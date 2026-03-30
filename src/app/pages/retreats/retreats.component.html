@@ -1,0 +1,277 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <h1>Yoga Retreats</h1>
+    <p>Transform your practice and renew your spirit in breathtaking destinations around the world</p>
+    <a href="#upcoming" class="btn btn-primary">View Upcoming Retreats</a>
+  </div>
+</section>
+
+<!-- Featured Retreats -->
+<section class="section featured-section">
+  <div class="container">
+    <h2 class="text-center">Featured Retreats</h2>
+    <p class="text-center sub-heading">Join us on these transformative journeys</p>
+    
+    <div class="featured-retreats-grid">
+      <div class="featured-retreat-card" *ngFor="let retreat of featuredRetreats">
+        <div class="featured-retreat-image">
+          <img [src]="retreat.image" [alt]="retreat.title">
+          <div class="retreat-dates">{{ retreat.dates }}</div>
+        </div>
+        
+        <div class="featured-retreat-content">
+          <h3>{{ retreat.title }}</h3>
+          
+          <div class="retreat-meta">
+            <div class="meta-item">
+              <span class="material-icons">location_on</span>
+              <span>{{ retreat.location }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="material-icons">schedule</span>
+              <span>{{ retreat.duration }}</span>
+            </div>
+          </div>
+          
+          <p class="retreat-description">{{ retreat.description | slice:0:150 }}...</p>
+          
+          <div class="retreat-footer">
+            <div class="retreat-actions">
+              <a [routerLink]="['/retreats', retreat.id]" class="btn btn-primary">View Details</a>
+              <button (click)="openPaymentModal(retreat)" class="btn btn-secondary">Reserve Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Our Retreats -->
+<section class="section why-section alt-bg">
+  <div class="container">
+    <h2 class="text-center">Why Choose Our Retreats?</h2>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <span class="material-icons">explore</span>
+        </div>
+        <h3>Stunning Locations</h3>
+        <p>Carefully selected destinations that inspire and rejuvenate, from tropical paradises to sacred mountains.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <span class="material-icons">self_improvement</span>
+        </div>
+        <h3>Experienced Teachers</h3>
+        <p>Learn from our most experienced teachers who create transformative and inclusive retreat experiences.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <span class="material-icons">group</span>
+        </div>
+        <h3>Community Connection</h3>
+        <p>Connect with like-minded practitioners and forge meaningful relationships that last beyond the retreat.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <span class="material-icons">restaurant</span>
+        </div>
+        <h3>Nourishing Cuisine</h3>
+        <p>Enjoy delicious, locally-sourced meals that support your practice and introduce you to regional flavors.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <span class="material-icons">balance</span>
+        </div>
+        <h3>Balanced Schedules</h3>
+        <p>Perfect blend of practice, rest, adventure, and cultural immersion for a complete experience.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <span class="material-icons">diversity_3</span>
+        </div>
+        <h3>All Levels Welcome</h3>
+        <p>Our retreats accommodate practitioners of all levels with modifications and options for everyone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- All Upcoming Retreats -->
+<section id="upcoming" class="section upcoming-section">
+  <div class="container">
+    <h2 class="text-center">Upcoming Retreats</h2>
+    <p class="text-center sub-heading">Transform your practice in breathtaking destinations</p>
+    
+    <div class="retreats-grid">
+      <div class="retreat-card" *ngFor="let retreat of upcomingRetreats">
+        <div class="retreat-image">
+          <img [src]="retreat.image" [alt]="retreat.title">
+          <div class="retreat-location">
+            <span class="material-icons">location_on</span>
+            <span>{{ retreat.location }}</span>
+          </div>
+        </div>
+        
+        <div class="retreat-content">
+          <div class="retreat-dates-badge">{{ retreat.dates }}</div>
+          <h3 class="retreat-title">{{ retreat.title }}</h3>
+          
+          <div class="retreat-teachers">
+            <span class="material-icons">person</span>
+            <span>Led by {{ retreat.teachers.join(' & ') }}</span>
+          </div>
+          
+          <p class="retreat-description">{{ retreat.description | slice:0:120 }}...</p>
+          
+          <div class="retreat-highlights">
+            <div class="highlight-item" *ngFor="let highlight of retreat.highlights.slice(0, 3)">
+              <span class="material-icons">check_circle</span>
+              <span>{{ highlight }}</span>
+            </div>
+          </div>
+          
+          <div class="retreat-footer">
+            <div class="retreat-actions">
+              <a [routerLink]="['/retreats', retreat.id]" class="btn btn-primary">View Details</a>
+              <button (click)="openPaymentModal(retreat)" class="btn btn-secondary">Reserve Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section testimonials-section alt-bg">
+  <div class="container">
+    <h2 class="text-center">Retreat Experiences</h2>
+    <p class="text-center sub-heading">Hear from past retreat participants</p>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+        <div class="quote">{{ testimonial.quote }}</div>
+        <div class="author">{{ testimonial.author }}</div>
+        <div class="retreat">{{ testimonial.retreat }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Past Retreats -->
+<section class="section past-retreats-section">
+  <div class="container">
+    <h2 class="text-center">Past Retreats</h2>
+    <p class="text-center sub-heading">A glimpse of our previous journeys</p>
+    
+    <div class="past-retreats-grid">
+      <div class="past-retreat-card" *ngFor="let retreat of pastRetreats">
+        <div class="past-retreat-image">
+          <img [src]="retreat.image" [alt]="retreat.title">
+          <div class="past-retreat-overlay">
+            <h3>{{ retreat.title }}</h3>
+            <div class="past-retreat-meta">
+              <div>{{ retreat.location }}</div>
+              <div>{{ retreat.dates }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section faq-section alt-bg">
+  <div class="container">
+    <h2 class="text-center">Frequently Asked Questions</h2>
+    
+    <div class="faq-accordion">
+      <div class="faq-item" *ngFor="let item of faq; let i = index">
+        <div class="faq-question">
+          <h3>{{ item.question }}</h3>
+          <span class="material-icons">expand_more</span>
+        </div>
+        <div class="faq-answer">
+          <p>{{ item.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lead a Retreat -->
+<section class="section lead-retreat-section">
+  <div class="container">
+    <div class="lead-retreat-content">
+      <div class="lead-retreat-info">
+        <h2>Interested in Leading a Retreat?</h2>
+        <p>We partner with experienced yoga teachers who want to lead retreats in beautiful destinations around the world. Our team handles logistics, marketing, and participant management so you can focus on creating a transformative experience.</p>
+        
+        <div class="lead-retreat-benefits">
+          <div class="benefit-item">
+            <span class="material-icons">support_agent</span>
+            <div>
+              <h3>Logistical Support</h3>
+              <p>We handle accommodations, meals, excursions, and all on-the-ground details.</p>
+            </div>
+          </div>
+          
+          <div class="benefit-item">
+            <span class="material-icons">campaign</span>
+            <div>
+              <h3>Marketing Assistance</h3>
+              <p>Benefit from our established audience and marketing expertise to fill your retreat.</p>
+            </div>
+          </div>
+          
+          <div class="benefit-item">
+            <span class="material-icons">groups</span>
+            <div>
+              <h3>Community Connection</h3>
+              <p>Access our community of dedicated practitioners who love retreat experiences.</p>
+            </div>
+          </div>
+        </div>
+        
+        <a href="#" class="btn btn-primary">Apply to Lead a Retreat</a>
+      </div>
+      
+      <div class="lead-retreat-image">
+        <img src="assets/images/lead-retreat.jpg" alt="Lead a yoga retreat with A - WELL YOGA" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="section newsletter-section">
+  <div class="container">
+    <div class="newsletter-content">
+      <h2>Stay Updated on New Retreats</h2>
+      <p>Join our retreat newsletter to be the first to know about new destinations and early bird pricing</p>
+      
+      <form class="newsletter-form">
+        <input type="email" placeholder="Your email address" required>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Payment Modal -->
+<app-payment-modal
+  [retreat]="selectedRetreat"
+  [isVisible]="isPaymentModalVisible"
+  (close)="closePaymentModal()"
+  (paymentSuccess)="onPaymentSuccess($event)">
+</app-payment-modal> 

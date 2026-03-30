@@ -1,0 +1,370 @@
+/* Hero Section */
+.hero-section {
+  height: 70vh;
+  background-size: cover;
+  background-position: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.hero-content {
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.location, .dates {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Common Section Styles */
+.section {
+  padding: 5rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.alt-bg {
+  background-color: var(--light-green);
+}
+
+h2 {
+  font-size: 2.5rem;
+  color: var(--primary-green);
+  margin-bottom: 2rem;
+}
+
+/* Introduction Section */
+.intro-section {
+  text-align: center;
+}
+
+.lead {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  color: var(--text-dark);
+}
+
+.experience-list {
+  list-style: none;
+  padding: 0;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+.experience-list li {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.tagline h3 {
+  font-size: 2rem;
+  color: var(--caramel);
+  margin: 3rem 0;
+}
+
+/* What Makes It Different Section */
+.different-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.different-item {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.different-item h3 {
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+}
+
+/* Venue Section */
+.venue-description {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+.venue-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.venue-images img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease;
+}
+
+.venue-images img:hover {
+  transform: scale(1.05);
+}
+
+/* What's Included Section */
+.included-list, .not-included-list {
+  list-style: none;
+  padding: 0;
+}
+
+.included-list li, .not-included-list li {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  position: relative;
+}
+
+.included-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary-green);
+}
+
+.not-included-list li:before {
+  content: "×";
+  position: absolute;
+  left: 0;
+  color: var(--caramel);
+}
+
+/* Pricing Section */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.price-item {
+  background: white;
+  padding: 2rem;
+  text-align: center;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.price-item h3 {
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+}
+
+.price {
+  font-size: 2rem;
+  color: var(--caramel);
+  font-weight: bold;
+}
+
+.price-special {
+  text-align: center;
+  margin: 3rem 0;
+  padding: 2rem;
+  background: var(--light-caramel);
+  border-radius: var(--border-radius);
+}
+
+.booking-cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+/* Host Section */
+.host-section {
+  padding: 5rem 0;
+}
+
+.host-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.host-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  aspect-ratio: 1;
+  width: 100%;
+}
+
+.host-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease;
+}
+
+.host-images img:hover {
+  transform: scale(1.05);
+}
+
+.host-info {
+  padding: 1rem;
+}
+
+.host-info h3 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.bio-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-dark);
+  white-space: pre-line;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .hero-content h1 {
+    font-size: 2.8rem;
+  }
+
+  .host-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .host-images {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .location, .dates {
+    font-size: 1.2rem;
+  }
+
+  .section {
+    padding: 3rem 0;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .tagline h3 {
+    font-size: 1.5rem;
+  }
+
+  .venue-images {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .venue-images img {
+    height: 250px;
+  }
+
+  .host-images {
+    max-width: 100%;
+    aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .price-item {
+    padding: 1.5rem;
+  }
+
+  .price {
+    font-size: 1.5rem;
+  }
+
+  .host-images {
+    grid-template-columns: 1fr;
+    aspect-ratio: auto;
+    gap: 1rem;
+  }
+
+  .host-images img {
+    aspect-ratio: 0;
+  }
+
+  .host-info h3 {
+    font-size: 1.5rem;
+  }
+}
+
+.status-badges {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-badge.sold-out {
+  background-color: var(--caramel);
+  color: white;
+}
+
+.status-badge.booking-now {
+  background-color: var(--primary-green);
+  color: white;
+}
+
+.btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border-radius: var(--border-radius);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--primary-green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--dark-green);
+  transform: translateY(-2px);
+}

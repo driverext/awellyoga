@@ -1,0 +1,73 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="onBackdropClick($event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Reserve Your Retreat</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="retreat">
+      <div class="retreat-summary">
+        <img [src]="retreat.image" [alt]="retreat.title" class="retreat-image">
+        
+        <div class="retreat-info">
+          <h3>{{ retreat.title }}</h3>
+          <div class="retreat-details">
+            <div class="detail-item">
+              <span class="material-icons">location_on</span>
+              <span>{{ retreat.location }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="material-icons">event</span>
+              <span>{{ retreat.dates }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="material-icons">schedule</span>
+              <span>{{ retreat.duration }}</span>
+            </div>
+            <div class="detail-item" *ngIf="checkoutData">
+              <span class="material-icons">attach_money</span>
+              <span>${{ checkoutData.amount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-info">
+        <h4>What's Included:</h4>
+        <ul class="included-items">
+          <li *ngFor="let highlight of retreat.highlights?.slice(0, 5)">
+            <span class="material-icons">check</span>
+            {{ highlight }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="payment-notice" *ngIf="checkoutData && !checkoutData.sessionReady">
+        <div class="notice-box">
+          <span class="material-icons">info</span>
+          <p>{{ checkoutData.message }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button 
+        class="btn btn-secondary" 
+        (click)="closeModal()" 
+        [disabled]="isLoading">
+        Cancel
+      </button>
+      
+      <button 
+        class="btn btn-primary" 
+        (click)="proceedToPayment()" 
+        [disabled]="isLoading">
+        <span *ngIf="isLoading" class="loading-spinner"></span>
+        <span *ngIf="!isLoading">Reserve Now</span>
+        <span *ngIf="isLoading">Processing...</span>
+      </button>
+    </div>
+  </div>
+</div> 

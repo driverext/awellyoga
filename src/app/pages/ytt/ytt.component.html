@@ -1,0 +1,373 @@
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <h1>Yoga Teacher Training</h1>
+    <p>Begin or deepen your journey as a certified yoga teacher</p>
+  </div>
+</section>
+
+<!-- Introduction Section -->
+<section class="section intro-section">
+  <div class="container">
+    <div class="intro-content">
+      <h2>Transform Your Practice, Transform Your Life</h2>
+      <p>A - WELL YOGA's Teacher Training programs provide comprehensive, authentic education grounded in both traditional yogic wisdom and modern teaching approaches.</p>
+      <p>Our Yoga Alliance certified programs are designed to not only prepare you to teach yoga safely and effectively, but to deepen your personal practice and understanding of yoga as a holistic system of well-being.</p>
+      
+      <div class="training-highlights">
+        <div class="highlight">
+          <span class="material-icons">local_library</span>
+          <div class="highlight-content">
+            <h3>Expert Faculty</h3>
+            <p>Learn from experienced, passionate teachers with diverse backgrounds</p>
+          </div>
+        </div>
+        
+        <div class="highlight">
+          <span class="material-icons">school</span>
+          <div class="highlight-content">
+            <h3>Yoga Alliance Certified</h3>
+            <p>All programs meet or exceed Yoga Alliance standards</p>
+          </div>
+        </div>
+        
+        <div class="highlight">
+          <span class="material-icons">people</span>
+          <div class="highlight-content">
+            <h3>Supportive Community</h3>
+            <p>Train in a nurturing environment with like-minded practitioners</p>
+          </div>
+        </div>
+        
+        <div class="highlight">
+          <span class="material-icons">payments</span>
+          <div class="highlight-content">
+            <h3>Flexible Financing</h3>
+            <p>Payment plans available to make training accessible</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Program Navigation -->
+<section class="section program-nav">
+  <div class="container">
+    <div class="program-nav-container">
+      <a href="#200hr" class="program-nav-item">
+        <h3>200-Hour Training</h3>
+        <p>Begin your teaching journey</p>
+      </a>
+      <a href="#300hr" class="program-nav-item">
+        <h3>300-Hour Advanced</h3>
+        <p>Deepen your expertise</p>
+      </a>
+      <a href="#ce" class="program-nav-item">
+        <h3>Continuing Education</h3>
+        <p>Specialized workshops</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 200-Hour Program -->
+<section id="200hr" class="section program-section">
+  <div class="container">
+    <div class="program-header">
+      <div class="program-title">
+        <h2>{{ programs[0].title }}</h2>
+        <p class="program-subtitle">{{ programs[0].subtitle }}</p>
+      </div>
+      <div class="certification-badge">
+        <span class="material-icons">verified</span>
+        <span>Yoga Alliance Certified</span>
+      </div>
+    </div>
+    
+    <div class="program-content">
+      <div class="program-image">
+        <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="200-Hour Teacher Training at A - WELL YOGA" class="img-rounded">
+      </div>
+      
+      <div class="program-details">
+        <p class="program-description">{{ programs[0].description }}</p>
+        
+        <div class="program-features">
+          <h3>What You'll Learn:</h3>
+          <ul>
+            <li *ngFor="let feature of programs[0].features">{{ feature }}</li>
+          </ul>
+        </div>
+        
+        <div class="program-formats">
+          <h3>Training Formats:</h3>
+          <div class="format-cards">
+            <div class="format-card" *ngFor="let format of programs[0].formats">
+              <div class="format-header">
+                <h4>{{ format.type }}</h4>
+              </div>
+              <div class="format-details">
+                <p><strong>Duration:</strong> {{ format.duration }}</p>
+                <p><strong>Dates:</strong> {{ format.dates }}</p>
+                <p><strong>Investment:</strong> {{ format.price }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="program-pricing-notes">
+            <p><strong>Early Bird:</strong> {{ programs[0].earlyBird }}</p>
+            <p><strong>Payment Plans:</strong> {{ programs[0].paymentPlans }}</p>
+          </div>
+          
+          <a href="#" class="btn btn-primary">Request Information</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 300-Hour Program -->
+<section id="300hr" class="section program-section alt-bg">
+  <div class="container">
+    <div class="program-header">
+      <div class="program-title">
+        <h2>{{ programs[1].title }}</h2>
+        <p class="program-subtitle">{{ programs[1].subtitle }}</p>
+      </div>
+      <div class="certification-badge">
+        <span class="material-icons">verified</span>
+        <span>Yoga Alliance Certified</span>
+      </div>
+    </div>
+    
+    <div class="program-content reverse">
+      <div class="program-details">
+        <p class="program-description">{{ programs[1].description }}</p>
+        
+        <div class="program-features">
+          <h3>What You'll Learn:</h3>
+          <ul>
+            <li *ngFor="let feature of programs[1].features">{{ feature }}</li>
+          </ul>
+        </div>
+        
+        <div class="program-formats">
+          <h3>Training Format:</h3>
+          <div class="format-cards">
+            <div class="format-card" *ngFor="let format of programs[1].formats">
+              <div class="format-header">
+                <h4>{{ format.type }}</h4>
+              </div>
+              <div class="format-details">
+                <p><strong>Duration:</strong> {{ format.duration }}</p>
+                <p><strong>Dates:</strong> {{ format.dates }}</p>
+                <p><strong>Investment:</strong> {{ format.price }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="program-pricing-notes">
+            <p><strong>Early Bird:</strong> {{ programs[1].earlyBird }}</p>
+            <p><strong>Payment Plans:</strong> {{ programs[1].paymentPlans }}</p>
+          </div>
+          
+          <a href="#" class="btn btn-primary">Request Information</a>
+        </div>
+      </div>
+      
+      <div class="program-image">
+        <img src="https://images.unsplash.com/photo-1545389336-cf090694435e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80" alt="300-Hour Advanced Teacher Training at A - WELL YOGA" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Continuing Education -->
+<section id="ce" class="section program-section">
+  <div class="container">
+    <div class="program-header">
+      <div class="program-title">
+        <h2>{{ programs[2].title }}</h2>
+        <p class="program-subtitle">{{ programs[2].subtitle }}</p>
+      </div>
+      <div class="certification-badge">
+        <span class="material-icons">verified</span>
+        <span>Yoga Alliance CEUs</span>
+      </div>
+    </div>
+    
+    <p class="program-description text-center">{{ programs[2].description }}</p>
+    
+    <div class="workshop-list">
+      <div class="workshop-item" *ngFor="let workshop of programs[2].workshops">
+        <div class="workshop-info">
+          <h3>{{ workshop.name }}</h3>
+          <p><strong>Hours:</strong> {{ workshop.hours }} ({{ workshop.hours }} CEUs)</p>
+          <p><strong>Dates:</strong> {{ workshop.dates }}</p>
+          <p><strong>Investment:</strong> {{ workshop.price }}</p>
+        </div>
+        <a href="#" class="btn btn-primary">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Faculty Section -->
+<section class="section faculty-section alt-bg">
+  <div class="container">
+    <h2 class="text-center">Meet Your Faculty</h2>
+    <p class="text-center sub-heading">Learn from dedicated teachers with decades of combined experience</p>
+    
+    <div class="faculty-grid">
+      <div class="faculty-card" *ngFor="let teacher of faculty">
+        <div class="faculty-image">
+          <img [src]="teacher.image" [alt]="teacher.name">
+        </div>
+        <div class="faculty-info">
+          <h3>{{ teacher.name }}</h3>
+          <p class="role">{{ teacher.role }}</p>
+          <p class="specialties"><strong>Specialties:</strong> {{ teacher.specialties }}</p>
+          <p class="bio">{{ teacher.bio }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="section testimonials-section">
+  <div class="container">
+    <h2 class="text-center">Graduate Experiences</h2>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+        <div class="quote">{{ testimonial.quote }}</div>
+        <div class="author-info">
+          <p class="author">{{ testimonial.author }}</p>
+          <p class="year">{{ testimonial.year }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Application Section -->
+<section class="section application-section">
+  <div class="container">
+    <div class="application-content">
+      <div class="application-info">
+        <h2>Application Process</h2>
+        <p>Taking the step to become a yoga teacher is a significant commitment. Our application process is designed to ensure you're prepared for the journey and to help us learn how we can best support you.</p>
+        
+        <div class="process-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Submit Application</h3>
+              <p>Complete our online application, including your yoga experience and goals for teacher training.</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Interview</h3>
+              <p>Participate in a brief conversation with one of our lead trainers to discuss the program and your intentions.</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Acceptance & Registration</h3>
+              <p>Upon acceptance, secure your place with a deposit and complete registration paperwork.</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Preparation</h3>
+              <p>Receive pre-training materials and preparation guidelines to begin your journey.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="application-cta">
+          <a href="#" class="btn btn-primary">Apply Now</a>
+          <a href="#" class="btn btn-secondary">Download Information Packet</a>
+        </div>
+      </div>
+      
+      <div class="application-image">
+        <img src="https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="Application process" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section faq-section alt-bg">
+  <div class="container">
+    <h2 class="text-center">Frequently Asked Questions</h2>
+    
+    <div class="faq-accordion">
+      <div class="faq-item">
+        <h3 class="faq-question">What are the prerequisites for the 200-hour training?</h3>
+        <div class="faq-answer">
+          <p>We recommend a minimum of 6 months consistent yoga practice before enrolling in our 200-hour program. While experience with various styles is helpful, a genuine interest in deepening your practice and a commitment to the learning process are the most important prerequisites.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <h3 class="faq-question">Is this training suitable if I don't want to teach yoga?</h3>
+        <div class="faq-answer">
+          <p>Absolutely! Many of our trainees join the program to deepen their personal practice and understanding of yoga, without the intention to teach. The training offers valuable tools for personal growth, regardless of your career aspirations.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <h3 class="faq-question">What is the time commitment outside of training hours?</h3>
+        <div class="faq-answer">
+          <p>Students should expect to spend an additional 5-10 hours per week on homework, reading, practice teaching, and personal practice. This varies based on your learning style and familiarity with the material.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <h3 class="faq-question">Do you offer scholarships or work-study opportunities?</h3>
+        <div class="faq-answer">
+          <p>Yes, we offer a limited number of partial scholarships and work-study positions for each training. Please indicate your interest in these options on your application, and we'll provide additional information during the interview process.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <h3 class="faq-question">What if I miss a session?</h3>
+        <div class="faq-answer">
+          <p>While we encourage full attendance, we understand that life happens. You can miss up to 10% of the training hours and still complete the program by doing make-up work. Beyond that, additional fees may apply for private make-up sessions.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <h3 class="faq-question">What styles of yoga does the training focus on?</h3>
+        <div class="faq-answer">
+          <p>Our 200-hour program provides a strong foundation in alignment-based vinyasa and hatha yoga, with exposure to yin, restorative, and meditation practices. The 300-hour program allows for more specialization in your areas of interest.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Begin Your Teaching Journey</h2>
+      <p>Transform your practice, share your passion, and join our community of teachers</p>
+      <div class="cta-buttons">
+        <a href="#" class="btn btn-primary">Apply Now</a>
+        <a href="#" class="btn btn-secondary">Request Information</a>
+      </div>
+    </div>
+  </div>
+</section> 

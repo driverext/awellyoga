@@ -1,0 +1,124 @@
+<!-- Hero Section -->
+<section class="hero-section" [ngStyle]="{'background-image': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + retreat?.image + ')'}">
+  <div class="hero-content">
+    <h1>{{retreat?.title}}</h1>
+    <p class="location">{{retreat?.location}}</p>
+    <p class="dates">{{retreat?.dates}}</p>
+    <div class="status-badges" *ngIf="retreat?.status">
+      <div class="status-badge sold-out" *ngIf="retreat?.status?.year2025">
+        2025: {{retreat?.status?.year2025}}
+      </div>
+      <div class="status-badge booking-now" *ngIf="retreat?.status?.year2026">
+        {{retreat?.status?.year2026}} for 2026
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="retreat-details">
+  <!-- Introduction -->
+  <section class="section intro-section">
+    <div class="container">
+      <h2>JOIN US FOR AN INTIMATE RETREAT IN {{retreat?.location}}:</h2>
+      <p class="lead">This retreat includes a unique blend of yoga, ritual, rest, and soul-awakening experiences:</p>
+      <ul class="experience-list">
+        <li *ngFor="let highlight of retreat?.highlights">{{highlight}}</li>
+      </ul>
+      <div class="tagline">
+        <h3>No performance. No pressure. Just space to return to who you truly are.</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- What Makes It Different -->
+  <section class="section different-section alt-bg">
+    <div class="container">
+      <h2>What Makes It Different:</h2>
+      <div class="different-grid">
+        <div class="different-item">
+          <h3>Not performative, but personal</h3>
+          <p>No pressure to "keep up" or "look the part." This is a retreat for real people in real healing, not curated perfection.</p>
+        </div>
+        <div class="different-item">
+          <h3>Intentional over packed</h3>
+          <p>Every offering is meaningful, with enough spaciousness to integrate, reflect, and truly rest.</p>
+        </div>
+        <div class="different-item">
+          <h3>Guided by lived wisdom</h3>
+          <p>Led by experienced teachers who know how to guide deep transformation with gentleness, safety, and power.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Venue -->
+  <section class="section venue-section">
+    <div class="container">
+      <h2>RETREAT VENUE</h2>
+      <p class="venue-description">{{retreat?.venueDescription}}</p>
+      <div class="venue-images">
+        <img *ngFor="let imageUrl of retreat?.venueImages" [src]="imageUrl" [alt]="'Puglia Retreat Venue'">
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included -->
+  <section class="section included-section alt-bg">
+    <div class="container">
+      <h2>WHAT'S INCLUDED</h2>
+      <div class="included-grid">
+        <ul class="included-list">
+          <li *ngFor="let item of retreat?.included">{{item}}</li>
+        </ul>
+      </div>
+
+      <h3>WHAT'S NOT INCLUDED</h3>
+      <ul class="not-included-list">
+        <li *ngFor="let item of retreat?.notIncluded">{{item}}</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="section pricing-section">
+    <div class="container">
+      <h2>PRICING</h2>
+      <div class="pricing-grid">
+        <div class="price-item">
+          <h3>Twin Share</h3>
+          <p class="price">{{retreat?.price?.shared}}</p>
+        </div>
+        <div class="price-item">
+          <h3>Private Room</h3>
+          <p class="price">{{retreat?.price?.private}}</p>
+        </div>
+      </div>
+      <div class="price-special">
+        <h3>Come with a friend & you both SAVE!</h3>
+        <p>{{retreat?.earlyBird}}</p>
+      </div>
+      <div class="booking-cta">
+        <a [href]="'mailto:arietabk@gmail.com?subject=Booking Inquiry: ' + retreat?.location + ' Retreat - ' + retreat?.dates + '&body=Hi,%0D%0A%0D%0AI am interested in booking the ' + retreat?.location + ' retreat for ' + retreat?.dates + '.%0D%0A%0D%0APlease send me more information about availability and the booking process.%0D%0A%0D%0AThank you!'" class="btn btn-primary">
+          {{retreat?.status?.year2025 ? 'Contact for 2026 Booking' : 'Reserve Your Spot'}}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Hosts -->
+  <section class="section host-section alt-bg">
+    <div class="container">
+      <h2>ABOUT YOUR HOSTS</h2>
+      <div class="host-content" *ngFor="let host of retreat?.hostInfo?.hosts; let i = index" [ngStyle]="{'margin-top': i > 0 ? '120px' : '0'}">
+        <div class="host-images">
+          <img *ngFor="let imageUrl of host.images" [src]="imageUrl" [alt]="host.name">
+        </div>
+        <div class="host-info">
+          <h3>{{host.name}}</h3>
+          <div class="bio-text" [innerHTML]="host.bio | newline"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

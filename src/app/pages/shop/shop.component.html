@@ -1,0 +1,295 @@
+<!-- Page Header -->
+<header class="page-header">
+  <div class="container">
+    <h1>Yoga Shop</h1>
+    <p>Carefully curated yoga gear and accessories to enhance your practice</p>
+  </div>
+</header>
+
+<!-- Featured Products Section -->
+<section class="featured-section section">
+  <div class="container">
+    <h2 class="text-center">Featured Products</h2>
+    <div class="featured-products">
+      <div class="product-card featured" *ngFor="let product of featuredProducts">
+        <div class="product-image">
+          <img [src]="product.image" [alt]="product.name">
+          <span class="featured-badge">Featured</span>
+          <span class="discount-badge" *ngIf="product.discountPercent">{{product.discountPercent}}% OFF</span>
+        </div>
+        <div class="product-content">
+          <h3 class="product-title">{{product.name}}</h3>
+          <div class="product-rating">
+            <div class="stars">
+              <span class="material-icons" *ngFor="let star of [1,2,3,4,5]">
+                {{star <= product.rating ? 'star' : (star - 0.5 <= product.rating ? 'star_half' : 'star_border')}}
+              </span>
+            </div>
+            <span class="review-count">({{product.reviewCount}} reviews)</span>
+          </div>
+          <p class="product-description">{{product.description}}</p>
+          <div class="product-footer">
+            <div class="product-price">
+              <span class="price" [class.discounted]="product.discountPercent">
+                ${{product.price.toFixed(2)}}
+              </span>
+              <span class="sale-price" *ngIf="product.discountPercent">
+                ${{calculateDiscountedPrice(product).toFixed(2)}}
+              </span>
+            </div>
+            <button class="btn btn-primary" (click)="addToCart(product)">
+              <span class="material-icons">shopping_cart</span> Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Filter Section -->
+<section class="filter-section">
+  <div class="container">
+    <div class="filters-container">
+      <div class="filter-group">
+        <label>Categories</label>
+        <div class="category-filters">
+          <button 
+            *ngFor="let category of categories" 
+            [class.active]="selectedCategory === category.id"
+            (click)="filterByCategory(category.id)">
+            {{category.name}}
+          </button>
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label>Popular Tags</label>
+        <div class="tag-filters">
+          <button 
+            *ngFor="let tag of uniqueTags" 
+            [class.active]="selectedTag === tag"
+            (click)="filterByTag(tag)">
+            {{tag}}
+          </button>
+        </div>
+      </div>
+      
+      <div class="filter-group search-group">
+        <label>Search Products</label>
+        <div class="search-container">
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery" 
+            placeholder="Search by name or description"
+            (keyup.enter)="searchProducts()">
+          <button class="btn btn-search" (click)="searchProducts()">
+            <span class="material-icons">search</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <button class="btn-reset" (click)="resetFilters()" *ngIf="selectedCategory !== 'all' || selectedTag || searchQuery">
+      Reset All Filters
+    </button>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section class="products-section section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our Products</h2>
+      <div class="cart-toggle" (click)="toggleCart()">
+        <span class="material-icons">shopping_cart</span>
+        <span class="cart-count" *ngIf="cartCount > 0">{{cartCount}}</span>
+      </div>
+    </div>
+    
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" [class.active]="showCart">
+      <div class="cart-header">
+        <h3>Your Cart ({{cartCount}} items)</h3>
+        <button class="btn-close" (click)="toggleCart()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      
+      <div class="cart-items" *ngIf="cartItems.length > 0">
+        <div class="cart-item" *ngFor="let item of cartItems">
+          <div class="cart-item-image">
+            <img [src]="item.product.image" [alt]="item.product.name">
+          </div>
+          <div class="cart-item-details">
+            <h4>{{item.product.name}}</h4>
+            <div class="cart-item-price">
+              ${{(calculateDiscountedPrice(item.product) * item.quantity).toFixed(2)}}
+            </div>
+            <div class="cart-item-quantity">
+              <button (click)="updateQuantity(item.product.id, item.quantity - 1)" [disabled]="item.quantity <= 1">-</button>
+              <span>{{item.quantity}}</span>
+              <button (click)="updateQuantity(item.product.id, item.quantity + 1)">+</button>
+            </div>
+          </div>
+          <button class="btn-remove" (click)="removeFromCart(item.product.id)">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="empty-cart" *ngIf="cartItems.length === 0">
+        <span class="material-icons">shopping_cart</span>
+        <p>Your cart is empty</p>
+        <button class="btn btn-outline" (click)="toggleCart()">Continue Shopping</button>
+      </div>
+      
+      <div class="cart-footer" *ngIf="cartItems.length > 0">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span>${{getCartTotal().toFixed(2)}}</span>
+        </div>
+        <button class="btn btn-primary">Checkout</button>
+      </div>
+    </div>
+    
+    <!-- Product Grid -->
+    <div class="products-grid" *ngIf="filteredProducts.length > 0">
+      <div class="product-card" *ngFor="let product of filteredProducts">
+        <div class="product-image">
+          <img [src]="product.image" [alt]="product.name">
+          <span class="category-badge">{{product.category}}</span>
+          <span class="discount-badge" *ngIf="product.discountPercent">{{product.discountPercent}}% OFF</span>
+          <span class="new-badge" *ngIf="product.isNew">New</span>
+          <div class="stock-status" [ngClass]="product.stockStatus">
+            {{product.stockStatus === 'in-stock' ? 'In Stock' : 
+              (product.stockStatus === 'low-stock' ? 'Low Stock' : 'Out of Stock')}}
+          </div>
+        </div>
+        <div class="product-content">
+          <h3 class="product-title">{{product.name}}</h3>
+          <div class="product-rating">
+            <div class="stars">
+              <span class="material-icons" *ngFor="let star of [1,2,3,4,5]">
+                {{star <= product.rating ? 'star' : (star - 0.5 <= product.rating ? 'star_half' : 'star_border')}}
+              </span>
+            </div>
+            <span class="review-count">({{product.reviewCount}} reviews)</span>
+          </div>
+          <p class="product-description">{{product.description}}</p>
+          <div class="product-tags">
+            <span class="tag" *ngFor="let tag of product.tags">{{tag}}</span>
+          </div>
+          <div class="product-footer">
+            <div class="product-price">
+              <span class="price" [class.discounted]="product.discountPercent">
+                ${{product.price.toFixed(2)}}
+              </span>
+              <span class="sale-price" *ngIf="product.discountPercent">
+                ${{calculateDiscountedPrice(product).toFixed(2)}}
+              </span>
+            </div>
+            <button class="btn btn-primary" (click)="addToCart(product)" [disabled]="product.stockStatus === 'out-of-stock'">
+              <span class="material-icons">shopping_cart</span> Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- No Results -->
+    <div class="no-results" *ngIf="filteredProducts.length === 0">
+      <span class="material-icons">search_off</span>
+      <h3>No Products Found</h3>
+      <p>We couldn't find any products matching your current filters. Try adjusting your search criteria or browse all products.</p>
+      <button (click)="resetFilters()">View All Products</button>
+    </div>
+  </div>
+</section>
+
+<!-- New Arrivals Section -->
+<section class="new-arrivals-section section alt-bg" *ngIf="newProducts.length > 0">
+  <div class="container">
+    <h2 class="text-center">New Arrivals</h2>
+    <div class="new-products">
+      <div class="product-card" *ngFor="let product of newProducts">
+        <div class="product-image">
+          <img [src]="product.image" [alt]="product.name">
+          <span class="new-badge">New</span>
+        </div>
+        <div class="product-content">
+          <h3 class="product-title">{{product.name}}</h3>
+          <p class="product-description">{{product.description}}</p>
+          <div class="product-footer">
+            <div class="product-price">${{product.price.toFixed(2)}}</div>
+            <button class="btn btn-primary" (click)="addToCart(product)">
+              <span class="material-icons">shopping_cart</span> Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="benefits-section section">
+  <div class="container">
+    <h2 class="text-center">Why Shop With Us?</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <span class="material-icons">eco</span>
+        <h3>Eco-Friendly Products</h3>
+        <p>We prioritize sustainable, earth-conscious products that align with yoga philosophy.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="material-icons">quality_check</span>
+        <h3>Tested by Yogis</h3>
+        <p>Our instructors personally test all products to ensure quality and functionality.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="material-icons">support</span>
+        <h3>Expert Advice</h3>
+        <p>Need help choosing the right mat or prop? Our team is always ready to assist.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="material-icons">local_shipping</span>
+        <h3>Free Shipping</h3>
+        <p>Enjoy free shipping on all orders over $75 within the continental US.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section section">
+  <div class="container">
+    <div class="newsletter-content">
+      <div class="newsletter-text">
+        <h2>Stay Updated</h2>
+        <p>Subscribe to our newsletter for exclusive deals, new product announcements, and yoga inspiration.</p>
+        <ul class="benefits-list">
+          <li><span class="material-icons">check_circle</span> Subscriber-only discounts</li>
+          <li><span class="material-icons">check_circle</span> Early access to sales</li>
+          <li><span class="material-icons">check_circle</span> Monthly yoga challenges</li>
+          <li><span class="material-icons">check_circle</span> Free practice guides</li>
+        </ul>
+      </div>
+      <div class="newsletter-form">
+        <h3>Join Our Community</h3>
+        <div class="form-group">
+          <label for="newsletter-email">Email Address</label>
+          <input type="email" id="newsletter-email" placeholder="Your email address">
+        </div>
+        <div class="form-checkbox">
+          <input type="checkbox" id="newsletter-consent">
+          <label for="newsletter-consent">I agree to receive emails from Your Yoga Studio about products, news, and special offers.</label>
+        </div>
+        <button class="btn btn-primary">Subscribe Now</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Overlay for Cart -->
+<div class="overlay" *ngIf="showCart" (click)="toggleCart()"></div> 

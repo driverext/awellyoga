@@ -1,0 +1,658 @@
+/* Page Header (reusing style from other pages) */
+.page-header {
+  background-color: var(--primary-green);
+  color: var(--text-light);
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.page-header p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Introduction Section */
+.intro-section {
+  background-color: white;
+}
+
+.intro-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.intro-content h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.intro-content p {
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+/* Filter Section */
+.filter-section {
+  background-color: var(--light-green);
+  padding: 2rem 0;
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-end;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 250px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+  color: var(--primary-green);
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-filters button {
+  background-color: white;
+  border: 1px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.category-filters button.active,
+.category-filters button:hover {
+  background-color: var(--primary-green);
+  color: white;
+}
+
+.filter-group select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--light-gray);
+  border-radius: var(--border-radius);
+  background-color: white;
+  font-size: 1rem;
+}
+
+.btn-reset {
+  background-color: transparent;
+  border: none;
+  color: var(--primary-green);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-reset:hover {
+  color: var(--secondary-green);
+}
+
+/* Workshops Section */
+.workshops-section {
+  padding: 4rem 0;
+}
+
+.workshops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2.5rem;
+}
+
+.workshop-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease;
+}
+
+.workshop-card:hover {
+  transform: translateY(-10px);
+}
+
+.workshop-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.workshop-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.workshop-card:hover .workshop-image img {
+  transform: scale(1.1);
+}
+
+.workshop-date {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  text-align: center;
+  min-width: 60px;
+  box-shadow: var(--box-shadow);
+}
+
+.workshop-date .month {
+  display: block;
+  color: var(--primary-green);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.workshop-date .day {
+  display: block;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.workshop-content {
+  padding: 1.5rem;
+}
+
+.workshop-title {
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.workshop-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--text-medium);
+}
+
+.meta-item .material-icons {
+  font-size: 1.1rem;
+  color: var(--caramel);
+}
+
+.workshop-description {
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+}
+
+.workshop-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.workshop-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.workshop-price .price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary-green);
+}
+
+.workshop-price .early-bird {
+  font-size: 0.8rem;
+  color: var(--caramel);
+}
+
+.workshop-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn-text {
+  color: var(--primary-green);
+  font-weight: 600;
+  position: relative;
+  text-decoration: none;
+}
+
+.btn-text:after {
+  content: '→';
+  margin-left: 0.3rem;
+  transition: transform 0.3s ease;
+}
+
+.btn-text:hover:after {
+  transform: translateX(5px);
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--light-green);
+  border-radius: var(--border-radius);
+}
+
+.no-results span.material-icons {
+  font-size: 3rem;
+  color: var(--caramel);
+  margin-bottom: 1rem;
+}
+
+.no-results h3 {
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+}
+
+.no-results p {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.no-results button {
+  background: none;
+  border: none;
+  color: var(--primary-green);
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.no-results button:hover {
+  color: var(--secondary-green);
+}
+
+/* Benefits Section */
+.benefits-section {
+  background-color: var(--light-green);
+  padding: 5rem 0;
+}
+
+.benefits-section h2 {
+  color: var(--primary-green);
+  margin-bottom: 3rem;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.benefit-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-10px);
+}
+
+.benefit-card span.material-icons {
+  font-size: 3rem;
+  color: var(--caramel);
+  margin-bottom: 1.5rem;
+}
+
+.benefit-card h3 {
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+}
+
+.benefit-card p {
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+/* Host a Workshop Section */
+.host-section {
+  padding: 5rem 0;
+}
+
+.host-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.host-info h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.host-info p {
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.host-info ul {
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+}
+
+.host-info li {
+  margin-bottom: 0.8rem;
+}
+
+.host-image img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+/* Private Workshops Section */
+.private-workshops-section {
+  background-color: var(--light-green);
+  padding: 5rem 0;
+}
+
+.private-workshops-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.private-workshops-info h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.private-workshops-info p {
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.private-workshops-info ul {
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+}
+
+.private-workshops-info li {
+  margin-bottom: 0.8rem;
+}
+
+.private-workshops-image img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+/* FAQ Section */
+.faq-section {
+  padding: 5rem 0;
+}
+
+.faq-section h2 {
+  color: var(--primary-green);
+  margin-bottom: 3rem;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.faq-item {
+  background-color: var(--light-green);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.faq-item h3 {
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.faq-item p {
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+  padding: 5rem 0;
+}
+
+.cta-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+}
+
+.newsletter-form {
+  display: flex;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.newsletter-form button {
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+/* Booking Section with Calendly */
+.booking-section {
+  background-color: white;
+  padding: 5rem 0;
+}
+
+.booking-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.booking-info h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.booking-info p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  color: var(--text-dark);
+}
+
+.booking-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.benefit-item .material-icons {
+  font-size: 2rem;
+  color: var(--caramel);
+}
+
+.benefit-text h4 {
+  color: var(--primary-green);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.benefit-text p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-medium);
+}
+
+.calendly-container {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  height: 700px;
+}
+
+/* Responsive adjustments for booking section */
+@media (max-width: 992px) {
+  .booking-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .booking-info {
+    text-align: center;
+  }
+  
+  .benefit-item {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .booking-section {
+    padding: 3rem 0;
+  }
+  
+  .calendly-container {
+    height: 600px;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .host-content,
+  .private-workshops-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .private-workshops-content {
+    direction: rtl;
+  }
+  
+  .private-workshops-content > * {
+    direction: ltr;
+  }
+  
+  .filters-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+  
+  .filter-group {
+    width: 100%;
+  }
+  
+  .workshop-footer {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .workshops-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .private-workshops-content {
+    direction: ltr;
+  }
+  
+  .host-info,
+  .private-workshops-info {
+    order: 2;
+  }
+  
+  .host-image,
+  .private-workshops-image {
+    order: 1;
+  }
+  
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .newsletter-form {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .newsletter-form input,
+  .newsletter-form button {
+    width: 100%;
+    border-radius: var(--border-radius);
+  }
+  
+  .page-header h1 {
+    font-size: 2.5rem;
+  }
+} 

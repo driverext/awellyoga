@@ -1,0 +1,181 @@
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <h1>Blog</h1>
+    <p>Insights, inspiration, and education for your yoga journey</p>
+  </div>
+</section>
+
+<!-- Featured Posts -->
+<section class="section featured-section">
+  <div class="container">
+    <h2 class="section-title">Featured Articles</h2>
+    
+    <div class="featured-posts-grid">
+      <div class="featured-post" *ngFor="let post of featuredPosts">
+        <div class="featured-post-image">
+          <img [src]="post.image" [alt]="post.title">
+        </div>
+        <div class="featured-post-content">
+          <div class="post-category">{{ post.category }}</div>
+          <h3 class="post-title">{{ post.title }}</h3>
+          <p class="post-excerpt">{{ post.excerpt }}</p>
+          <div class="post-meta">
+            <div class="post-author">By {{ post.author }}</div>
+            <div class="post-date">{{ post.date }}</div>
+          </div>
+          <a [routerLink]="['/blog', post.id]" class="btn btn-primary">Read More</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Blog Filters -->
+<section class="section filters-section">
+  <div class="container">
+    <div class="blog-filters">
+      <div class="category-filter">
+        <label>Filter by Category</label>
+        <div class="category-buttons">
+          <button [class.active]="selectedCategory === 'all'" (click)="filterByCategory('all')">All Categories</button>
+          <button *ngFor="let category of categories.slice(1)" 
+                  [class.active]="selectedCategory === category.value"
+                  (click)="filterByCategory(category.value)">
+            {{ category.name }}
+          </button>
+        </div>
+      </div>
+      
+      <div class="search-filter">
+        <label>Search Articles</label>
+        <div class="search-form">
+          <input type="text" placeholder="Search by keyword..." #searchInput>
+          <button (click)="search(searchInput.value)" class="btn-search">
+            <span class="material-icons">search</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Blog Posts -->
+<section class="section posts-section">
+  <div class="container">
+    <div class="posts-grid" *ngIf="filteredPosts.length > 0">
+      <div class="post-card" *ngFor="let post of filteredPosts">
+        <div class="post-card-image">
+          <img [src]="post.image" [alt]="post.title">
+          <div class="post-category">{{ post.category }}</div>
+        </div>
+        
+        <div class="post-card-content">
+          <h3 class="post-title">{{ post.title }}</h3>
+          
+          <div class="post-meta">
+            <div class="post-author">By {{ post.author }}</div>
+            <div class="post-date">{{ post.date }}</div>
+          </div>
+          
+          <p class="post-excerpt">{{ post.excerpt }}</p>
+          
+          <div class="post-tags">
+            <span class="tag" *ngFor="let tag of post.tags">{{ tag | titlecase }}</span>
+          </div>
+          
+          <a [routerLink]="['/blog', post.id]" class="btn-text">Read Full Article</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="no-posts" *ngIf="filteredPosts.length === 0">
+      <span class="material-icons">search_off</span>
+      <h3>No articles found</h3>
+      <p>No articles match your current search or filter. Please try different criteria or <button (click)="filterByCategory('all'); searchInput.value = ''; search('')">reset all filters</button>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="section newsletter-section">
+  <div class="container">
+    <div class="newsletter-content">
+      <div class="newsletter-info">
+        <h2>Subscribe to Our Blog</h2>
+        <p>Get our latest articles, studio news, and wellness tips delivered straight to your inbox.</p>
+        <ul class="newsletter-benefits">
+          <li>
+            <span class="material-icons">check_circle</span>
+            <span>Weekly updates with new content</span>
+          </li>
+          <li>
+            <span class="material-icons">check_circle</span>
+            <span>Exclusive subscriber-only content</span>
+          </li>
+          <li>
+            <span class="material-icons">check_circle</span>
+            <span>Special offers and early access</span>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="newsletter-form-container">
+        <form class="newsletter-form">
+          <div class="form-group">
+            <input type="text" placeholder="Your Name" required>
+          </div>
+          <div class="form-group">
+            <input type="email" placeholder="Your Email Address" required>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-container">
+              <input type="checkbox" required>
+              <span class="checkmark"></span>
+              <span class="checkbox-text">I agree to receive emails from A - WELL YOGA. We respect your privacy.</span>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Write for Us -->
+<section class="section write-for-us-section">
+  <div class="container">
+    <div class="write-for-us-content">
+      <div class="write-for-us-image">
+        <img src="assets/images/write-for-us.jpg" alt="Write for A - WELL YOGA blog">
+      </div>
+      
+      <div class="write-for-us-info">
+        <h2>Write for Our Blog</h2>
+        <p>Are you passionate about yoga, wellness, mindfulness, or holistic health? Share your expertise with our community by becoming a guest contributor.</p>
+        
+        <h3>We're Looking For:</h3>
+        <ul>
+          <li>
+            <span class="material-icons">check</span>
+            <span>Original, insightful content that serves our yoga community</span>
+          </li>
+          <li>
+            <span class="material-icons">check</span>
+            <span>Personal experiences and stories that inspire practice</span>
+          </li>
+          <li>
+            <span class="material-icons">check</span>
+            <span>Evidence-based wellness and yoga information</span>
+          </li>
+          <li>
+            <span class="material-icons">check</span>
+            <span>Practical tips and guidance for practitioners of all levels</span>
+          </li>
+        </ul>
+        
+        <a href="#" class="btn btn-primary">Learn About Contributing</a>
+      </div>
+    </div>
+  </div>
+</section> 

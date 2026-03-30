@@ -1,0 +1,394 @@
+/* Hero Section */
+.hero {
+  height: 90vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 800px;
+  padding: 0 2rem;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: white;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* About Section */
+.about-section {
+  background-color: var(--light-green);
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.about-image img {
+  width: 100%;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.about-text h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.about-text p {
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+/* Classes Section */
+.classes-section {
+  background-color: var(--text-light);
+}
+
+.sub-heading {
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+  color: var(--secondary-green);
+}
+
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.class-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease;
+}
+
+.class-card:hover {
+  transform: translateY(-10px);
+}
+
+.class-image {
+  height: 200px;
+  overflow: hidden;
+}
+
+.class-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.class-card:hover .class-image img {
+  transform: scale(1.1);
+}
+
+.class-content {
+  padding: 1.5rem;
+}
+
+.class-content h3 {
+  color: var(--primary-green);
+  margin-bottom: 0.5rem;
+}
+
+.btn-text {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--primary-green);
+  font-weight: 600;
+  position: relative;
+}
+
+.btn-text:after {
+  content: '→';
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.btn-text:hover:after {
+  transform: translateX(5px);
+}
+
+/* Testimonials Section */
+.testimonials-section {
+  background-color: var(--light-caramel);
+  position: relative;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.testimonial-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  position: relative;
+}
+
+.testimonial-card:before {
+  content: '"';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  font-size: 6rem;
+  color: var(--primary-green);
+  opacity: 0.2;
+  font-family: 'Georgia', serif;
+  line-height: 1;
+}
+
+.quote {
+  font-style: italic;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.author {
+  color: var(--primary-green);
+  font-weight: 600;
+}
+
+/* Retreats Section */
+.retreats-section {
+  background-color: var(--text-light);
+}
+
+.retreats-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.retreats-text h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.retreats-text p {
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.retreats-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.retreat-location {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.retreat-location:first-child {
+  grid-column: span 2;
+}
+
+.retreat-location img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.retreat-location:hover img {
+  transform: scale(1.1);
+}
+
+.location-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem;
+  background-color: rgba(71, 51, 34, 0.8);
+  color: white;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Booking Section with Calendly */
+.booking-section {
+  background-color: var(--light-green);
+  padding: 5rem 0;
+}
+
+.booking-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.booking-info h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.booking-info p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  color: var(--text-dark);
+}
+
+.booking-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.benefit-item .material-icons {
+  font-size: 2rem;
+  color: var(--caramel);
+}
+
+.benefit-text h4 {
+  color: var(--primary-green);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.benefit-text p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-medium);
+}
+
+.calendly-container {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  height: 700px;
+  background-color: white;
+}
+
+/* Call to Action Section */
+.cta-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1545389336-cf090694435e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+}
+
+.cta-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .about-content,
+  .retreats-content,
+  .booking-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .calendly-container {
+    height: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-buttons,
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .retreats-images {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  
+  .retreat-location:first-child {
+    grid-column: span 1;
+  }
+  
+  .calendly-container {
+    height: 500px;
+  }
+} 

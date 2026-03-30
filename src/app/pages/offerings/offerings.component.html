@@ -1,0 +1,153 @@
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <h1>Our Classes</h1>
+    <p>Discover practices that nurture your body, mind, and spirit</p>
+  </div>
+</section>
+
+<!-- Introduction Section -->
+<section class="section intro-section">
+  <div class="container">
+    <div class="intro-content">
+      <h2>Find Your Practice</h2>
+      <p>At A - WELL YOGA, we believe that yoga is for everyone. Our diverse range of classes is designed to meet you wherever you are on your journey, whether you're a complete beginner or an experienced practitioner.</p>
+      <p>Each of our classes is led by experienced, certified teachers who bring their unique perspective and expertise to their practice. Explore our offerings below to find the perfect class for your needs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Class Filters (optional for future expansion) -->
+<section class="section filter-section">
+  <div class="container">
+    <div class="filters">
+      <div class="filter-info">
+        <p>All classes are available for drop-in, monthly memberships, or class packages. <a routerLink="/studio">View pricing options</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Classes Grid -->
+<section class="section classes-section">
+  <div class="container">
+    <div class="classes-grid">
+      <div class="class-card" *ngFor="let class of classes" [id]="class.id">
+        <div class="class-image">
+          <img [src]="class.image" [alt]="class.name + ' Class'">
+          <div class="class-level">{{ class.level }}</div>
+        </div>
+        <div class="class-content">
+          <h3>{{ class.name }}</h3>
+          <p class="class-description">{{ class.description }}</p>
+          <div class="benefits">
+            <h4>Benefits:</h4>
+            <ul>
+              <li *ngFor="let benefit of class.benefits">{{ benefit }}</li>
+            </ul>
+          </div>
+          <a routerLink="/studio" class="btn btn-primary">Book a Class</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Private Sessions -->
+<section class="section private-section">
+  <div class="container">
+    <div class="content-grid">
+      <div class="content-text">
+        <h2>Private Sessions</h2>
+        <p>Looking for personalized attention or have specific goals for your practice? Our private sessions offer customized instruction tailored to your unique needs.</p>
+        <p>Whether you're a beginner wanting to establish a solid foundation, an experienced practitioner looking to deepen your practice, or someone with specific physical considerations, our skilled teachers will work with you one-on-one to create a practice that serves you best.</p>
+        <div class="private-features">
+          <div class="feature">
+            <span class="material-icons">person</span>
+            <p>Personalized attention and feedback</p>
+          </div>
+          <div class="feature">
+            <span class="material-icons">schedule</span>
+            <p>Flexible scheduling options</p>
+          </div>
+          <div class="feature">
+            <span class="material-icons">tune</span>
+            <p>Customized practice for your goals</p>
+          </div>
+          <div class="feature">
+            <span class="material-icons">favorite</span>
+            <p>Specialized focus on your needs</p>
+          </div>
+        </div>
+        <a routerLink="/studio" class="btn btn-primary">Book a Private Session</a>
+      </div>
+      <div class="content-image">
+        <img src="https://images.unsplash.com/photo-1599447292761-a145ebd7deca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Private yoga instruction" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Special Workshops Teaser -->
+<section class="section workshops-teaser">
+  <div class="container">
+    <div class="teaser-content">
+      <h2>Explore Our Workshops</h2>
+      <p>Deepen your practice and expand your knowledge through our specialized workshops led by experienced instructors and visiting teachers.</p>
+      <a routerLink="/workshops" class="btn btn-secondary">View Upcoming Workshops</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section faq-section">
+  <div class="container">
+    <h2 class="text-center">Frequently Asked Questions</h2>
+    
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h3>What should I wear to yoga class?</h3>
+        <p>Wear comfortable, breathable clothing that allows you to move freely. Form-fitting clothes are recommended so teachers can see your alignment. No special footwear is needed as yoga is practiced barefoot.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h3>Do I need to bring my own yoga mat?</h3>
+        <p>While we do provide mats for those who need them, we encourage students to bring their own mats for hygiene reasons. We also have mats available for purchase in our small retail area.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h3>I'm a complete beginner. Which class should I start with?</h3>
+        <p>We recommend Gentle Yoga or Hatha Yoga for beginners. These classes focus on foundational poses and proper alignment. Our Beginner Workshops are also excellent for those new to yoga.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h3>How early should I arrive for class?</h3>
+        <p>We recommend arriving 10-15 minutes before class begins, especially for your first visit. This gives you time to check in, set up your space, and center yourself before practice begins.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h3>I have an injury or medical condition. Can I still practice yoga?</h3>
+        <p>Yoga can be adapted for many conditions, but it's important to consult with your healthcare provider first. Let your teacher know about any concerns before class, and consider starting with a private session for personalized guidance.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h3>What's your cancellation policy?</h3>
+        <p>We kindly request that you cancel at least 6 hours before class time to receive a class credit. No-shows or late cancellations will be charged for the class. Emergencies are considered on a case-by-case basis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Begin Your Practice?</h2>
+      <p>Join us on the mat and discover the transformative power of yoga</p>
+      <div class="cta-buttons">
+        <a routerLink="/studio" class="btn btn-primary">Book a Class</a>
+        <a routerLink="/about" class="btn btn-secondary">Learn More About Us</a>
+      </div>
+    </div>
+  </div>
+</section> 

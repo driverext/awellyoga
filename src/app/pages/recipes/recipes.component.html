@@ -1,0 +1,219 @@
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <h1>Yoga-Inspired Recipes</h1>
+    <p>Nourish your body with wholesome, plant-focused recipes to support your practice</p>
+  </div>
+</section>
+
+<!-- Intro Section -->
+<section class="section intro-section">
+  <div class="container">
+    <div class="intro-content">
+      <h2>Food as Medicine</h2>
+      <p>At A - WELL YOGA, we believe that what you eat is just as important as how you move. Our recipes are designed to support your yoga practice, promote overall wellness, and bring mindfulness to your kitchen.</p>
+      <p>From energizing pre-yoga breakfasts to recovery-focused smoothies and Ayurvedic healing meals, these recipes will help you feel your best on and off the mat.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Filter Section -->
+<section class="section filter-section">
+  <div class="container">
+    <div class="filters-container">
+      <div class="filter-group">
+        <label>Filter by Category</label>
+        <div class="category-filters">
+          <button [class.active]="selectedCategory === 'all'" (click)="filterByCategory('all')">All Categories</button>
+          <button *ngFor="let category of categories.slice(1)" 
+                  [class.active]="selectedCategory === category.value"
+                  (click)="filterByCategory(category.value)">
+            {{ category.name }}
+          </button>
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label>Filter by Tag</label>
+        <div class="tag-filters">
+          <button [class.active]="selectedTag === 'all'" (click)="filterByTag('all')">All Tags</button>
+          <button *ngFor="let tag of tags" 
+                  [class.active]="selectedTag === tag.value"
+                  (click)="filterByTag(tag.value)">
+            {{ tag.name }}
+          </button>
+        </div>
+      </div>
+      
+      <button class="btn-reset" (click)="resetFilters()">Reset Filters</button>
+    </div>
+  </div>
+</section>
+
+<!-- Recipes Grid -->
+<section class="section recipes-section">
+  <div class="container">
+    <div class="recipes-grid" *ngIf="filteredRecipes.length > 0">
+      <div class="recipe-card" *ngFor="let recipe of filteredRecipes">
+        <div class="recipe-image">
+          <img [src]="recipe.image" [alt]="recipe.title">
+          <div class="recipe-category">{{ recipe.category }}</div>
+        </div>
+        
+        <div class="recipe-content">
+          <h3 class="recipe-title">{{ recipe.title }}</h3>
+          
+          <div class="recipe-meta">
+            <div class="meta-item">
+              <span class="material-icons">schedule</span>
+              <span>Prep: {{ recipe.prepTime }}</span>
+            </div>
+            <div class="meta-item" *ngIf="recipe.cookTime !== '0 minutes'">
+              <span class="material-icons">timer</span>
+              <span>Cook: {{ recipe.cookTime }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="material-icons">restaurant</span>
+              <span>Serves: {{ recipe.servings }}</span>
+            </div>
+          </div>
+          
+          <p class="recipe-description">{{ recipe.description }}</p>
+          
+          <div class="recipe-tags">
+            <span class="tag" *ngFor="let tag of recipe.tags">{{ tag | titlecase }}</span>
+          </div>
+          
+          <div class="recipe-footer">
+            <div class="recipe-difficulty">
+              <span>Difficulty: {{ recipe.difficulty }}</span>
+            </div>
+            <a [routerLink]="['/recipes', recipe.id]" class="btn-text">View Recipe</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="no-results" *ngIf="filteredRecipes.length === 0">
+      <span class="material-icons">restaurant_menu</span>
+      <h3>No recipes found</h3>
+      <p>No recipes match your current filter selections. Please try different filters or <button (click)="resetFilters()">reset all filters</button>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="section benefits-section alt-bg">
+  <div class="container">
+    <h2 class="text-center">How Food Supports Your Practice</h2>
+    
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <span class="material-icons">fitness_center</span>
+        <h3>Energy & Endurance</h3>
+        <p>Properly fueling your body before and after practice ensures sustained energy and improved endurance during challenging poses.</p>
+      </div>
+      
+      <div class="benefit-card">
+        <span class="material-icons">healing</span>
+        <h3>Recovery & Repair</h3>
+        <p>Post-practice nutrition provides the building blocks your body needs to repair tissues and reduce inflammation.</p>
+      </div>
+      
+      <div class="benefit-card">
+        <span class="material-icons">psychology</span>
+        <h3>Mental Clarity</h3>
+        <p>Brain-supporting foods enhance focus and concentration, deepening your mind-body connection during practice.</p>
+      </div>
+      
+      <div class="benefit-card">
+        <span class="material-icons">spa</span>
+        <h3>Dosha Balance</h3>
+        <p>Ayurvedic principles guide food choices to balance your unique constitution and support holistic wellness.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recipe Submission Section -->
+<section class="section recipe-submission-section">
+  <div class="container">
+    <div class="submission-content">
+      <div class="submission-info">
+        <h2>Share Your Recipe</h2>
+        <p>Have a nourishing, yoga-inspired recipe to share with our community? We'd love to feature it on our site!</p>
+        <p>Whether it's your favorite post-practice smoothie, an Ayurvedic meal, or a healthy treat that supports your wellness journey, we welcome your contributions.</p>
+        
+        <h3>Submission Guidelines:</h3>
+        <ul>
+          <li>Original recipes that support yoga practice or overall wellness</li>
+          <li>Clear, detailed ingredients list and instructions</li>
+          <li>High-quality photo of the finished dish</li>
+          <li>Description of how the recipe benefits yoga practitioners</li>
+        </ul>
+        
+        <a href="#" class="btn btn-primary">Submit Your Recipe</a>
+      </div>
+      
+      <div class="submission-image">
+        <img src="assets/images/recipe-submission.jpg" alt="Share your yoga-inspired recipes" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Nutrition Tips -->
+<section class="section nutrition-tips-section alt-bg">
+  <div class="container">
+    <h2 class="text-center">Nutrition Tips for Yogis</h2>
+    
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">
+          <span class="material-icons">schedule</span>
+        </div>
+        <h3>Timing Your Meals</h3>
+        <p>Try to eat 1-2 hours before practice, focusing on easily digestible foods. After practice, aim to eat within 30-45 minutes to support recovery.</p>
+      </div>
+      
+      <div class="tip-card">
+        <div class="tip-icon">
+          <span class="material-icons">water_drop</span>
+        </div>
+        <h3>Hydration</h3>
+        <p>Maintain hydration throughout the day, especially before heated classes. Herbal teas and coconut water are excellent additions to plain water.</p>
+      </div>
+      
+      <div class="tip-card">
+        <div class="tip-icon">
+          <span class="material-icons">balance</span>
+        </div>
+        <h3>Balancing Your Plate</h3>
+        <p>Aim for meals with complex carbs, plant protein, healthy fats, and plenty of colorful vegetables to support overall wellness and yoga performance.</p>
+      </div>
+      
+      <div class="tip-card">
+        <div class="tip-icon">
+          <span class="material-icons">sentiment_satisfied_alt</span>
+        </div>
+        <h3>Mindful Eating</h3>
+        <p>Bring your yoga practice to the table by eating mindfully, chewing thoroughly, and expressing gratitude for your food.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Get New Recipes in Your Inbox</h2>
+      <p>Subscribe to our newsletter to receive monthly recipe collections, nutrition tips, and seasonal wellness guides</p>
+      
+      <form class="newsletter-form">
+        <input type="email" placeholder="Your email address" required>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section> 

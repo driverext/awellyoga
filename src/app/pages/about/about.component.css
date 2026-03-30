@@ -1,0 +1,367 @@
+/* Page Header */
+.page-header {
+  background-color: var(--primary-green);
+  color: var(--text-light);
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.page-header p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Content Grid Layout */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.content-grid.reverse {
+  grid-template-columns: 1fr 1fr;
+  direction: rtl;
+}
+
+.content-grid.reverse > * {
+  direction: ltr;
+}
+
+.content-text h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.content-text p {
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.content-image img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+/* Section Specific Styles */
+.story-section {
+  background-color: white;
+}
+
+.philosophy-section {
+  background-color: var(--light-green);
+}
+
+.team-section {
+  background-color: white;
+}
+
+.studio-section {
+  background-color: var(--light-green);
+}
+
+.testimonials-section {
+  background-color: var(--light-caramel);
+}
+
+.contact-section {
+  background-color: white;
+}
+
+/* Team Grid */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.team-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-10px);
+}
+
+.team-image {
+  height: 300px;
+  overflow: hidden;
+}
+
+.team-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.team-card:hover .team-image img {
+  transform: scale(1.05);
+}
+
+.team-info {
+  padding: 1.5rem;
+}
+
+.team-info h3 {
+  color: var(--primary-green);
+  margin-bottom: 0.5rem;
+}
+
+.team-title {
+  color: var(--caramel);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Studio Gallery */
+.studio-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 200px);
+  gap: 1rem;
+  margin: 3rem 0;
+}
+
+.gallery-item {
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.gallery-item.large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.1);
+}
+
+/* Studio Features */
+.studio-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.feature {
+  text-align: center;
+  padding: 2rem;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.feature span.material-icons {
+  font-size: 3rem;
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+}
+
+.feature h3 {
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+}
+
+/* Contact Section */
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.contact-info h2 {
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.contact-info address {
+  font-style: normal;
+  margin-bottom: 2rem;
+}
+
+.contact-info address p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-links a {
+  background-color: var(--light-green);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background-color: var(--caramel);
+  transform: translateY(-3px);
+}
+
+.contact-map img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+/* Sub-heading common style */
+.sub-heading {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: var(--secondary-green);
+}
+
+/* Testimonials (re-used from home with modifications) */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.testimonial-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  position: relative;
+}
+
+.testimonial-card:before {
+  content: '"';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  font-size: 6rem;
+  color: var(--primary-green);
+  opacity: 0.2;
+  font-family: 'Georgia', serif;
+  line-height: 1;
+}
+
+.quote {
+  font-style: italic;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.author {
+  color: var(--primary-green);
+  font-weight: 600;
+}
+
+/* CTA Section (re-used from home) */
+.cta-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/images/cta-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+}
+
+.cta-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .content-grid,
+  .content-grid.reverse,
+  .contact-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    direction: ltr;
+  }
+  
+  .studio-gallery {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 200px);
+  }
+  
+  .gallery-item.large {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  
+  .page-header h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .studio-gallery {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 200px);
+  }
+  
+  .gallery-item.large {
+    grid-column: span 1;
+  }
+  
+  .team-grid,
+  .studio-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+} 

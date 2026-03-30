@@ -1,0 +1,275 @@
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <h1>Studio & Pricing</h1>
+    <p>Flexible options to support your yoga journey</p>
+  </div>
+</section>
+
+<!-- Schedule Teaser -->
+<section class="section schedule-teaser">
+  <div class="container">
+    <div class="schedule-content">
+      <div class="schedule-text">
+        <h2>Class Schedule</h2>
+        <p>We offer a variety of classes throughout the week to accommodate your busy lifestyle. From early morning sessions to evening wind-downs, you'll find the perfect time to practice.</p>
+        <div class="schedule-cta">
+          <a href="#" class="btn btn-primary">View Full Schedule</a>
+          <p class="schedule-note">Schedule updated monthly. Classes subject to change.</p>
+        </div>
+      </div>
+      <div class="schedule-image">
+        <img src="https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="Yoga class in session" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Packages -->
+<section class="section pricing-section">
+  <div class="container">
+    <h2 class="text-center">Pricing Options</h2>
+    <p class="text-center sub-heading">Find the perfect plan for your practice and budget</p>
+    
+    <div class="pricing-container" *ngFor="let package of packages">
+      <h3 class="package-type">{{ package.type }}</h3>
+      
+      <div class="pricing-grid">
+        <div class="pricing-card" *ngFor="let option of package.options">
+          <div class="price-header">
+            <h4>{{ option.name }}</h4>
+            <div class="price">{{ option.price }}</div>
+          </div>
+          <p class="price-description">{{ option.description }}</p>
+          <ul class="price-features">
+            <li *ngFor="let feature of option.features">{{ feature }}</li>
+          </ul>
+          <div class="price-action">
+            <a href="#" class="btn btn-primary">Purchase</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Registration Process -->
+<section class="section registration-section">
+  <div class="container">
+    <h2 class="text-center">How to Register</h2>
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Choose Your Package</h3>
+          <p>Select the option that best fits your practice frequency and budget from our pricing options above.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Create an Account</h3>
+          <p>Register online or in-person to create your A - WELL YOGA account for easy booking and management.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Book Your Classes</h3>
+          <p>Reserve your spot in class through our website, mobile app, or by calling the studio.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Enjoy Your Practice</h3>
+          <p>Arrive 10-15 minutes before class to check in, set up your space, and prepare for your session.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Studio Policies -->
+<section class="section policies-section">
+  <div class="container">
+    <h2 class="text-center">Studio Policies</h2>
+    
+    <div class="policies-grid">
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">event_busy</span>
+        </div>
+        <h3>Cancellation Policy</h3>
+        <p>Please cancel at least 6 hours before class time to receive a class credit. No-shows or late cancellations will be charged for the class.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">access_time</span>
+        </div>
+        <h3>Arrival Time</h3>
+        <p>Doors open 15 minutes before class. Please arrive at least 5 minutes early. Late arrivals may not be admitted to class.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">event_available</span>
+        </div>
+        <h3>Reservations</h3>
+        <p>We recommend booking classes in advance to secure your spot. Classes can fill up quickly, especially during peak hours.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">payments</span>
+        </div>
+        <h3>Refunds</h3>
+        <p>All purchases are non-refundable. In special circumstances, credits may be issued at management discretion.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">phone_in_talk</span>
+        </div>
+        <h3>Electronics</h3>
+        <p>Please silence all electronic devices and refrain from using phones in the studio to maintain a peaceful environment.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">sanitizer</span>
+        </div>
+        <h3>Cleanliness</h3>
+        <p>Please clean your mat and any props after use with the provided cleaning supplies. Personal hygiene is appreciated.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Private Sessions -->
+<section class="section private-sessions">
+  <div class="container">
+    <div class="private-content">
+      <div class="private-text">
+        <h2>Private Sessions</h2>
+        <p>Looking for personalized attention? Our private sessions offer one-on-one instruction tailored to your specific needs and goals.</p>
+        <div class="private-pricing">
+          <div class="price-item">
+            <h4>Single Session</h4>
+            <p class="price">$95 (60 min)</p>
+          </div>
+          <div class="price-item">
+            <h4>Package of 5</h4>
+            <p class="price">$425 ($85 each)</p>
+          </div>
+          <div class="price-item">
+            <h4>Package of 10</h4>
+            <p class="price">$800 ($80 each)</p>
+          </div>
+        </div>
+        <a href="#" class="btn btn-primary">Book a Private Session</a>
+      </div>
+      <div class="private-image">
+        <img src="https://images.unsplash.com/photo-1599447292761-a145ebd7deca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Private yoga instruction" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gift Cards Section -->
+<section class="section gift-section">
+  <div class="container">
+    <div class="gift-content">
+      <h2>Give the Gift of Yoga</h2>
+      <p>Share the benefits of yoga with someone special. Our gift cards are available in any amount and can be used for classes, workshops, or merchandise.</p>
+      <a href="#" class="btn btn-secondary">Purchase a Gift Card</a>
+    </div>
+  </div>
+</section>
+
+<!-- Contact/Location Section -->
+<section class="section contact-section">
+  <div class="container">
+    <h2 class="text-center">Visit Our Studio</h2>
+    <div class="contact-content">
+      <div class="contact-map">
+        <img src="https://images.pexels.com/photos/4662950/pexels-photo-4662950.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Map to our studio location" class="img-rounded">
+      </div>
+      <div class="contact-info">
+        <h3>Studio Hours</h3>
+        <ul class="hours-list">
+          <li><span>Monday-Friday:</span> 6:00am - 9:00pm</li>
+          <li><span>Saturday:</span> 8:00am - 7:00pm</li>
+          <li><span>Sunday:</span> 8:00am - 5:00pm</li>
+        </ul>
+        
+        <h3>Location</h3>
+        <address>
+          <p><span class="material-icons">location_on</span> 5055 Otters Den FLorida 32771</p>
+          <p><span class="material-icons">phone</span> (321) 230-8833</p>
+          <p><span class="material-icons">email</span> Arieta.kirk&#64;ucf.edu</p>
+        </address>
+        
+        <p>Free parking available in the dedicated lot behind our building.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Booking Section with Calendly -->
+<section class="booking-section section">
+  <div class="container">
+    <div class="booking-content">
+      <div class="booking-info">
+        <h2>Schedule a Session</h2>
+        <p>Book a spot in one of our upcoming classes or schedule a private session with our instructors. Choose a time that works for you and we'll confirm your booking via email.</p>
+        <div class="booking-benefits">
+          <div class="benefit-item">
+            <span class="material-icons">event_available</span>
+            <div class="benefit-text">
+              <h4>Easy Scheduling</h4>
+              <p>Book your spot in just a few clicks</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <span class="material-icons">notifications</span>
+            <div class="benefit-text">
+              <h4>Instant Confirmations</h4>
+              <p>Receive immediate booking confirmations</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <span class="material-icons">calendar_today</span>
+            <div class="benefit-text">
+              <h4>Calendar Integration</h4>
+              <p>Add your booking directly to your calendar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="calendly-container">
+        <!-- Calendly inline widget begin -->
+        <div class="calendly-inline-widget" data-url="https://calendly.com/arietabk" style="min-width:320px;height:700px;"></div>
+        <!-- Calendly inline widget end -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Begin Your Practice?</h2>
+      <p>Join us on the mat and discover the transformative power of yoga</p>
+      <div class="cta-buttons">
+        <a href="#" class="btn btn-primary">Sign Up Now</a>
+        <a routerLink="/offerings" class="btn btn-secondary">Explore Our Classes</a>
+      </div>
+    </div>
+  </div>
+</section> 
