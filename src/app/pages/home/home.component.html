@@ -4,8 +4,8 @@
     <h1>Find Your Balance with A - WELL YOGA</h1>
     <p>Discover peace, strength, and mindfulness through our transformative yoga practice</p>
     <div class="hero-buttons">
-      <a routerLink="/offerings" class="btn btn-primary">Explore Classes</a>
-      <a routerLink="/about" class="btn btn-secondary">Learn More</a>
+      <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
+      <a routerLink="/offerings" class="btn btn-secondary">Explore Classes</a>
     </div>
   </div>
 </section>
@@ -124,41 +124,43 @@
   </div>
 </section>
 
-<!-- Booking Section with Calendly -->
+<!-- Booking Section -->
 <section class="booking-section section">
   <div class="container">
     <div class="booking-content">
       <div class="booking-info">
-        <h2>Schedule Your First Class</h2>
-        <p>Ready to begin your yoga journey? Book your first class or a free consultation with one of our expert instructors. Choose a time that works for your schedule.</p>
+        <h2>Book with One Clear System</h2>
+        <p>Choose your class date in our schedule, then complete checkout for the event you want. For private sessions, send a direct request.</p>
         <div class="booking-benefits">
           <div class="benefit-item">
             <span class="material-icons">event_available</span>
             <div class="benefit-text">
-              <h4>Easy Scheduling</h4>
-              <p>Book your spot in just a few clicks</p>
+              <h4>Calendar-Based Booking</h4>
+              <p>Pick a date and book directly from that day’s class cards</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-icons">notifications</span>
             <div class="benefit-text">
-              <h4>Instant Confirmations</h4>
-              <p>Receive immediate booking confirmations</p>
+              <h4>Stripe Checkout</h4>
+              <p>Secure payment flow with immediate confirmation from Stripe</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-icons">calendar_today</span>
             <div class="benefit-text">
-              <h4>Calendar Integration</h4>
-              <p>Add your booking directly to your calendar</p>
+              <h4>Private Session Requests</h4>
+              <p>Private sessions are handled separately through direct inquiry</p>
             </div>
           </div>
         </div>
       </div>
-      <div class="calendly-container">
-        <!-- Calendly inline widget begin -->
-        <div class="calendly-inline-widget" data-url="https://calendly.com/arietabk" style="min-width:320px;height:700px;"></div>
-        <!-- Calendly inline widget end -->
+      <div class="booking-actions-card">
+        <h3>Start Here</h3>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
+        <a routerLink="/schedule" class="btn btn-secondary">View Full Schedule</a>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-secondary">Request a Private Session</a>
+        <a routerLink="/workshops" class="btn btn-secondary">Browse Workshops</a>
       </div>
     </div>
   </div>
@@ -171,7 +173,7 @@
       <h2>Begin Your Yoga Journey Today</h2>
       <p>Join our community and discover the transformative power of yoga.</p>
       <div class="cta-buttons">
-        <a routerLink="/studio" class="btn btn-primary">Book a Class</a>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
         <a routerLink="/about" class="btn btn-secondary">Contact Us</a>
       </div>
     </div>

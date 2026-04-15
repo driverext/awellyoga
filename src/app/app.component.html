@@ -2,7 +2,7 @@
   <div class="container">
     <nav>
       <div class="logo">
-        <a routerLink="/home">
+        <a routerLink="/home" (click)="closeMenu()">
           <h1>A - WELL YOGA</h1>
         </a>
       </div>
@@ -10,15 +10,15 @@
         <span class="material-icons">{{ menuOpen ? 'close' : 'menu' }}</span>
     </div>
       <ul class="nav-links" [class.active]="menuOpen">
-        <li><a routerLink="/about" routerLinkActive="active">About</a></li>
-        <li><a routerLink="/offerings" routerLinkActive="active">Offerings</a></li>
-        <li><a routerLink="/studio" routerLinkActive="active">Studio</a></li>
-        <li><a routerLink="/ytt" routerLinkActive="active">YTT</a></li>
-        <li><a routerLink="/workshops" routerLinkActive="active">Workshops</a></li>
-        <li><a routerLink="/retreats" routerLinkActive="active">Retreats</a></li>
-        <li><a routerLink="/recipes" routerLinkActive="active">Recipes</a></li>
-        <li><a routerLink="/blog" routerLinkActive="active">Blog</a></li>
-        <li><a routerLink="/shop" routerLinkActive="active">Shop</a></li>
+        <li><a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a></li>
+        <li><a routerLink="/offerings" routerLinkActive="active" (click)="closeMenu()">Classes</a></li>
+        <li><a routerLink="/schedule" routerLinkActive="active" (click)="closeMenu()">Schedule</a></li>
+        <li><a routerLink="/ytt" routerLinkActive="active" (click)="closeMenu()">YTT</a></li>
+        <li><a routerLink="/workshops" routerLinkActive="active" (click)="closeMenu()">Workshops</a></li>
+        <li><a routerLink="/retreats" routerLinkActive="active" (click)="closeMenu()">Retreats</a></li>
+        <li><a routerLink="/recipes" routerLinkActive="active" (click)="closeMenu()">Recipes</a></li>
+        <li><a routerLink="/blog" routerLinkActive="active" (click)="closeMenu()">Blog</a></li>
+        <li><a routerLink="/shop" routerLinkActive="active" (click)="closeMenu()">Shop</a></li>
       </ul>
     </nav>
   </div>
@@ -45,9 +45,10 @@
         <h3>Quick Links</h3>
         <ul>
           <li><a routerLink="/about">About Us</a></li>
-          <li><a routerLink="/offerings">Our Classes</a></li>
+          <li><a routerLink="/offerings">Classes</a></li>
+          <li><a routerLink="/schedule">Schedule</a></li>
           <li><a routerLink="/retreats">Retreats</a></li>
-          <li><a routerLink="/blog">Blog</a></li>
+          <li><a routerLink="/workshops">Workshops</a></li>
         </ul>
       </div>
       

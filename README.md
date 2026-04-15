@@ -106,3 +106,82 @@ Potential future enhancements include:
 - Payment processing for shop items
 - Admin dashboard for content management
 - Integration with calendar systems
+
+## Sanity CMS Integration
+
+This project now supports Sanity as a headless CMS while keeping the Angular frontend.
+
+### Phase 1: CMS architecture (implemented)
+
+Content model (editor-friendly):
+- `Site Settings` (singleton): global contact, social links, SEO defaults.
+- `Homepage` (singleton): hero and primary intro content.
+- `About Page` (singleton): headings and section copy.
+- `Instructor` (repeatable): bio cards with ordering and active toggle.
+- `Studio Page` (singleton): page header, schedule teaser, studio hours.
+- `Retreat or Event` (repeatable): retreats/workshops/events.
+- `Announcement` (repeatable): active date-based announcements.
+
+### Phase 2: Sanity setup (implemented)
+
+Sanity Studio is in `sanity/` with all schemas and structure pre-configured.
+
+1. Install studio dependencies:
+```bash
+npm run cms:install
+```
+2. Add studio env file:
+```bash
+cp sanity/.env.example sanity/.env
+```
+3. Fill in:
+- `SANITY_STUDIO_PROJECT_ID`
+- `SANITY_STUDIO_DATASET`
+4. Run CMS locally:
+```bash
+npm run cms:dev
+```
+
+### Phase 3: Angular integration (implemented for initial migration)
+
+The following areas are CMS-driven with fallback content:
+- About page instructor section (`/about`)
+- Studio page header + schedule section + studio hours (`/studio`)
+- Active announcements on studio page
+
+Fallback behavior:
+- If Sanity is not configured or empty, existing hardcoded content is shown.
+
+### Phase 4: Editor experience (implemented)
+
+Editor usability features:
+- Singletons for one-off pages (`Site Settings`, `Homepage`, `About Page`, `Studio Page`)
+- Repeatable content types for instructors, announcements, and events
+- Clear labels and non-technical field names
+- Display ordering and visibility toggles
+
+## Environment Setup For Angular
+
+Set Sanity values in:
+- `src/environments/environment.ts`
+- `src/environments/environment.prod.ts`
+
+Replace placeholder values:
+- `sanity.projectId`
+- `sanity.dataset`
+- keep/update `sanity.apiVersion`
+
+## Safe Migration Order
+
+1. Configure Sanity project + dataset.
+2. Run studio and create singleton docs:
+  - Site Settings
+  - Homepage
+  - About Page
+  - Studio Page
+3. Create instructors (set display order and active flags).
+4. Create announcements and set date windows.
+5. Verify `/about` and `/studio` render CMS data.
+6. Deploy Angular app.
+7. Deploy Sanity Studio.
+8. Gradually migrate remaining pages (home, retreats/events, etc.) once validated.

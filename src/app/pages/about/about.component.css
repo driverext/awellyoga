@@ -103,14 +103,16 @@
   overflow: hidden;
 }
 
-.team-image img {
+.instructor-photo {
   width: 100%;
   height: 100%;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
+  display: block;
   transition: transform 0.5s ease;
 }
 
-.team-card:hover .team-image img {
+.team-card:hover .instructor-photo {
   transform: scale(1.05);
 }
 
@@ -132,8 +134,9 @@
 /* Studio Gallery */
 .studio-gallery {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 200px);
+  grid-template-columns: 2fr 1fr;
+  grid-template-areas:
+    "space-main space-2";
   gap: 1rem;
   margin: 3rem 0;
 }
@@ -145,15 +148,40 @@
 }
 
 .gallery-item.large {
-  grid-column: span 2;
-  grid-row: span 2;
+  aspect-ratio: 16 / 10;
+}
+
+.gallery-item.space-main {
+  grid-area: space-main;
+}
+
+.gallery-item.space-2 {
+  grid-area: space-2;
+}
+
+.gallery-item.portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.gallery-item.space-2 {
+  aspect-ratio: 4 / 5;
 }
 
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
   transition: transform 0.5s ease;
+}
+
+.gallery-item.portrait img {
+  object-position: center top;
+}
+
+.gallery-item.space-2 img {
+  object-position: center 62%;
 }
 
 .gallery-item:hover img {
@@ -234,7 +262,12 @@
 
 .contact-map img {
   width: 100%;
+  max-width: 460px;
+  max-height: 320px;
   height: auto;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
 }
@@ -328,12 +361,8 @@
   
   .studio-gallery {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(3, 200px);
-  }
-  
-  .gallery-item.large {
-    grid-column: span 2;
-    grid-row: span 1;
+    grid-template-areas:
+      "space-main space-2";
   }
   
   .page-header h1 {
@@ -349,11 +378,15 @@
   
   .studio-gallery {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 200px);
+    grid-template-areas:
+      "space-main"
+      "space-2";
+    grid-template-rows: auto;
   }
   
-  .gallery-item.large {
-    grid-column: span 1;
+  .gallery-item.large,
+  .gallery-item.portrait {
+    aspect-ratio: 4 / 3;
   }
   
   .team-grid,

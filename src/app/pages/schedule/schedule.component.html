@@ -1,0 +1,403 @@
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <h1>{{ pageTitle }}</h1>
+    <p>{{ pageSubtitle }}</p>
+  </div>
+</section>
+
+<section class="section announcements-section" *ngIf="announcements.length > 0">
+  <div class="container">
+    <div class="announcement-list">
+      <article
+        class="announcement-card"
+        *ngFor="let announcement of announcements"
+        [class.warning]="announcement.level === 'warning'"
+        [class.success]="announcement.level === 'success'"
+      >
+        <h3>{{ announcement.title }}</h3>
+        <p>{{ announcement.message }}</p>
+        <a
+          *ngIf="announcement.linkLabel && announcement.linkUrl"
+          [href]="announcement.linkUrl"
+          class="btn-text"
+        >
+          {{ announcement.linkLabel }}
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Schedule Teaser -->
+<section class="section schedule-teaser">
+  <div class="container">
+    <div class="schedule-content">
+      <div class="schedule-text">
+        <h2>{{ scheduleHeading }}</h2>
+        <p>{{ scheduleBody }}</p>
+        <div class="schedule-cta">
+          <a [href]="scheduleButtonUrl" class="btn btn-primary">{{ scheduleButtonLabel }}</a>
+          <p class="schedule-note">{{ scheduleNote }}</p>
+        </div>
+      </div>
+      <div class="schedule-image">
+        <img [src]="scheduleImageUrl" [alt]="scheduleImageAlt" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section calendar-section" id="calendar">
+  <div class="container">
+    <div class="booking-steps-card">
+      <h3>How To Book</h3>
+      <p>1. Click a date on the calendar.</p>
+      <p>2. Choose your class from that day.</p>
+      <p>3. Click <strong>Book</strong> and complete checkout.</p>
+    </div>
+
+    <h2 class="text-center">Find a Class</h2>
+    <p class="text-center sub-heading">Click a date to view everything happening that day</p>
+    <p class="text-center pricing-flow-message" *ngIf="pricingFlowMessage">{{ pricingFlowMessage }}</p>
+
+    <div class="calendar-shell">
+      <div class="calendar-toolbar">
+        <button type="button" class="month-nav" (click)="previousMonth()">Previous</button>
+        <h3>{{ monthLabel() }}</h3>
+        <button type="button" class="month-nav" (click)="nextMonth()">Next</button>
+      </div>
+
+      <div class="calendar-grid-header">
+        <span *ngFor="let day of weekdayLabels">{{ day }}</span>
+      </div>
+
+      <div class="calendar-grid">
+        <button
+          type="button"
+          class="calendar-day"
+          *ngFor="let day of calendarDays"
+          [class.outside-month]="!day.inCurrentMonth"
+          [class.selected]="isSelected(day)"
+          [class.has-events]="day.eventCount > 0"
+          (click)="selectDate(day)"
+        >
+          <span class="day-number">{{ day.date | date: 'd' }}</span>
+          <span class="day-events" *ngIf="day.eventCount > 0">{{ day.eventCount }} event<span *ngIf="day.eventCount > 1">s</span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="day-events-panel">
+      <h3>{{ selectedDateHeading() }}</h3>
+      <div *ngIf="selectedDateEvents().length > 0; else noEventsForDay">
+        <article class="calendar-event-card" *ngFor="let event of selectedDateEvents()">
+          <div class="event-card-main">
+            <div class="event-card-details">
+              <div class="event-badge">{{ event.eventType }}</div>
+              <h4>{{ event.title }}</h4>
+              <p class="event-time">
+                {{ event.startDate | date: 'h:mm a' }}
+                <span *ngIf="event.endDate"> - {{ event.endDate | date: 'h:mm a' }}</span>
+              </p>
+              <p class="event-location" *ngIf="event.location">{{ event.location }}</p>
+              <p class="event-price" *ngIf="event.priceLabel">{{ event.priceLabel }}</p>
+              <p class="event-spots" *ngIf="spotsRemaining(event) !== null">
+                <span *ngIf="!isEventFull(event)">{{ spotsRemaining(event) }} spots left</span>
+                <span *ngIf="isEventFull(event)" class="event-full-text">Class Full</span>
+              </p>
+              <p *ngIf="event.summary">{{ event.summary }}</p>
+            </div>
+            <div class="event-card-actions">
+              <button type="button" class="btn btn-primary" [disabled]="isEventFull(event)" [class.btn-disabled]="isEventFull(event)" (click)="openBooking(event)">
+                {{ bookingButtonLabel(event) }}
+              </button>
+            </div>
+          </div>
+          <a *ngIf="event.ctaLabel && event.ctaUrl" [href]="event.ctaUrl" class="btn btn-text">
+            {{ event.ctaLabel }}
+          </a>
+        </article>
+      </div>
+      <ng-template #noEventsForDay>
+        <div class="calendar-empty">
+          <p>No events on this date. Pick another day.</p>
+        </div>
+      </ng-template>
+    </div>
+
+  </div>
+</section>
+
+<div class="booking-modal-overlay" *ngIf="bookingEvent" (click)="closeBookingModal()">
+  <section class="booking-modal" (click)="$event.stopPropagation()">
+    <h3>Book {{ bookingEvent.title }}</h3>
+    <p>Enter your email to continue to Stripe checkout.</p>
+    <form (ngSubmit)="submitBooking()">
+      <label for="booking-email">Email</label>
+      <input
+        id="booking-email"
+        name="bookingEmail"
+        type="email"
+        [(ngModel)]="bookingEmail"
+        placeholder="you@example.com"
+        required
+      >
+      <p class="booking-error" *ngIf="bookingError">{{ bookingError }}</p>
+      <div class="booking-modal-actions">
+        <button type="button" class="btn btn-secondary" [disabled]="bookingLoading" (click)="closeBookingModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="bookingLoading">
+          {{ bookingLoading ? 'Starting Checkout...' : 'Continue to Payment' }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<!-- Pricing Packages -->
+<section class="section pricing-section">
+  <div class="container">
+    <h2 class="text-center">Pricing Options</h2>
+    <p class="text-center sub-heading">Single visits, class packs, and memberships with dedicated checkout paths</p>
+
+    <div class="pricing-grid pricing-grid-consolidated">
+      <article class="pricing-card" *ngFor="let group of pricingGroups">
+        <div class="price-header">
+          <h4>{{ group.title }}</h4>
+        </div>
+        <p class="price-description">{{ group.subtitle }}</p>
+        <ul class="price-features">
+          <li *ngFor="let item of group.items">{{ item }}</li>
+        </ul>
+        <div class="price-action">
+          <button type="button" class="btn btn-primary" (click)="purchasePricingGroup(group.title)">
+            {{ group.ctaLabel }}
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Registration Process -->
+<section class="section registration-section">
+  <div class="container">
+    <h2 class="text-center">How to Register</h2>
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Choose Your Plan Type</h3>
+          <p>Pick Single Visit, Class Pack, or Membership from pricing options.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Use The Correct Checkout Flow</h3>
+          <p>Class packs and memberships use dedicated checkout links. Single visits can book directly from class cards.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Select A Date</h3>
+          <p>Use the calendar to find the day and class time you want.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Enjoy Your Practice</h3>
+          <p>Arrive 10-15 minutes before class to check in, set up your space, and prepare for your session.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Studio Policies -->
+<section class="section policies-section">
+  <div class="container">
+    <h2 class="text-center">Studio Policies</h2>
+    
+    <div class="policies-grid">
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">event_busy</span>
+        </div>
+        <h3>Cancellation Policy</h3>
+        <p>Please cancel at least 6 hours before class time to receive a class credit. No-shows or late cancellations will be charged for the class.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">access_time</span>
+        </div>
+        <h3>Arrival Time</h3>
+        <p>Doors open 15 minutes before class. Please arrive at least 5 minutes early. Late arrivals may not be admitted to class.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">event_available</span>
+        </div>
+        <h3>Reservations</h3>
+        <p>We recommend booking classes in advance to secure your spot. Classes can fill up quickly, especially during peak hours.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">payments</span>
+        </div>
+        <h3>Refunds</h3>
+        <p>All purchases are non-refundable. In special circumstances, credits may be issued at management discretion.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">phone_in_talk</span>
+        </div>
+        <h3>Electronics</h3>
+        <p>Please silence all electronic devices and refrain from using phones in the studio to maintain a peaceful environment.</p>
+      </div>
+      
+      <div class="policy-card">
+        <div class="policy-icon">
+          <span class="material-icons">sanitizer</span>
+        </div>
+        <h3>Cleanliness</h3>
+        <p>Please clean your mat and any props after use with the provided cleaning supplies. Personal hygiene is appreciated.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Private Sessions -->
+<section class="section private-sessions">
+  <div class="container">
+    <div class="private-content">
+      <div class="private-text">
+        <h2>Private Sessions</h2>
+        <p>Looking for personalized attention? Our private sessions offer one-on-one instruction tailored to your specific needs and goals.</p>
+        <div class="private-pricing">
+          <div class="price-item">
+            <h4>Single Session</h4>
+            <p class="price">$95 (60 min)</p>
+          </div>
+          <div class="price-item">
+            <h4>Package of 5</h4>
+            <p class="price">$425 ($85 each)</p>
+          </div>
+          <div class="price-item">
+            <h4>Package of 10</h4>
+            <p class="price">$800 ($80 each)</p>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="bookPrivateSession()">Book a Private Session</button>
+      </div>
+      <div class="private-image">
+        <img src="https://images.unsplash.com/photo-1599447292761-a145ebd7deca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Private yoga instruction" class="img-rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gift Cards Section -->
+<section class="section gift-section">
+  <div class="container">
+      <div class="gift-content">
+        <h2>Give the Gift of Yoga</h2>
+        <p>Share the benefits of yoga with someone special. Our gift cards are available in any amount and can be used for classes, workshops, or merchandise.</p>
+      <button type="button" class="btn btn-secondary" (click)="purchaseGiftCard()">Purchase a Gift Card</button>
+      </div>
+    </div>
+</section>
+
+<!-- Contact/Location Section -->
+<section class="section contact-section">
+  <div class="container">
+    <h2 class="text-center">Visit Our Studio</h2>
+    <div class="contact-content">
+      <div class="contact-map">
+        <img src="https://images.pexels.com/photos/4662950/pexels-photo-4662950.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Map to our studio location" class="img-rounded">
+      </div>
+      <div class="contact-info">
+        <h3>Studio Hours</h3>
+        <ul class="hours-list">
+          <li *ngFor="let entry of studioHours">
+            <span>{{ entry.label }}:</span> {{ entry.hours }}
+          </li>
+        </ul>
+        
+        <h3>Location</h3>
+        <address>
+          <p><span class="material-icons">location_on</span> 5055 Otters Den FLorida 32771</p>
+          <p><span class="material-icons">phone</span> (321) 230-8833</p>
+          <p><span class="material-icons">email</span> Arieta.kirk&#64;ucf.edu</p>
+        </address>
+        
+        <p>Free parking available in the dedicated lot behind our building.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Booking Section -->
+<section class="booking-section section">
+  <div class="container">
+    <div class="booking-content">
+      <div class="booking-info">
+        <h2>Organized Booking System</h2>
+        <p>All class and event bookings now happen directly from this schedule calendar. Private sessions are handled through direct inquiry.</p>
+        <div class="booking-benefits">
+          <div class="benefit-item">
+            <span class="material-icons">event_available</span>
+            <div class="benefit-text">
+              <h4>Click Date, Then Book</h4>
+              <p>Choose a date, open an event card, and click Book</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <span class="material-icons">notifications</span>
+            <div class="benefit-text">
+              <h4>Stripe-Powered Payments</h4>
+              <p>Each event can use its own checkout link managed in CMS</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <span class="material-icons">calendar_today</span>
+            <div class="benefit-text">
+              <h4>One Source of Truth</h4>
+              <p>Schedule, events, and announcements stay in one system</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="booking-actions-card">
+        <h3>Quick Actions</h3>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
+        <button type="button" class="btn btn-secondary" (click)="bookPrivateSession()">Request a Private Session</button>
+        <a routerLink="/workshops" class="btn btn-secondary">Browse Workshops</a>
+        <a routerLink="/retreats" class="btn btn-secondary">View Retreats</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Begin Your Practice?</h2>
+      <p>Join us on the mat and discover the transformative power of yoga</p>
+      <div class="cta-buttons">
+        <button type="button" class="btn btn-primary" (click)="signUpNow()">Sign Up Now</button>
+        <a routerLink="/offerings" class="btn btn-secondary">Explore Our Classes</a>
+      </div>
+    </div>
+  </div>
+</section> 

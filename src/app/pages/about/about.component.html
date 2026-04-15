@@ -17,7 +17,7 @@
         <p>Our name, A - WELL YOGA, represents our belief that yoga is a pathway to wellness in all aspects of life - physical, mental, emotional, and spiritual.</p>
       </div>
       <div class="content-image">
-        <img src="https://images.unsplash.com/photo-1599447292761-a145ebd7deca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Our yoga studio journey" class="img-rounded">
+        <img src="/assets/AWELLYOGA-LOGO.jpg" alt="Our yoga studio journey" class="img-rounded">
       </div>
     </div>
   </div>
@@ -28,7 +28,7 @@
   <div class="container">
     <div class="content-grid reverse">
       <div class="content-image">
-        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="Yoga philosophy in practice" class="img-rounded">
+        <img src="/assets/philosophy.jpg" alt="Yoga philosophy in practice" class="img-rounded">
       </div>
       <div class="content-text">
         <h2>Our Philosophy</h2>
@@ -43,52 +43,22 @@
 <!-- Our Team Section -->
 <section class="section team-section">
   <div class="container">
-    <h2 class="text-center">Meet Our Team</h2>
-    <p class="text-center sub-heading">Experienced teachers dedicated to guiding your practice</p>
+    <h2 class="text-center">{{ teamSectionHeading }}</h2>
+    <p class="text-center sub-heading">{{ teamSectionSubheading }}</p>
     
     <div class="team-grid">
-      <div class="team-card">
-        <div class="founder-info">
-          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1220&q=80" alt="Arieta Berisha Kirk - Founder & Lead Instructor">
-          <div class="founder-text">
-            <h3>Arieta Berisha Kirk</h3>
-            <p class="role">Founder & Lead Instructor</p>
-            <p>Arieta Berisha Kirk is an internationally recognized yoga educator, somatic guide, NBHWC-certified coach, and MBSR practitioner with over 6,500 teaching hours. For more than 15 years, she has led yoga teacher trainings, transformational retreats, workshops, and large-scale events for corporations and communities across the globe.</p>
-            <p>Blending neuroscience, ancient ritual, and embodied wisdom, Arieta creates deeply transformative spaces that feel both sacred and real. Her trauma-informed approach is rooted in nervous system attunement, presence, and soul-level healing—guiding others not just to practice, but to remember who they are.</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="team-card">
+      <div class="team-card" *ngFor="let instructor of instructors">
         <div class="team-image">
-          <img src="https://images.pexels.com/photos/4057042/pexels-photo-4057042.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Michael Chen - Yin & Restorative Yoga">
+          <img
+            [src]="instructor.imageUrl"
+            [alt]="instructor.photoAlt || instructor.name"
+            class="instructor-photo"
+          >
         </div>
         <div class="team-info">
-          <h3>Michael Chen</h3>
-          <p class="team-title">Yin & Restorative Yoga</p>
-          <p>Michael's gentle approach creates a nurturing space for deep relaxation and release. His classes focus on mindfulness and healing.</p>
-        </div>
-      </div>
-      
-      <div class="team-card">
-        <div class="team-image">
-          <img src="https://images.pexels.com/photos/6787201/pexels-photo-6787201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Elena Rodriguez - Ashtanga & Power Yoga">
-        </div>
-        <div class="team-info">
-          <h3>Elena Rodriguez</h3>
-          <p class="team-title">Ashtanga & Power Yoga</p>
-          <p>Elena's dynamic teaching style challenges students to discover their strength while maintaining alignment and breath awareness.</p>
-        </div>
-      </div>
-      
-      <div class="team-card">
-        <div class="team-image">
-          <img src="https://images.unsplash.com/photo-1552286450-4a669f880062?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" alt="James Wilson - Meditation & Yoga Philosophy">
-        </div>
-        <div class="team-info">
-          <h3>James Wilson</h3>
-          <p class="team-title">Meditation & Yoga Philosophy</p>
-          <p>James brings ancient wisdom to modern practice, guiding students through meditation and exploring the philosophical aspects of yoga.</p>
+          <h3>{{ instructor.name }}</h3>
+          <p class="team-title">{{ instructor.title }}</p>
+          <p *ngFor="let paragraph of instructor.bioParagraphs">{{ paragraph }}</p>
         </div>
       </div>
     </div>
@@ -102,17 +72,11 @@
     <p class="text-center sub-heading">A sanctuary for practice and community</p>
     
     <div class="studio-gallery">
-      <div class="gallery-item large">
-        <img src="https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="Our main yoga studio space">
+      <div class="gallery-item large space-main">
+        <img src="/assets/space1.jpg" alt="Our main yoga studio space">
       </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Intimate practice room">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1507914997-8eadf89b1bcc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Community lounge area">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1593810450967-f9c55e89eaa7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Outdoor yoga garden">
+      <div class="gallery-item portrait space-2">
+        <img src="/assets/space2.jpg" alt="Intimate practice room">
       </div>
     </div>
     
@@ -150,18 +114,22 @@
     <h2 class="text-center">Community Voices</h2>
     <div class="testimonials-grid">
       <div class="testimonial-card">
-        <div class="quote">"Finding A - WELL YOGA was like coming home. The teachers create such a welcoming environment, and I've grown so much in my practice here."</div>
-        <div class="author">- Jamie K.</div>
+        <div class="quote">Arieta is a yogi of guiding light, her passion, dedication, guidance and grace provide a door for one to arrive in the moment with pure Bliss and joy for life and breath. So incredibly grateful to experience all her wisdom and passion sculpting me to be a brighter most lovable human, thank you all your positive support and presence</div>
+        <div class="author">- Brett S.</div>
       </div>
       
       <div class="testimonial-card">
-        <div class="quote">"I appreciate the balance of physical challenge and spiritual wisdom in every class. This studio stands out because they truly embody yoga as a lifestyle."</div>
-        <div class="author">- Priya S.</div>
+        <div class="quote">I joined Arieta’s yoga class in 2025. Her classes have made such a positive impact in my personal life by helping me cope and manage external factors such as stress and physical mobility. Arieta’s style of teaching is incredible. She has an innate ability to connect with others and help her class participants feel comfortable while adopting a positive outlook on life.
+
+I admire her work ethic, dedication and professionalism. She goes above and beyond what is expected of her in class. I hope that she has more opportunities to fulfill her mission and continue to reach people in an impactful manner.</div>
+        <div class="author">- Lucila F.</div>
       </div>
       
       <div class="testimonial-card">
-        <div class="quote">"As someone new to yoga, I was intimidated at first, but the supportive community here made me feel like I belonged from day one."</div>
-        <div class="author">- Thomas R.</div>
+        <div class="quote">Since joining Arieta’s therapeutic yoga sessions, I feel more connected to my body, my breath, and my mind. I can recognize my emotions–observe them, appreciate them, and begin to understand the simplicity of life.
+
+Thank you for holding space with such kindness and for sharing your knowledge with so much passion.</div>
+        <div class="author">- Paola O.</div>
       </div>
     </div>
   </div>
@@ -174,7 +142,7 @@
       <div class="contact-info">
         <h2>Visit Us</h2>
         <address>
-          <p><span class="material-icons">location_on</span> 5055 Otters Den Trl Sanford, Florida 32771</p>
+          <p><span class="material-icons">location_on</span> 214 Hickman Dr, Sanford, FL 32771</p>
           <p><span class="material-icons">phone</span> (321) 230-8833</p>
           <p><span class="material-icons">email</span> info&#64;awellyoga.com</p>
         </address>
@@ -185,7 +153,7 @@
         </div>
       </div>
       <div class="contact-map">
-        <img src="/assets/arieta8.jpg" alt="Map to our studio location" class="img-rounded">
+        <img src="/assets/visitus.jpg" alt="Map to our studio location" class="img-rounded">
       </div>
     </div>
   </div>
@@ -198,7 +166,7 @@
       <h2>Begin Your Yoga Journey With Us</h2>
       <p>Take the first step toward wellness and join our supportive community</p>
       <div class="cta-buttons">
-        <a routerLink="/studio" class="btn btn-primary">Book a Class</a>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
         <a routerLink="/offerings" class="btn btn-secondary">Explore Our Classes</a>
       </div>
     </div>

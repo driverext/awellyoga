@@ -40,3 +40,11 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Local CMS generated/runtime files
+sanity/.sanity/
+sanity/awell-yoga/.sanity/
+
+# Local environment files
+sanity/.env
+sanity/awell-yoga/.env

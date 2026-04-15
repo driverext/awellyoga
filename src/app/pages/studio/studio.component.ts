@@ -1,6 +1,14 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
+import {
+  CmsAnnouncement,
+  CmsEvent,
+  CmsStudioHour,
+  CmsStudioPage
+} from '../../services/cms/cms.models';
+import { SanityContentService } from '../../services/cms/sanity-content.service';
 
 @Component({
   selector: 'app-studio',
@@ -9,7 +17,29 @@ import { RouterLink } from '@angular/router';
   templateUrl: './studio.component.html',
   styleUrls: ['./studio.component.css']
 })
-export class StudioComponent implements OnInit, AfterViewInit {
+export class StudioComponent implements OnInit, OnDestroy {
+  pageTitle = 'Schedule & Pricing';
+  pageSubtitle = 'Flexible options to support your yoga journey';
+  scheduleHeading = 'Class Schedule';
+  scheduleBody =
+    "We offer a variety of classes throughout the week to accommodate your busy lifestyle. From early morning sessions to evening wind-downs, you'll find the perfect time to practice.";
+  scheduleButtonLabel = 'View Full Schedule';
+  scheduleButtonUrl = '/schedule#calendar';
+  scheduleNote = 'Schedule updated monthly. Classes subject to change.';
+  scheduleImageUrl =
+    'https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80';
+  scheduleImageAlt = 'Yoga class in session';
+  studioHours: CmsStudioHour[] = [
+    { label: 'Monday-Friday', hours: '6:00am - 9:00pm' },
+    { label: 'Saturday', hours: '8:00am - 7:00pm' },
+    { label: 'Sunday', hours: '8:00am - 5:00pm' }
+  ];
+  announcements: CmsAnnouncement[] = [];
+  events: CmsEvent[] = [];
+  private readonly subscriptions = new Subscription();
+
+  constructor(private cmsContent: SanityContentService) {}
+
   packages = [
     {
       type: 'Drop-In',
@@ -106,24 +136,41 @@ export class StudioComponent implements OnInit, AfterViewInit {
   ];
   
   ngOnInit() {
-    // Initialize component
+    this.subscriptions.add(
+      this.cmsContent.getStudioPage().subscribe((content) => {
+        if (content) {
+          this.applyStudioPageContent(content);
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      this.cmsContent.getActiveAnnouncements(3).subscribe((announcements) => {
+        this.announcements = announcements;
+      })
+    );
+
+    this.subscriptions.add(
+      this.cmsContent.getUpcomingEvents(50).subscribe((events) => {
+        this.events = events;
+      })
+    );
   }
   
-  ngAfterViewInit() {
-    // Load Calendly script
-    this.loadCalendlyScript();
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
-  
-  // Load Calendly script dynamically
-  loadCalendlyScript() {
-    // Check if script is already loaded
-    if (!document.getElementById('calendly-script')) {
-      const script = document.createElement('script');
-      script.id = 'calendly-script';
-      script.type = 'text/javascript';
-      script.src = 'https://assets.calendly.com/assets/external/widget.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
+
+  private applyStudioPageContent(content: CmsStudioPage) {
+    this.pageTitle = content.pageTitle || this.pageTitle;
+    this.pageSubtitle = content.pageSubtitle || this.pageSubtitle;
+    this.scheduleHeading = content.scheduleHeading || this.scheduleHeading;
+    this.scheduleBody = content.scheduleBody || this.scheduleBody;
+    this.scheduleButtonLabel = content.scheduleButtonLabel || this.scheduleButtonLabel;
+    this.scheduleButtonUrl = content.scheduleButtonUrl || this.scheduleButtonUrl;
+    this.scheduleNote = content.scheduleNote || this.scheduleNote;
+    this.scheduleImageUrl = content.scheduleImageUrl || this.scheduleImageUrl;
+    this.scheduleImageAlt = content.scheduleImageAlt || this.scheduleImageAlt;
+    this.studioHours = content.studioHours?.length ? content.studioHours : this.studioHours;
   }
-} 
+}

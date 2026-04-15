@@ -19,6 +19,43 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+/* Announcements */
+.announcements-section {
+  background-color: #fff8e8;
+  padding: 2.5rem 0 1.5rem;
+}
+
+.announcement-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.announcement-card {
+  background-color: white;
+  border-left: 4px solid var(--caramel);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 1.2rem;
+}
+
+.announcement-card.warning {
+  border-left-color: #b25a00;
+}
+
+.announcement-card.success {
+  border-left-color: #3c7a3f;
+}
+
+.announcement-card h3 {
+  margin-bottom: 0.5rem;
+  color: var(--primary-green);
+}
+
+.announcement-card p {
+  margin-bottom: 0.75rem;
+}
+
 /* Schedule Teaser Section */
 .schedule-teaser {
   background-color: white;
@@ -52,6 +89,63 @@
   height: auto;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+}
+
+/* Calendar */
+.calendar-section {
+  background-color: #fff;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.calendar-event-card {
+  background: #fff;
+  border-radius: var(--border-radius);
+  border: 1px solid #e8dec9;
+  box-shadow: var(--box-shadow);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.event-badge {
+  align-self: flex-start;
+  background: var(--light-green);
+  color: var(--primary-green);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.calendar-event-card h3 {
+  color: var(--primary-green);
+  margin: 0;
+}
+
+.event-time {
+  color: var(--secondary-green);
+  font-weight: 600;
+  margin: 0;
+}
+
+.event-location {
+  margin: 0;
+  font-style: italic;
+}
+
+.calendar-empty {
+  margin-top: 1.5rem;
+  background: #fff;
+  border: 1px dashed #ccbfa5;
+  border-radius: var(--border-radius);
+  padding: 1rem 1.25rem;
 }
 
 /* Pricing Section */
@@ -425,6 +519,21 @@ address p {
   box-shadow: var(--box-shadow);
   height: 700px;
   background-color: white;
+}
+
+.booking-actions-card {
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  background-color: white;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.booking-actions-card h3 {
+  color: var(--primary-green);
+  margin-bottom: 0.5rem;
 }
 
 /* CTA Section */

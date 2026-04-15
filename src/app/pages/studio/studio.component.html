@@ -1,8 +1,31 @@
 <!-- Page Header -->
 <section class="page-header">
   <div class="container">
-    <h1>Studio & Pricing</h1>
-    <p>Flexible options to support your yoga journey</p>
+    <h1>{{ pageTitle }}</h1>
+    <p>{{ pageSubtitle }}</p>
+  </div>
+</section>
+
+<section class="section announcements-section" *ngIf="announcements.length > 0">
+  <div class="container">
+    <div class="announcement-list">
+      <article
+        class="announcement-card"
+        *ngFor="let announcement of announcements"
+        [class.warning]="announcement.level === 'warning'"
+        [class.success]="announcement.level === 'success'"
+      >
+        <h3>{{ announcement.title }}</h3>
+        <p>{{ announcement.message }}</p>
+        <a
+          *ngIf="announcement.linkLabel && announcement.linkUrl"
+          [href]="announcement.linkUrl"
+          class="btn-text"
+        >
+          {{ announcement.linkLabel }}
+        </a>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -11,17 +34,48 @@
   <div class="container">
     <div class="schedule-content">
       <div class="schedule-text">
-        <h2>Class Schedule</h2>
-        <p>We offer a variety of classes throughout the week to accommodate your busy lifestyle. From early morning sessions to evening wind-downs, you'll find the perfect time to practice.</p>
+        <h2>{{ scheduleHeading }}</h2>
+        <p>{{ scheduleBody }}</p>
         <div class="schedule-cta">
-          <a href="#" class="btn btn-primary">View Full Schedule</a>
-          <p class="schedule-note">Schedule updated monthly. Classes subject to change.</p>
+          <a [href]="scheduleButtonUrl" class="btn btn-primary">{{ scheduleButtonLabel }}</a>
+          <p class="schedule-note">{{ scheduleNote }}</p>
         </div>
       </div>
       <div class="schedule-image">
-        <img src="https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="Yoga class in session" class="img-rounded">
+        <img [src]="scheduleImageUrl" [alt]="scheduleImageAlt" class="img-rounded">
       </div>
     </div>
+  </div>
+</section>
+
+<section class="section calendar-section" id="calendar">
+  <div class="container">
+    <h2 class="text-center">Full Schedule</h2>
+    <p class="text-center sub-heading">Yoga classes, workshops, retreats, and special events</p>
+
+    <div class="calendar-grid" *ngIf="events.length > 0; else noEvents">
+      <article class="calendar-event-card" *ngFor="let event of events">
+        <div class="event-badge">{{ event.eventType }}</div>
+        <h3>{{ event.title }}</h3>
+        <p class="event-time">
+          {{ event.startDate | date: 'EEE, MMM d • h:mm a' }}
+          <span *ngIf="event.endDate">
+            - {{ event.endDate | date: 'h:mm a' }}
+          </span>
+        </p>
+        <p class="event-location" *ngIf="event.location">{{ event.location }}</p>
+        <p *ngIf="event.summary">{{ event.summary }}</p>
+        <a *ngIf="event.ctaLabel && event.ctaUrl" [href]="event.ctaUrl" class="btn btn-primary">
+          {{ event.ctaLabel }}
+        </a>
+      </article>
+    </div>
+
+    <ng-template #noEvents>
+      <div class="calendar-empty">
+        <p>No upcoming events are published yet. Check back soon.</p>
+      </div>
+    </ng-template>
   </div>
 </section>
 
@@ -45,7 +99,7 @@
             <li *ngFor="let feature of option.features">{{ feature }}</li>
           </ul>
           <div class="price-action">
-            <a href="#" class="btn btn-primary">Purchase</a>
+            <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book from Schedule</a>
           </div>
         </div>
       </div>
@@ -202,9 +256,9 @@
       <div class="contact-info">
         <h3>Studio Hours</h3>
         <ul class="hours-list">
-          <li><span>Monday-Friday:</span> 6:00am - 9:00pm</li>
-          <li><span>Saturday:</span> 8:00am - 7:00pm</li>
-          <li><span>Sunday:</span> 8:00am - 5:00pm</li>
+          <li *ngFor="let entry of studioHours">
+            <span>{{ entry.label }}:</span> {{ entry.hours }}
+          </li>
         </ul>
         
         <h3>Location</h3>
@@ -220,41 +274,43 @@
   </div>
 </section>
 
-<!-- Booking Section with Calendly -->
+<!-- Booking Section -->
 <section class="booking-section section">
   <div class="container">
     <div class="booking-content">
       <div class="booking-info">
-        <h2>Schedule a Session</h2>
-        <p>Book a spot in one of our upcoming classes or schedule a private session with our instructors. Choose a time that works for you and we'll confirm your booking via email.</p>
+        <h2>Organized Booking Flow</h2>
+        <p>Use the schedule calendar to choose a date, then book directly from that class card. Use direct inquiry for private sessions.</p>
         <div class="booking-benefits">
           <div class="benefit-item">
             <span class="material-icons">event_available</span>
             <div class="benefit-text">
-              <h4>Easy Scheduling</h4>
-              <p>Book your spot in just a few clicks</p>
+              <h4>Date-First Booking</h4>
+              <p>Click a date to see every class and event on that day</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-icons">notifications</span>
             <div class="benefit-text">
-              <h4>Instant Confirmations</h4>
-              <p>Receive immediate booking confirmations</p>
+              <h4>Stripe Checkout</h4>
+              <p>Each class can have its own checkout link managed in CMS</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-icons">calendar_today</span>
             <div class="benefit-text">
-              <h4>Calendar Integration</h4>
-              <p>Add your booking directly to your calendar</p>
+              <h4>Simple Operations</h4>
+              <p>One schedule page for classes, workshops, and announcements</p>
             </div>
           </div>
         </div>
       </div>
-      <div class="calendly-container">
-        <!-- Calendly inline widget begin -->
-        <div class="calendly-inline-widget" data-url="https://calendly.com/arietabk" style="min-width:320px;height:700px;"></div>
-        <!-- Calendly inline widget end -->
+      <div class="booking-actions-card">
+        <h3>Book Now</h3>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
+        <a routerLink="/schedule" class="btn btn-secondary">View Full Schedule</a>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-secondary">Request a Private Session</a>
+        <a routerLink="/workshops" class="btn btn-secondary">Browse Workshops</a>
       </div>
     </div>
   </div>
@@ -267,7 +323,7 @@
       <h2>Ready to Begin Your Practice?</h2>
       <p>Join us on the mat and discover the transformative power of yoga</p>
       <div class="cta-buttons">
-        <a href="#" class="btn btn-primary">Sign Up Now</a>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Sign Up Now</a>
         <a routerLink="/offerings" class="btn btn-secondary">Explore Our Classes</a>
       </div>
     </div>

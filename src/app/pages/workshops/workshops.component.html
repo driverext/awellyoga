@@ -230,41 +230,42 @@
   </div>
 </section>
 
-<!-- Schedule a Workshop Section -->
+<!-- Workshop Booking Section -->
 <section class="booking-section section">
   <div class="container">
     <div class="booking-content">
       <div class="booking-info">
-        <h2>Schedule a Session</h2>
-        <p>Book a spot in one of our upcoming workshops or schedule a consultation with our instructors. Choose a time that works for you and we'll confirm your booking via email.</p>
+        <h2>Book Workshops Through Schedule</h2>
+        <p>Workshops now follow the same booking system as classes. Find the workshop date in the schedule calendar and use the workshop checkout link there.</p>
         <div class="booking-benefits">
           <div class="benefit-item">
             <span class="material-icons">event_available</span>
             <div class="benefit-text">
-              <h4>Easy Scheduling</h4>
-              <p>Book your spot in just a few clicks</p>
+              <h4>Single Booking Flow</h4>
+              <p>Classes and workshops use one calendar + one checkout system</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-icons">notifications</span>
             <div class="benefit-text">
-              <h4>Instant Confirmations</h4>
-              <p>Receive immediate booking confirmations</p>
+              <h4>Stripe Checkout</h4>
+              <p>Each workshop can have its own payment link in the CMS</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-icons">calendar_today</span>
             <div class="benefit-text">
-              <h4>Calendar Integration</h4>
-              <p>Add your booking directly to your calendar</p>
+              <h4>Clear Operations</h4>
+              <p>Your team only updates events and announcements in one place</p>
             </div>
           </div>
         </div>
       </div>
-      <div class="calendly-container">
-        <!-- Calendly inline widget begin -->
-        <div class="calendly-inline-widget" data-url="https://calendly.com/arietabk" style="min-width:320px;height:700px;"></div>
-        <!-- Calendly inline widget end -->
+      <div class="booking-actions-card">
+        <h3>Workshop Booking</h3>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Find a Workshop Date</a>
+        <a routerLink="/schedule" class="btn btn-secondary">View Full Schedule</a>
+        <a href="mailto:Arieta.kirk@ucf.edu?subject=Workshop%20Question" class="btn btn-secondary">Ask a Workshop Question</a>
       </div>
     </div>
   </div>

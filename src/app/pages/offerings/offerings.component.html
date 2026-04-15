@@ -22,7 +22,8 @@
   <div class="container">
     <div class="filters">
       <div class="filter-info">
-        <p>All classes are available for drop-in, monthly memberships, or class packages. <a routerLink="/studio">View pricing options</a>.</p>
+        <p>Ready to pick a time?</p>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">View Full Schedule</a>
       </div>
     </div>
   </div>
@@ -46,7 +47,7 @@
               <li *ngFor="let benefit of class.benefits">{{ benefit }}</li>
             </ul>
           </div>
-          <a routerLink="/studio" class="btn btn-primary">Book a Class</a>
+          <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
         </div>
       </div>
     </div>
@@ -79,7 +80,7 @@
             <p>Specialized focus on your needs</p>
           </div>
         </div>
-        <a routerLink="/studio" class="btn btn-primary">Book a Private Session</a>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Private Session</a>
       </div>
       <div class="content-image">
         <img src="https://images.unsplash.com/photo-1599447292761-a145ebd7deca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Private yoga instruction" class="img-rounded">
@@ -145,7 +146,7 @@
       <h2>Ready to Begin Your Practice?</h2>
       <p>Join us on the mat and discover the transformative power of yoga</p>
       <div class="cta-buttons">
-        <a routerLink="/studio" class="btn btn-primary">Book a Class</a>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
         <a routerLink="/about" class="btn btn-secondary">Learn More About Us</a>
       </div>
     </div>
