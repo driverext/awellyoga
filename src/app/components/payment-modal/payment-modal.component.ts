@@ -47,7 +47,7 @@ export class PaymentModalComponent implements OnInit {
       this.isLoading = true;
       
       // For now, show a message that backend integration is needed
-      alert(`Payment processing will be implemented once backend is ready.\n\nRetreat: ${this.retreat.title}\nLocation: ${this.retreat.location}\nDates: ${this.retreat.dates}\nEstimated Price: $${this.checkoutData.amount}\n\nPlease contact us directly at arietabk@gmail.com for booking.`);
+      alert(`Payment processing will be implemented once backend is ready.\n\nRetreat: ${this.retreat.title}\nLocation: ${this.retreat.location}\nDates: ${this.retreat.dates}\nEstimated Price: $${this.checkoutData.amount}\n\nPlease contact us directly at info@awellyoga.com for booking.`);
       
       // TODO: Implement actual Stripe checkout when backend is ready
       // await this.stripeService.redirectToCheckout(sessionId);
