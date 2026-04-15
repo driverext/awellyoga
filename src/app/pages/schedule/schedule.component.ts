@@ -10,13 +10,22 @@ import {
   CmsStudioPage
 } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
-import { BookingService } from '../../services/booking.service';
+import { BookingService, PrivateSessionRequestPayload } from '../../services/booking.service';
 
 interface CalendarDay {
   date: Date;
   inCurrentMonth: boolean;
   iso: string;
   eventCount: number;
+}
+
+interface PrivateSessionFormModel {
+  name: string;
+  email: string;
+  phone: string;
+  goal: string;
+  availability: string;
+  notes: string;
 }
 
 @Component({
@@ -59,6 +68,18 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   bookingEmail = '';
   bookingError = '';
   bookingLoading = false;
+  privateSessionModalOpen = false;
+  privateSessionLoading = false;
+  privateSessionError = '';
+  privateSessionSuccess = '';
+  privateSessionForm: PrivateSessionFormModel = {
+    name: '',
+    email: '',
+    phone: '',
+    goal: '',
+    availability: '',
+    notes: ''
+  };
 
   constructor(
     private cmsContent: SanityContentService,
@@ -201,23 +222,45 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   bookPrivateSession(): void {
-    const upcoming = this.findUpcomingEvent('Special Event');
-    const calendar = document.getElementById('calendar');
-    if (calendar) {
-      calendar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    this.privateSessionSuccess = '';
+    this.privateSessionError = '';
+    this.privateSessionModalOpen = true;
+  }
 
-    if (!upcoming) {
-      this.pricingFlowMessage = 'No private or special sessions are published right now. Please choose another date in the calendar.';
+  closePrivateSessionModal(): void {
+    if (this.privateSessionLoading) {
       return;
     }
 
-    const eventDate = this.startOfDay(new Date(upcoming.startDate));
-    this.selectedDate = eventDate;
-    this.calendarMonth = this.startOfMonth(eventDate);
-    this.buildCalendarDays();
-    this.pricingFlowMessage = `Showing next available session: ${upcoming.title}.`;
-    this.openBooking(upcoming);
+    this.privateSessionModalOpen = false;
+    this.privateSessionError = '';
+  }
+
+  async submitPrivateSessionRequest(): Promise<void> {
+    const payload = this.buildPrivateSessionPayload();
+    if (!payload) {
+      return;
+    }
+
+    this.privateSessionLoading = true;
+    this.privateSessionError = '';
+
+    try {
+      const result = await this.bookingService.createPrivateSessionRequest(payload);
+      if (!result.id) {
+        this.privateSessionError = result.error || 'Could not submit your request. Please try again.';
+        return;
+      }
+
+      this.privateSessionSuccess =
+        'Thanks! Your private session request was received. We will contact you soon at the email you provided.';
+      this.resetPrivateSessionForm();
+      this.privateSessionModalOpen = false;
+    } catch (error) {
+      this.privateSessionError = (error as Error).message || 'Could not submit your request. Please try again.';
+    } finally {
+      this.privateSessionLoading = false;
+    }
   }
 
   purchaseGiftCard(): void {
@@ -235,21 +278,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       return;
     }
     window.location.hash = '#calendar';
-  }
-
-  private findUpcomingEvent(preferredType: CmsEvent['eventType']): CmsEvent | null {
-    const now = Date.now();
-    const sortedEvents = [...this.events]
-      .filter((event) => new Date(event.startDate).getTime() >= now)
-      .filter((event) => !this.isEventFull(event))
-      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
-
-    const matchingType = sortedEvents.find((event) => event.eventType === preferredType);
-    if (matchingType) {
-      return matchingType;
-    }
-
-    return sortedEvents[0] || null;
   }
 
   private applyStudioPageContent(content: CmsStudioPage): void {
@@ -383,6 +411,56 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   private isValidEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  private buildPrivateSessionPayload(): PrivateSessionRequestPayload | null {
+    const name = this.privateSessionForm.name.trim();
+    const email = this.privateSessionForm.email.trim().toLowerCase();
+    const phone = this.privateSessionForm.phone.trim();
+    const goal = this.privateSessionForm.goal.trim();
+    const availability = this.privateSessionForm.availability.trim();
+    const notes = this.privateSessionForm.notes.trim();
+
+    if (!name || name.length < 2) {
+      this.privateSessionError = 'Please enter your full name.';
+      return null;
+    }
+
+    if (!this.isValidEmail(email)) {
+      this.privateSessionError = 'Please enter a valid email address.';
+      return null;
+    }
+
+    if (!goal) {
+      this.privateSessionError = 'Please share your private session goals.';
+      return null;
+    }
+
+    if (!availability) {
+      this.privateSessionError = 'Please share your preferred days/times.';
+      return null;
+    }
+
+    return {
+      name,
+      email,
+      phone,
+      goal,
+      availability,
+      notes,
+      source: 'schedule-page'
+    };
+  }
+
+  private resetPrivateSessionForm(): void {
+    this.privateSessionForm = {
+      name: '',
+      email: '',
+      phone: '',
+      goal: '',
+      availability: '',
+      notes: ''
+    };
   }
 
   private syncCalendarSelection(): void {

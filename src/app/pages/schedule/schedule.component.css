@@ -354,6 +354,15 @@
   font: inherit;
 }
 
+.booking-modal textarea {
+  width: 100%;
+  border: 1px solid #d6ccb8;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  resize: vertical;
+}
+
 .booking-error {
   margin-top: 0.6rem;
   margin-bottom: 0;
@@ -366,6 +375,16 @@
   justify-content: flex-end;
   gap: 0.7rem;
   margin-top: 1rem;
+}
+
+.private-session-modal {
+  width: min(100%, 560px);
+}
+
+.private-session-success {
+  margin-top: 0.8rem;
+  color: #2f6c35;
+  font-weight: 600;
 }
 
 /* Pricing Section */

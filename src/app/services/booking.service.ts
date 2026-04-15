@@ -14,6 +14,22 @@ interface BookingCountResponse {
   counts?: Record<string, number>;
 }
 
+export interface PrivateSessionRequestPayload {
+  name: string;
+  email: string;
+  phone?: string;
+  goal: string;
+  availability: string;
+  notes?: string;
+  source?: string;
+}
+
+interface PrivateSessionRequestResponse {
+  id?: string;
+  status?: string;
+  error?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BookingService {
   private readonly edgeFunctionsBaseUrl = environment.booking?.edgeFunctionsBaseUrl || '';
@@ -77,5 +93,28 @@ export class BookingService {
 
     const data = (await response.json()) as BookingCountResponse;
     return data.counts || {};
+  }
+
+  async createPrivateSessionRequest(payload: PrivateSessionRequestPayload): Promise<PrivateSessionRequestResponse> {
+    if (!this.edgeFunctionsBaseUrl) {
+      return {
+        error: 'Booking backend is not configured yet.'
+      };
+    }
+
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/private-session-request`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = (await response.json()) as PrivateSessionRequestResponse;
+    if (!response.ok) {
+      throw new Error(data.error || 'Could not submit private session request.');
+    }
+
+    return data;
   }
 }

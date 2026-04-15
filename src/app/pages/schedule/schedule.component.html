@@ -154,6 +154,80 @@
   </section>
 </div>
 
+<div class="booking-modal-overlay" *ngIf="privateSessionModalOpen" (click)="closePrivateSessionModal()">
+  <section class="booking-modal private-session-modal" (click)="$event.stopPropagation()">
+    <h3>Request a Private Session</h3>
+    <p>Share a few details and we will follow up to confirm your session time.</p>
+    <form (ngSubmit)="submitPrivateSessionRequest()">
+      <label for="ps-name">Full Name</label>
+      <input
+        id="ps-name"
+        name="psName"
+        type="text"
+        [(ngModel)]="privateSessionForm.name"
+        placeholder="Your full name"
+        required
+      >
+
+      <label for="ps-email">Email</label>
+      <input
+        id="ps-email"
+        name="psEmail"
+        type="email"
+        [(ngModel)]="privateSessionForm.email"
+        placeholder="you@example.com"
+        required
+      >
+
+      <label for="ps-phone">Phone (optional)</label>
+      <input
+        id="ps-phone"
+        name="psPhone"
+        type="tel"
+        [(ngModel)]="privateSessionForm.phone"
+        placeholder="(321) 555-1234"
+      >
+
+      <label for="ps-goal">What are your goals?</label>
+      <textarea
+        id="ps-goal"
+        name="psGoal"
+        [(ngModel)]="privateSessionForm.goal"
+        placeholder="Example: stress relief, mobility, beginner foundations, injury-aware movement"
+        rows="3"
+        required
+      ></textarea>
+
+      <label for="ps-availability">Preferred days/times</label>
+      <textarea
+        id="ps-availability"
+        name="psAvailability"
+        [(ngModel)]="privateSessionForm.availability"
+        placeholder="Example: Tuesdays/Thursdays after 5pm or Saturday mornings"
+        rows="2"
+        required
+      ></textarea>
+
+      <label for="ps-notes">Notes (optional)</label>
+      <textarea
+        id="ps-notes"
+        name="psNotes"
+        [(ngModel)]="privateSessionForm.notes"
+        placeholder="Any injuries, preferences, or additional context"
+        rows="2"
+      ></textarea>
+
+      <p class="booking-error" *ngIf="privateSessionError">{{ privateSessionError }}</p>
+      <div class="booking-modal-actions">
+        <button type="button" class="btn btn-secondary" [disabled]="privateSessionLoading" (click)="closePrivateSessionModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="privateSessionLoading">
+          {{ privateSessionLoading ? 'Submitting...' : 'Submit Request' }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
 <!-- Registration Process -->
 <section class="section registration-section">
   <div class="container">
@@ -252,7 +326,7 @@
 </section>
 
 <!-- Private Sessions -->
-<section class="section private-sessions">
+<section class="section private-sessions" id="private-session-request">
   <div class="container">
     <div class="private-content">
       <div class="private-text">
@@ -273,6 +347,7 @@
           </div>
         </div>
         <button type="button" class="btn btn-primary" (click)="bookPrivateSession()">Book a Private Session</button>
+        <p class="private-session-success" *ngIf="privateSessionSuccess">{{ privateSessionSuccess }}</p>
       </div>
       <div class="private-image">
         <img src="https://images.unsplash.com/photo-1599447292761-a145ebd7deca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Private yoga instruction" class="img-rounded">
@@ -298,7 +373,7 @@
     <h2 class="text-center">Visit Our Studio</h2>
     <div class="contact-content">
       <div class="contact-map">
-        <img src="https://images.pexels.com/photos/4662950/pexels-photo-4662950.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Map to our studio location" class="img-rounded">
+        <img src="/assets/studio.JPEG" alt="A-WELL Yoga studio interior" class="img-rounded">
       </div>
       <div class="contact-info">
         <h3>Studio Hours</h3>
