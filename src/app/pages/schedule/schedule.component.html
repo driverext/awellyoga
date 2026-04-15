@@ -154,31 +154,6 @@
   </section>
 </div>
 
-<!-- Pricing Packages -->
-<section class="section pricing-section">
-  <div class="container">
-    <h2 class="text-center">Pricing Options</h2>
-    <p class="text-center sub-heading">Single visits, class packs, and memberships with dedicated checkout paths</p>
-
-    <div class="pricing-grid pricing-grid-consolidated">
-      <article class="pricing-card" *ngFor="let group of pricingGroups">
-        <div class="price-header">
-          <h4>{{ group.title }}</h4>
-        </div>
-        <p class="price-description">{{ group.subtitle }}</p>
-        <ul class="price-features">
-          <li *ngFor="let item of group.items">{{ item }}</li>
-        </ul>
-        <div class="price-action">
-          <button type="button" class="btn btn-primary" (click)="purchasePricingGroup(group.title)">
-            {{ group.ctaLabel }}
-          </button>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
 <!-- Registration Process -->
 <section class="section registration-section">
   <div class="container">
@@ -187,24 +162,24 @@
       <div class="step">
         <div class="step-number">1</div>
         <div class="step-content">
-          <h3>Choose Your Plan Type</h3>
-          <p>Pick Single Visit, Class Pack, or Membership from pricing options.</p>
+          <h3>Choose A Date</h3>
+          <p>Use the calendar to find the day and class time you want.</p>
         </div>
       </div>
       
       <div class="step">
         <div class="step-number">2</div>
         <div class="step-content">
-          <h3>Use The Correct Checkout Flow</h3>
-          <p>Class packs and memberships use dedicated checkout links. Single visits can book directly from class cards.</p>
+          <h3>Select Your Class</h3>
+          <p>Click the class card that fits your schedule.</p>
         </div>
       </div>
       
       <div class="step">
         <div class="step-number">3</div>
         <div class="step-content">
-          <h3>Select A Date</h3>
-          <p>Use the calendar to find the day and class time you want.</p>
+          <h3>Click Book</h3>
+          <p>Enter your email and continue to secure checkout.</p>
         </div>
       </div>
       

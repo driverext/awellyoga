@@ -19,8 +19,6 @@ interface CalendarDay {
   eventCount: number;
 }
 
-type PricingActionKey = 'single_visit' | 'class_pack' | 'membership';
-
 @Component({
   selector: 'app-schedule',
   standalone: true,
@@ -32,7 +30,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
   private readonly defaultClassCapacity = 7;
 
-  pageTitle = 'Schedule & Pricing';
+  pageTitle = 'Schedule';
   pageSubtitle = 'Flexible options to support your yoga journey';
   scheduleHeading = 'Class Schedule';
   scheduleBody =
@@ -61,43 +59,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   bookingEmail = '';
   bookingError = '';
   bookingLoading = false;
-  singleVisitCheckoutUrl = '';
-  classPackCheckoutUrl = '';
-  membershipCheckoutUrl = '';
-
-  pricingGroups = [
-    {
-      title: 'Single Visits',
-      subtitle: 'Great if you are new or have a flexible schedule',
-      items: ['Single Class - $22', 'First-Time Special - $15', 'Community Class - $12'],
-      ctaLabel: 'Book A Single Class',
-      preferredType: 'Yoga Class' as CmsEvent['eventType'],
-      actionKey: 'single_visit' as PricingActionKey
-    },
-    {
-      title: 'Class Packs',
-      subtitle: 'Lower per-class price with more flexibility than memberships',
-      items: ['5-Class Pack - $100', '10-Class Pack - $190', '20-Class Pack - $340'],
-      ctaLabel: 'Buy A Class Pack',
-      preferredType: 'Yoga Class' as CmsEvent['eventType'],
-      actionKey: 'class_pack' as PricingActionKey
-    },
-    {
-      title: 'Memberships & Special Rates',
-      subtitle: 'Best value for regular practice',
-      items: [
-        'Basic (8 Classes) - $89/month',
-        'Standard (12 Classes) - $119/month',
-        'Unlimited - $159/month',
-        'Student/Senior - 15% off',
-        'Family Plan - 10% off',
-        'Annual Membership - Save 20%'
-      ],
-      ctaLabel: 'Start Membership',
-      preferredType: 'Yoga Class' as CmsEvent['eventType'],
-      actionKey: 'membership' as PricingActionKey
-    }
-  ];
 
   constructor(
     private cmsContent: SanityContentService,
@@ -239,40 +200,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
-  purchasePricingGroup(groupTitle: string): void {
-    const group = this.pricingGroups.find((item) => item.title === groupTitle);
-    if (!group) {
-      return;
-    }
-
-    const directUrl = this.pricingCheckoutUrl(group.actionKey);
-    if (directUrl) {
-      window.location.href = directUrl;
-      return;
-    }
-
-    const preferredType = group.preferredType || 'Yoga Class';
-    const upcoming = this.findUpcomingEvent(preferredType);
-
-    const calendar = document.getElementById('calendar');
-    if (calendar) {
-      calendar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    if (!upcoming) {
-      this.pricingFlowMessage =
-        'No dedicated checkout link is set for this pricing option yet. Please choose a class date below.';
-      return;
-    }
-
-    const eventDate = this.startOfDay(new Date(upcoming.startDate));
-    this.selectedDate = eventDate;
-    this.calendarMonth = this.startOfMonth(eventDate);
-    this.buildCalendarDays();
-    this.pricingFlowMessage = `Showing next available ${preferredType.toLowerCase()}: ${upcoming.title}.`;
-    this.openBooking(upcoming);
-  }
-
   bookPrivateSession(): void {
     const upcoming = this.findUpcomingEvent('Special Event');
     const calendar = document.getElementById('calendar');
@@ -335,33 +262,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.scheduleNote = content.scheduleNote || this.scheduleNote;
     this.scheduleImageUrl = content.scheduleImageUrl || this.scheduleImageUrl;
     this.scheduleImageAlt = content.scheduleImageAlt || this.scheduleImageAlt;
-    this.singleVisitCheckoutUrl = content.singleVisitCheckoutUrl || '';
-    this.classPackCheckoutUrl = content.classPackCheckoutUrl || '';
-    this.membershipCheckoutUrl = content.membershipCheckoutUrl || '';
     this.studioHours = content.studioHours?.length ? content.studioHours : this.studioHours;
-  }
-
-  private pricingCheckoutUrl(actionKey: PricingActionKey): string {
-    const url =
-      actionKey === 'single_visit'
-        ? this.singleVisitCheckoutUrl
-        : actionKey === 'class_pack'
-        ? this.classPackCheckoutUrl
-        : this.membershipCheckoutUrl;
-
-    if (!url) {
-      return '';
-    }
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
-        return '';
-      }
-      return parsed.toString();
-    } catch {
-      return '';
-    }
   }
 
   eventCapacity(event: CmsEvent): number | null {
