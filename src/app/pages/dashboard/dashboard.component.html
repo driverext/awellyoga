@@ -1,0 +1,118 @@
+<section class="page-header">
+  <div class="container">
+    <h1>Booking Dashboard</h1>
+    <p>Internal operations view for bookings, revenue, and private session requests</p>
+  </div>
+</section>
+
+<section class="section dashboard-section">
+  <div class="container">
+    <div class="toolbar">
+      <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="loading">
+        {{ loading ? 'Refreshing...' : 'Refresh Data' }}
+      </button>
+    </div>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+    <div class="overview-grid" *ngIf="!loading && !error">
+      <article class="overview-card">
+        <h3>Total Revenue</h3>
+        <p class="value">{{ money(overview.totalRevenueCents) | currency:(overview.currency || 'USD'): 'symbol':'1.2-2' }}</p>
+      </article>
+      <article class="overview-card">
+        <h3>Paid Bookings</h3>
+        <p class="value">{{ overview.paidBookings }}</p>
+      </article>
+      <article class="overview-card">
+        <h3>Pending Bookings</h3>
+        <p class="value">{{ overview.pendingBookings }}</p>
+      </article>
+      <article class="overview-card">
+        <h3>Total Bookings</h3>
+        <p class="value">{{ overview.totalBookings }}</p>
+      </article>
+    </div>
+
+    <div class="table-card" *ngIf="!loading && !error">
+      <h2>Revenue by Event</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Bookings</th>
+            <th>Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of topEvents">
+            <td>{{ event.eventTitle }}</td>
+            <td>{{ event.bookingsCount }}</td>
+            <td>{{ money(event.revenueCents) | currency:(overview.currency || 'USD'): 'symbol':'1.2-2' }}</td>
+          </tr>
+          <tr *ngIf="topEvents.length === 0">
+            <td colspan="3">No paid bookings yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-card" *ngIf="!loading && !error">
+      <h2>Recent Class Bookings</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Event</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let booking of recentBookings">
+            <td>{{ booking.createdAt ? (booking.createdAt | date:'MMM d, y h:mm a') : '-' }}</td>
+            <td>{{ booking.eventTitle || '-' }}</td>
+            <td>{{ booking.customerName || '-' }}</td>
+            <td>{{ booking.customerEmail || '-' }}</td>
+            <td>{{ money(booking.amountTotal) | currency:(booking.currency || overview.currency || 'USD'): 'symbol':'1.2-2' }}</td>
+            <td>{{ booking.bookingStatus || booking.paymentStatus || '-' }}</td>
+          </tr>
+          <tr *ngIf="recentBookings.length === 0">
+            <td colspan="6">No bookings yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-card" *ngIf="!loading && !error">
+      <h2>Private Session Requests</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Requested</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Availability</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let request of privateSessionRequests">
+            <td>{{ request.created_at ? (request.created_at | date:'MMM d, y h:mm a') : '-' }}</td>
+            <td>{{ request.name || '-' }}</td>
+            <td>{{ request.email || '-' }}</td>
+            <td>{{ request.phone || '-' }}</td>
+            <td>{{ request.availability || '-' }}</td>
+            <td>{{ request.status || 'new' }}</td>
+          </tr>
+          <tr *ngIf="privateSessionRequests.length === 0">
+            <td colspan="6">No private session requests yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

@@ -14,6 +14,52 @@ interface BookingCountResponse {
   counts?: Record<string, number>;
 }
 
+export interface DashboardOverview {
+  totalBookings: number;
+  paidBookings: number;
+  pendingBookings: number;
+  totalRevenueCents: number;
+  currency: string;
+}
+
+export interface DashboardEventSummary {
+  eventTitle: string;
+  bookingsCount: number;
+  revenueCents: number;
+}
+
+export interface DashboardBooking {
+  id: string;
+  eventTitle: string;
+  eventStart?: string | null;
+  customerName?: string | null;
+  customerEmail?: string | null;
+  amountTotal?: number | null;
+  currency?: string | null;
+  paymentStatus?: string | null;
+  bookingStatus?: string | null;
+  createdAt?: string | null;
+}
+
+export interface DashboardPrivateSessionRequest {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  goal?: string | null;
+  availability?: string | null;
+  status?: string | null;
+  created_at?: string | null;
+}
+
+export interface BookingDashboardResponse {
+  overview: DashboardOverview;
+  topEvents: DashboardEventSummary[];
+  recentBookings: DashboardBooking[];
+  privateSessionRequests: DashboardPrivateSessionRequest[];
+  error?: string;
+}
+
 export interface PrivateSessionRequestPayload {
   name: string;
   email: string;
@@ -113,6 +159,23 @@ export class BookingService {
     const data = (await response.json()) as PrivateSessionRequestResponse;
     if (!response.ok) {
       throw new Error(data.error || 'Could not submit private session request.');
+    }
+
+    return data;
+  }
+
+  async getBookingDashboard(): Promise<BookingDashboardResponse> {
+    if (!this.edgeFunctionsBaseUrl) {
+      throw new Error('Booking backend is not configured yet.');
+    }
+
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/booking-dashboard`, {
+      method: 'GET'
+    });
+
+    const data = (await response.json()) as BookingDashboardResponse;
+    if (!response.ok) {
+      throw new Error(data.error || 'Could not load booking dashboard.');
     }
 
     return data;

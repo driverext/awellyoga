@@ -54,6 +54,7 @@ Deno.serve(async (req) => {
         .from('bookings')
         .update({
           stripe_session_id: session.id,
+          stripe_customer_name: session.customer_details?.name || null,
           stripe_customer_email: session.customer_details?.email || null,
           stripe_payment_intent_id: session.payment_intent || null,
           amount_total: session.amount_total ?? null,
