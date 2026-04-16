@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
-import { corsHeaders } from '../_shared/cors.ts';
+import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
 
 interface CountsPayload {
   eventIds?: string[];
@@ -7,24 +7,28 @@ interface CountsPayload {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: buildCorsHeaders(req) });
+  }
+
+  if (!isOriginAllowed(req)) {
+    return json(req, { error: 'Origin not allowed.' }, 403);
   }
 
   if (req.method !== 'POST') {
-    return json({ error: 'Method not allowed.' }, 405);
+      return json(req, { error: 'Method not allowed.' }, 405);
   }
 
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
     if (!supabaseUrl || !serviceRoleKey) {
-      return json({ error: 'Missing Supabase environment variables.' }, 500);
+      return json(req, { error: 'Missing Supabase environment variables.' }, 500);
     }
 
     const payload = (await req.json()) as CountsPayload;
     const eventIds = (payload.eventIds || []).filter(Boolean);
     if (!eventIds.length) {
-      return json({ counts: {} });
+      return json(req, { counts: {} });
     }
 
     const admin = createClient(supabaseUrl, serviceRoleKey);
@@ -35,7 +39,7 @@ Deno.serve(async (req) => {
       .in('booking_status', ['pending', 'paid']);
 
     if (error) {
-      return json({ error: error.message }, 400);
+      return json(req, { error: error.message }, 400);
     }
 
     const now = new Date();
@@ -57,17 +61,17 @@ Deno.serve(async (req) => {
       }
     }
 
-    return json({ counts });
+    return json(req, { counts });
   } catch (error) {
-    return json({ error: (error as Error).message || 'Unexpected server error.' }, 500);
+    return json(req, { error: (error as Error).message || 'Unexpected server error.' }, 500);
   }
 });
 
-function json(body: unknown, status = 200): Response {
+function json(req: Request, body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
-      ...corsHeaders,
+      ...buildCorsHeaders(req),
       'Content-Type': 'application/json'
     }
   });

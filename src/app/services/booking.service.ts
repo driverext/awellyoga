@@ -169,8 +169,20 @@ export class BookingService {
       throw new Error('Booking backend is not configured yet.');
     }
 
+    const authHeader =
+      typeof window !== 'undefined'
+        ? window.sessionStorage.getItem('awell_dashboard_auth_header')
+        : null;
+
+    if (!authHeader) {
+      throw new Error('Dashboard authorization is missing. Please re-open the dashboard.');
+    }
+
     const response = await fetch(`${this.edgeFunctionsBaseUrl}/booking-dashboard`, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        Authorization: authHeader
+      }
     });
 
     const data = (await response.json()) as BookingDashboardResponse;

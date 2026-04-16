@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { RetreatsComponent } from './pages/retreats/retreats.component';
 import { RetreatDetailsComponent } from './pages/retreat-details/retreat-details.component';
+import { dashboardAuthGuard } from './guards/dashboard-auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,7 +17,14 @@ export const routes: Routes = [
   { path: 'retreats/:id', component: RetreatDetailsComponent },
   { path: 'recipes', loadComponent: () => import('../app/pages/recipes/recipes.component').then(m => m.RecipesComponent) },
   { path: 'blog', loadComponent: () => import('../app/pages/blog/blog.component').then(m => m.BlogComponent) },
-  { path: 'dashboard', loadComponent: () => import('../app/pages/dashboard/dashboard.component').then(m => m.DashboardComponent) },
+  {
+    path: 'dashboard',
+    canActivate: [dashboardAuthGuard],
+    loadComponent: () =>
+      import('../app/pages/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      )
+  },
   { path: 'shop', redirectTo: '/home', pathMatch: 'full' },
   { path: 'payment-success', loadComponent: () => import('../app/pages/payment-success/payment-success.component').then(m => m.PaymentSuccessComponent) },
   { path: '**', redirectTo: '/home' }

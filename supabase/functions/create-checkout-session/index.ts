@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
-import { corsHeaders } from '../_shared/cors.ts';
+import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
 
 interface CreateCheckoutPayload {
   eventId: string;
@@ -19,32 +19,36 @@ interface CreateCheckoutPayload {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: buildCorsHeaders(req) });
+  }
+
+  if (!isOriginAllowed(req)) {
+    return json(req, { error: 'Origin not allowed.' }, 403);
   }
 
   try {
     if (req.method !== 'POST') {
-      return json({ error: 'Method not allowed.' }, 405);
+      return json(req, { error: 'Method not allowed.' }, 405);
     }
 
     const payload = (await req.json()) as CreateCheckoutPayload;
     if (!payload?.eventId || !payload?.title || !payload?.startDate) {
-      return json({ error: 'Missing event id, title, or start date.' }, 400);
+      return json(req, { error: 'Missing event id, title, or start date.' }, 400);
     }
 
     const email = (payload.email || '').trim().toLowerCase();
     if (!isValidEmail(email)) {
-      return json({ error: 'A valid email address is required.' }, 400);
+      return json(req, { error: 'A valid email address is required.' }, 400);
     }
 
     if (!payload.stripePriceId) {
       if (payload.bookingUrl) {
-        return json({
+        return json(req, {
           fallbackUrl: payload.bookingUrl,
           message: 'This event uses a direct payment link fallback because no Stripe Price ID is set.'
         });
       }
-      return json({
+      return json(req, {
         error: 'No Stripe Price ID was configured for this event. Add one in Sanity before booking.'
       }, 400);
     }
@@ -54,7 +58,7 @@ Deno.serve(async (req) => {
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY') || '';
 
     if (!supabaseUrl || !supabaseServiceRoleKey || !stripeSecretKey) {
-      return json({ error: 'Missing Supabase or Stripe environment variables.' }, 500);
+      return json(req, { error: 'Missing Supabase or Stripe environment variables.' }, 500);
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
@@ -67,7 +71,7 @@ Deno.serve(async (req) => {
         .eq('sanity_event_id', payload.eventId);
 
       if (countError) {
-        return json({ error: countError.message }, 400);
+        return json(req, { error: countError.message }, 400);
       }
 
       const now = new Date();
@@ -85,6 +89,7 @@ Deno.serve(async (req) => {
 
       if (activeCount >= maxSpots) {
         return json(
+          req,
           {
             error: 'This class is full.',
             code: 'CLASS_FULL'
@@ -112,10 +117,10 @@ Deno.serve(async (req) => {
       .single();
 
     if (insertError || !insertedBooking?.id) {
-      return json({ error: insertError?.message || 'Could not reserve this class spot.' }, 400);
+      return json(req, { error: insertError?.message || 'Could not reserve this class spot.' }, 400);
     }
 
-    const origin = req.headers.get('origin') || Deno.env.get('SITE_URL') || 'http://localhost:4200';
+    const origin = resolveRedirectOrigin(req);
     const successUrl = `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${origin}/schedule#calendar`;
 
@@ -166,7 +171,7 @@ Deno.serve(async (req) => {
     if (!stripeResponse.ok) {
       const message = result?.error?.message || 'Stripe session creation failed.';
       await supabase.from('bookings').delete().eq('id', insertedBooking.id);
-      return json({ error: message }, 400);
+      return json(req, { error: message }, 400);
     }
 
     const { error: updateError } = await supabase
@@ -175,12 +180,12 @@ Deno.serve(async (req) => {
       .eq('id', insertedBooking.id);
 
     if (updateError) {
-      return json({ error: updateError.message }, 400);
+      return json(req, { error: updateError.message }, 400);
     }
 
-    return json({ url: result.url, sessionId: result.id });
+    return json(req, { url: result.url, sessionId: result.id });
   } catch (error) {
-    return json({ error: (error as Error).message || 'Unexpected server error.' }, 500);
+    return json(req, { error: (error as Error).message || 'Unexpected server error.' }, 500);
   }
 });
 
@@ -217,11 +222,28 @@ async function fetchStripePrice(
   return (await response.json()) as { unit_amount?: number };
 }
 
-function json(body: unknown, status = 200): Response {
+function resolveRedirectOrigin(req: Request): string {
+  const siteUrl = (Deno.env.get('SITE_URL') || 'http://localhost:4200').trim();
+  const requestedOrigin = (req.headers.get('origin') || '').trim();
+  if (!requestedOrigin) {
+    return siteUrl;
+  }
+
+  const allowedOrigins = (Deno.env.get('ALLOWED_REDIRECT_ORIGINS') || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const fallbackAllowed = [siteUrl, 'http://localhost:4200', 'https://awellyoga.com', 'https://www.awellyoga.com'];
+  const fullAllowlist = allowedOrigins.length ? allowedOrigins : fallbackAllowed;
+
+  return fullAllowlist.includes(requestedOrigin) ? requestedOrigin : siteUrl;
+}
+
+function json(req: Request, body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
-      ...corsHeaders,
+      ...buildCorsHeaders(req),
       'Content-Type': 'application/json'
     }
   });

@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
-import { corsHeaders } from '../_shared/cors.ts';
+import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
 
 type BookingRow = {
   id: string;
@@ -28,18 +28,27 @@ type PrivateRequestRow = {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: buildCorsHeaders(req, 'GET, OPTIONS') });
+  }
+
+  if (!isOriginAllowed(req)) {
+    return json(req, { error: 'Origin not allowed.' }, 403);
   }
 
   if (req.method !== 'GET') {
-    return json({ error: 'Method not allowed.' }, 405);
+    return json(req, { error: 'Method not allowed.' }, 405);
   }
 
   try {
+    const authError = validateDashboardAuth(req);
+    if (authError) {
+      return json(req, { error: authError }, 401);
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
     if (!supabaseUrl || !serviceRoleKey) {
-      return json({ error: 'Missing Supabase environment variables.' }, 500);
+      return json(req, { error: 'Missing Supabase environment variables.' }, 500);
     }
 
     const admin = createClient(supabaseUrl, serviceRoleKey);
@@ -53,7 +62,7 @@ Deno.serve(async (req) => {
       .limit(200);
 
     if (bookingError) {
-      return json({ error: bookingError.message }, 400);
+      return json(req, { error: bookingError.message }, 400);
     }
 
     const { data: privateRequests, error: privateError } = await admin
@@ -63,7 +72,7 @@ Deno.serve(async (req) => {
       .limit(100);
 
     if (privateError) {
-      return json({ error: privateError.message }, 400);
+      return json(req, { error: privateError.message }, 400);
     }
 
     const bookings = (bookingData || []) as BookingRow[];
@@ -100,7 +109,7 @@ Deno.serve(async (req) => {
 
     const recentPrivateSessionRequests = ((privateRequests || []) as PrivateRequestRow[]).slice(0, 25);
 
-    return json({
+    return json(req, {
       overview: {
         totalBookings: bookings.length,
         paidBookings: paidBookings.length,
@@ -113,15 +122,65 @@ Deno.serve(async (req) => {
       privateSessionRequests: recentPrivateSessionRequests
     });
   } catch (error) {
-    return json({ error: (error as Error).message || 'Unexpected server error.' }, 500);
+    return json(req, { error: (error as Error).message || 'Unexpected server error.' }, 500);
   }
 });
 
-function json(body: unknown, status = 200): Response {
+function validateDashboardAuth(req: Request): string | null {
+  const expectedUser = Deno.env.get('DASHBOARD_USERNAME') || '';
+  const expectedPass = Deno.env.get('DASHBOARD_PASSWORD') || '';
+  if (!expectedUser || !expectedPass) {
+    return 'Dashboard credentials are not configured.';
+  }
+
+  const header = req.headers.get('authorization') || '';
+  if (!header.startsWith('Basic ')) {
+    return 'Missing dashboard authorization.';
+  }
+
+  const encoded = header.slice(6).trim();
+  const decoded = decodeBase64(encoded);
+  if (!decoded) {
+    return 'Invalid dashboard authorization.';
+  }
+
+  const [user, ...rest] = decoded.split(':');
+  const pass = rest.join(':');
+  if (!timingSafeEqual(user, expectedUser) || !timingSafeEqual(pass, expectedPass)) {
+    return 'Invalid dashboard credentials.';
+  }
+
+  return null;
+}
+
+function decodeBase64(value: string): string | null {
+  try {
+    const binary = atob(value);
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  } catch {
+    return null;
+  }
+}
+
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i += 1) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+
+  return mismatch === 0;
+}
+
+function json(req: Request, body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
-      ...corsHeaders,
+      ...buildCorsHeaders(req, 'GET, OPTIONS'),
       'Content-Type': 'application/json'
     }
   });

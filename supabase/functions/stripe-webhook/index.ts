@@ -18,6 +18,8 @@ type StripeEvent = {
   };
 };
 
+const WEBHOOK_TOLERANCE_SECONDS = 300;
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return json({ error: 'Method not allowed.' }, 405);
@@ -40,6 +42,16 @@ Deno.serve(async (req) => {
 
     const event = JSON.parse(payload) as StripeEvent;
     const admin = createClient(supabaseUrl, serviceRoleKey);
+
+    const { data: duplicateEvent } = await admin
+      .from('bookings')
+      .select('id')
+      .eq('raw_stripe_event_id', event.id)
+      .limit(1);
+
+    if (duplicateEvent && duplicateEvent.length > 0) {
+      return json({ received: true, ignored: true, reason: 'duplicate event' });
+    }
 
     const session = event.data.object;
     const metadata = session.metadata || {};
@@ -99,6 +111,16 @@ async function verifyStripeSignature(payload: string, header: string, secret: st
   const v1 = parts.find((part) => part.startsWith('v1='))?.slice(3);
 
   if (!timestamp || !v1) {
+    return false;
+  }
+
+  const timestampSeconds = Number(timestamp);
+  if (!Number.isFinite(timestampSeconds)) {
+    return false;
+  }
+
+  const nowSeconds = Math.floor(Date.now() / 1000);
+  if (Math.abs(nowSeconds - timestampSeconds) > WEBHOOK_TOLERANCE_SECONDS) {
     return false;
   }
 
