@@ -30,13 +30,14 @@
 }
 
 .ytt-coming-soon-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  background: rgba(24, 30, 22, 0.2);
+  align-items: flex-start;
+  padding: 5.5rem 1.25rem 2rem;
+  background: rgba(24, 30, 22, 0.3);
+  z-index: 1200;
 }
 
 .ytt-coming-soon-card {

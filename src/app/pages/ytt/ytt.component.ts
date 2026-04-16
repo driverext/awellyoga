@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 const ARIETA_BIO = 'Arieta Berisha Kirk is an internationally recognized yoga educator, somatic guide, NBHWC-certified coach, and MBSR practitioner with over 6,500 teaching hours. For more than 15 years, she has led yoga teacher trainings, transformational retreats, workshops, and large-scale events for corporations and communities across the globe.\n\nBlending neuroscience, ancient ritual, and embodied wisdom, Arieta creates deeply transformative spaces that feel both sacred and real. Her trauma-informed approach is rooted in nervous system attunement, presence, and soul-level healing—guiding others not just to practice, but to remember who they are.';
@@ -10,7 +10,8 @@ const ARIETA_BIO = 'Arieta Berisha Kirk is an internationally recognized yoga ed
   templateUrl: './ytt.component.html',
   styleUrls: ['./ytt.component.css']
 })
-export class YttComponent {
+export class YttComponent implements OnInit, OnDestroy {
+  private previousBodyOverflow = '';
   programs = [
     {
       id: '200hr',
@@ -154,4 +155,13 @@ export class YttComponent {
       year: "2023"
     }
   ];
-} 
+
+  ngOnInit(): void {
+    this.previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+  }
+
+  ngOnDestroy(): void {
+    document.body.style.overflow = this.previousBodyOverflow;
+  }
+}
