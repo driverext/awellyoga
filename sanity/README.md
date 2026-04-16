@@ -1,30 +1,15 @@
-# Sanity Studio (Content Admin)
+# Sanity Workspace Note
 
-This folder contains the Sanity Studio used by non-technical editors.
+The active Sanity Studio for this project lives at:
 
-## Local setup
+- `sanity/awell-yoga`
 
-1. Install studio dependencies:
-   ```bash
-   cd sanity
-   npm install
-   ```
-2. Add environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-   Fill in `SANITY_STUDIO_PROJECT_ID` and `SANITY_STUDIO_DATASET`.
-3. Start studio:
-   ```bash
-   npm run dev
-   ```
-4. Open the Studio URL shown in terminal (usually `http://localhost:3333/studio`).
-
-## Deploy studio
+Run Studio from repo root with:
 
 ```bash
-cd sanity
-npm run deploy
+npm run cms:install
+npm run cms:dev
 ```
 
-Sanity will prompt for the hosted studio path the first time.
+This top-level `sanity/` folder is retained as a container for the workspace directory.
+

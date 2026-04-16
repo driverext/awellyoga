@@ -1,6 +1,7 @@
 {
   "name": "yoga-app",
   "version": "0.0.0",
+  "description": "A-WELL Yoga: Angular + Sanity + Supabase + Stripe booking website",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

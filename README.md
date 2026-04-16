@@ -1,187 +1,137 @@
-# Yoga Studio Website
+# A-WELL Yoga Website
 
-A complete Angular application for a yoga studio, featuring an elegant and responsive design that enhances user experience and showcases the studio's offerings.
+Production-focused Angular website for a yoga studio, with CMS-managed content, class booking workflows, and Stripe/Supabase backend integration.
 
-## Pages Created
+## Highlights
 
-The website consists of the following pages:
+- Angular 19 frontend with responsive pages and calendar-based scheduling UI
+- Sanity Studio CMS for non-technical content editing
+- Supabase Edge Functions for booking and dashboard APIs
+- Stripe checkout integration for class booking payments
+- Capacity tracking for events (paid + active pending reservations)
+- Security hardening for dashboard access, CORS allowlists, and webhook validation
 
-### 1. Home Page
-- Introduction to the studio
-- Highlights of services
-- Testimonials and upcoming events
+## Tech Stack
 
-### 2. About Page
-- Studio history and philosophy
-- Meet the instructors
-- Studio values and mission
+- Frontend: Angular, RxJS, TypeScript
+- CMS: Sanity Studio (`sanity/awell-yoga`)
+- Backend: Supabase (Postgres + Edge Functions)
+- Payments: Stripe Checkout
+- Deployment: Vercel (frontend), Sanity hosted studio, Supabase hosted functions
 
-### 3. Offerings Page
-- Overview of all class types
-- Schedule information
-- Pricing and memberships
+## Project Structure
 
-### 4. Studio Page
-- Studio locations
-- Amenities
-- Parking and access information
-
-### 5. Yoga Teacher Training (YTT) Page
-- Comprehensive information about yoga teacher training programs
-- Curriculum details
-- Instructor profiles
-- Pricing and enrollment details
-
-### 6. Workshops Page
-- List of upcoming specialized workshops
-- Filtering by date, instructor, and style
-- Workshop details including pricing and prerequisites
-- FAQ section about workshops
-
-### 7. Retreats Page
-- Featured international and local retreats
-- Details on accommodations, pricing, and schedules
-- Testimonials from past retreat participants
-- Information on leading retreats
-
-### 8. Recipes Page
-- Collection of yoga-supporting recipes and nutrition information
-- Filtering by dietary preference, meal type, and benefits
-- Detailed recipe cards with ingredients, instructions, and benefits
-- Nutrition tips for yoga practitioners
-
-### 9. Blog Page
-- Featured blog posts
-- Category and keyword filtering
-- Detailed articles on yoga, wellness, and studio news
-- Newsletter sign-up
-
-### 10. Shop Page
-- Display of yoga products (mats, props, apparel, books, etc.)
-- Filtering by category, tags, and search
-- Shopping cart functionality
-- Featured and new product sections
-
-## Features
-
-- **Responsive Design**: All pages adapt seamlessly to different screen sizes
-- **Filtering System**: Advanced filtering on workshops, retreats, blog posts, recipes, and shop items
-- **Angular Components**: Properly structured standalone components using Angular best practices
-- **CSS Variables**: Consistent color scheme and styling throughout
-- **Interactive Elements**: Buttons, cards, and navigation with hover effects and animations
-- **Material Icons**: Integrated Google Material Icons for enhanced user interface
-
-## Technical Implementation
-
-All pages follow Angular best practices:
-- Standalone components with proper imports
-- TypeScript interfaces for data models
-- Angular-specific features (ngFor, ngIf, etc.)
-- CSS with responsive design principles
-- Reusable components and consistent styling
-
-## Setup
-
-1. Install dependencies:
+```text
+.
+├── src/
+│   ├── app/
+│   │   ├── pages/                 # Route-level standalone components
+│   │   ├── services/              # CMS + booking + payment services
+│   │   ├── components/            # Shared UI blocks
+│   │   └── guards/                # Route guards (dashboard auth flow)
+│   └── environments/              # Angular env config
+├── sanity/
+│   └── awell-yoga/                # Canonical Sanity Studio project
+├── supabase/
+│   ├── functions/                 # Edge Functions (checkout, webhook, dashboard, etc.)
+│   └── migrations/                # SQL migrations
+└── vercel.json
 ```
+
+## Core Routes
+
+- `/home`
+- `/about`
+- `/offerings`
+- `/schedule`
+- `/ytt`
+- `/workshops`
+- `/retreats`
+- `/recipes`
+- `/blog`
+- `/dashboard` (protected flow + backend auth)
+
+Legacy routes:
+- `/studio` redirects to `/schedule`
+- `/shop` redirects to `/home`
+
+## Local Development
+
+### 1) Install dependencies
+
+```bash
 npm install
 ```
 
-2. Run the development server:
+### 2) Run Angular app
+
+```bash
+npm start
 ```
-ng serve
+
+App runs at `http://localhost:4200`.
+
+### 3) Build
+
+```bash
+npm run build
 ```
 
-3. Navigate to `http://localhost:4200/` to view the application.
+## CMS (Sanity Studio)
 
-## Routing
+Studio lives in `sanity/awell-yoga`.
 
-The application uses Angular's routing system for navigation between pages, with a clear route structure defined in `app.routes.ts`.
-
-## Future Enhancements
-
-Potential future enhancements include:
-- Authentication for user accounts
-- Class booking system
-- Payment processing for shop items
-- Admin dashboard for content management
-- Integration with calendar systems
-
-## Sanity CMS Integration
-
-This project now supports Sanity as a headless CMS while keeping the Angular frontend.
-
-### Phase 1: CMS architecture (implemented)
-
-Content model (editor-friendly):
-- `Site Settings` (singleton): global contact, social links, SEO defaults.
-- `Homepage` (singleton): hero and primary intro content.
-- `About Page` (singleton): headings and section copy.
-- `Instructor` (repeatable): bio cards with ordering and active toggle.
-- `Studio Page` (singleton): page header, schedule teaser, studio hours.
-- `Retreat or Event` (repeatable): retreats/workshops/events.
-- `Announcement` (repeatable): active date-based announcements.
-
-### Phase 2: Sanity setup (implemented)
-
-Sanity Studio is in `sanity/` with all schemas and structure pre-configured.
-
-1. Install studio dependencies:
 ```bash
 npm run cms:install
-```
-2. Add studio env file:
-```bash
-cp sanity/.env.example sanity/.env
-```
-3. Fill in:
-- `SANITY_STUDIO_PROJECT_ID`
-- `SANITY_STUDIO_DATASET`
-4. Run CMS locally:
-```bash
 npm run cms:dev
 ```
 
-### Phase 3: Angular integration (implemented for initial migration)
+Use `.env` in `sanity/awell-yoga` with:
 
-The following areas are CMS-driven with fallback content:
-- About page instructor section (`/about`)
-- Studio page header + schedule section + studio hours (`/studio`)
-- Active announcements on studio page
+- `SANITY_STUDIO_PROJECT_ID`
+- `SANITY_STUDIO_DATASET`
 
-Fallback behavior:
-- If Sanity is not configured or empty, existing hardcoded content is shown.
+## Supabase Functions
 
-### Phase 4: Editor experience (implemented)
+Supabase functions and migrations are in `supabase/`.
 
-Editor usability features:
-- Singletons for one-off pages (`Site Settings`, `Homepage`, `About Page`, `Studio Page`)
-- Repeatable content types for instructors, announcements, and events
-- Clear labels and non-technical field names
-- Display ordering and visibility toggles
+Primary functions:
 
-## Environment Setup For Angular
+- `create-checkout-session`
+- `event-booking-counts`
+- `stripe-webhook`
+- `private-session-request`
+- `my-bookings`
+- `booking-dashboard`
 
-Set Sanity values in:
-- `src/environments/environment.ts`
-- `src/environments/environment.prod.ts`
+See [supabase/README.md](/Users/jacob/Projects/awellyoga/supabase/README.md) for deployment and secret requirements.
 
-Replace placeholder values:
-- `sanity.projectId`
-- `sanity.dataset`
-- keep/update `sanity.apiVersion`
+## NPM Scripts
 
-## Safe Migration Order
+- `npm start` – run Angular dev server
+- `npm run build` – production build
+- `npm run test` – unit tests
+- `npm run cms:install` – install Sanity Studio deps
+- `npm run cms:dev` – run Sanity Studio locally
+- `npm run cms:build` – build Sanity Studio
+- `npm run cms:deploy` – deploy Sanity Studio
 
-1. Configure Sanity project + dataset.
-2. Run studio and create singleton docs:
-  - Site Settings
-  - Homepage
-  - About Page
-  - Studio Page
-3. Create instructors (set display order and active flags).
-4. Create announcements and set date windows.
-5. Verify `/about` and `/studio` render CMS data.
-6. Deploy Angular app.
-7. Deploy Sanity Studio.
-8. Gradually migrate remaining pages (home, retreats/events, etc.) once validated.
+## Deployment
+
+See [docs/DEPLOYMENT.md](/Users/jacob/Projects/awellyoga/docs/DEPLOYMENT.md) for Vercel + Sanity + Supabase deployment steps.
+
+## Security Notes
+
+- Dashboard API now enforces backend authorization (not UI-only protection)
+- CORS is restricted by allowlist via Supabase function secrets
+- Stripe webhook verification includes timestamp tolerance and duplicate-event protection
+- Keep all API keys/secrets in environment/secret managers, never in source files
+
+## Portfolio Context
+
+This repository demonstrates:
+
+- Full-stack product thinking across frontend + CMS + backend + payments
+- Migration from static content to editor-friendly headless CMS
+- Practical operational features for a real service business
+- Security remediation on active production workflows

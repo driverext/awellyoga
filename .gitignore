@@ -13,6 +13,7 @@ yarn-error.log
 
 # IDEs and editors
 .idea/
+.claude/
 .project
 .classpath
 .c9/
@@ -44,7 +45,11 @@ Thumbs.db
 # Local CMS generated/runtime files
 sanity/.sanity/
 sanity/awell-yoga/.sanity/
+supabase/.temp/
 
 # Local environment files
 sanity/.env
 sanity/awell-yoga/.env
+
+# Local dashboard auth secret (do not commit)
+src/app/config/dashboard-auth.local.ts
