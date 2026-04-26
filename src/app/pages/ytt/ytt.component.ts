@@ -1,17 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 const ARIETA_BIO = 'Arieta Berisha Kirk is an internationally recognized yoga educator, somatic guide, NBHWC-certified coach, and MBSR practitioner with over 6,500 teaching hours. For more than 15 years, she has led yoga teacher trainings, transformational retreats, workshops, and large-scale events for corporations and communities across the globe.\n\nBlending neuroscience, ancient ritual, and embodied wisdom, Arieta creates deeply transformative spaces that feel both sacred and real. Her trauma-informed approach is rooted in nervous system attunement, presence, and soul-level healing—guiding others not just to practice, but to remember who they are.';
 
 @Component({
   selector: 'app-ytt',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './ytt.component.html',
   styleUrls: ['./ytt.component.css']
 })
 export class YttComponent implements OnInit, OnDestroy {
   private previousBodyOverflow = '';
+  yttInterestEmail = '';
+  yttInterestLoading = false;
+  yttInterestSuccess = '';
+  yttInterestError = '';
   programs = [
     {
       id: '200hr',
@@ -163,5 +169,47 @@ export class YttComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     document.body.style.overflow = this.previousBodyOverflow;
+  }
+
+  async submitYttInterest(): Promise<void> {
+    const email = this.yttInterestEmail.trim().toLowerCase();
+    if (!this.isValidEmail(email)) {
+      this.yttInterestError = 'Please enter a valid email address.';
+      this.yttInterestSuccess = '';
+      return;
+    }
+
+    this.yttInterestLoading = true;
+    this.yttInterestError = '';
+    this.yttInterestSuccess = '';
+
+    try {
+      const response = await fetch(`${environment.booking.edgeFunctionsBaseUrl}/ytt-interest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          program: 'NeuroYoga(TM) YTT 200',
+          cohort: '2027',
+          source: 'ytt-coming-soon-overlay'
+        })
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result?.error || 'Could not submit your email. Please try again.');
+      }
+
+      this.yttInterestSuccess = 'Thank you. We will email you when NeuroYoga(TM) YTT 200 opens.';
+      this.yttInterestEmail = '';
+    } catch (error) {
+      this.yttInterestError = (error as Error).message || 'Could not submit your email. Please try again.';
+    } finally {
+      this.yttInterestLoading = false;
+    }
+  }
+
+  private isValidEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 }

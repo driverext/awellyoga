@@ -59,6 +59,37 @@
   margin: 0.4rem 0;
 }
 
+.ytt-interest-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.ytt-interest-form input {
+  width: 100%;
+  border: 1px solid #cdbda1;
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+.ytt-interest-form .btn {
+  width: 100%;
+}
+
+.ytt-interest-success {
+  margin-top: 0.75rem;
+  color: #1f6f3c;
+  font-weight: 600;
+}
+
+.ytt-interest-error {
+  margin-top: 0.75rem;
+  color: #b42318;
+  font-weight: 600;
+}
+
 /* Introduction Section */
 .intro-section {
   background-color: white;

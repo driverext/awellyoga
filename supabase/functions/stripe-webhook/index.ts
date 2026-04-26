@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+import nodemailer from 'npm:nodemailer@6.10.1';
 
 type StripeEvent = {
   id: string;
@@ -189,10 +190,17 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
   const fromEmail = (Deno.env.get('BOOKING_EMAIL_FROM') || Deno.env.get('REMINDER_FROM_EMAIL') || '').trim();
   const replyTo = (Deno.env.get('BOOKING_EMAIL_REPLY_TO') || '').trim();
   const timezone = (Deno.env.get('BOOKING_EMAIL_TIMEZONE') || DEFAULT_STUDIO_TIMEZONE).trim();
+  const smtpHost = (Deno.env.get('SMTP_HOST') || '').trim();
+  const smtpPortRaw = (Deno.env.get('SMTP_PORT') || '').trim();
+  const smtpUser = (Deno.env.get('SMTP_USER') || '').trim();
+  const smtpPass = (Deno.env.get('SMTP_PASS') || '').trim();
+  const smtpSecureRaw = (Deno.env.get('SMTP_SECURE') || '').trim().toLowerCase();
 
   const toEmail = payload.toEmail.trim().toLowerCase();
   if (!resendApiKey || !fromEmail || !toEmail || !isValidEmail(toEmail)) {
-    return;
+    if (!fromEmail || !toEmail || !isValidEmail(toEmail)) {
+      return;
+    }
   }
 
   const customerName = payload.customerName.trim() || 'there';
@@ -265,29 +273,44 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
 
   const html = isYogaGlow
     ? `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2937">
-      <p>You&rsquo;re officially booked for Yoga Glow.</p>
-      <p>We&rsquo;ll meet by the ocean &mdash; not just for a class, but for an experience.</p>
-      <p>⸻</p>
-      <p><strong>Event Details</strong></p>
-      <p>📍 <strong>Location:</strong> Flagler Avenue, New Smyrna Beach<br/>
-      Meet at LUMA Caffè<br/>
-      🕒 <strong>Time:</strong> 10:00 AM<br/>
-      📅 <strong>Date:</strong> May 2nd, 2026</p>
-      <p>⸻</p>
-      <p><strong>What to bring</strong></p>
-      <p>A towel or yoga mat<br/>
-      Water<br/>
-      Comfortable clothing you can move in<br/>
-      An open mind (this one matters most)</p>
-      <p>⸻</p>
-      <p>I&rsquo;ll provide the immersive headsets, so you can drop fully into the experience.</p>
-      <p>⸻</p>
-      <p>Take a breath before you arrive.<br/>
-      Let the ocean do the rest.</p>
-      <p>⸻</p>
-      <p>I can&rsquo;t wait to share this with you.</p>
-      <p>&mdash;<br/>Arieta<br/>A-WELL YOGA 🤍</p>
+    <div style="margin:0;padding:24px;background:#f6f3ef;font-family:Arial,sans-serif;color:#1f2937;">
+      <div style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e8e1d8;">
+        <div style="padding:24px 28px;background:linear-gradient(135deg,#f7efe5 0%,#fff7ee 100%);border-bottom:1px solid #efe5d9;">
+          <p style="margin:0 0 8px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#7d6651;">A-WELL YOGA</p>
+          <h1 style="margin:0;font-size:26px;line-height:1.2;color:#3f2f24;">You&rsquo;re officially booked for Yoga Glow.</h1>
+        </div>
+
+        <div style="padding:24px 28px;">
+          <p style="margin:0 0 18px;font-size:16px;line-height:1.7;">We&rsquo;ll meet by the ocean &mdash; not just for a class, but for an experience.</p>
+
+          <hr style="border:none;border-top:1px solid #efe5d9;margin:18px 0;" />
+
+          <h2 style="margin:0 0 14px;font-size:18px;color:#4f3b2d;">Event Details</h2>
+          <div style="background:#fcf9f4;border:1px solid #eee3d8;border-radius:12px;padding:14px 16px;font-size:15px;line-height:1.7;">
+            <div>📍 <strong>Location:</strong> Flagler Avenue, New Smyrna Beach</div>
+            <div>Meet at LUMA Caffè</div>
+            <div>🕒 <strong>Time:</strong> 10:00 AM</div>
+            <div>📅 <strong>Date:</strong> May 2nd, 2026</div>
+          </div>
+
+          <hr style="border:none;border-top:1px solid #efe5d9;margin:18px 0;" />
+
+          <h2 style="margin:0 0 12px;font-size:18px;color:#4f3b2d;">What to bring</h2>
+          <ul style="margin:0 0 4px 20px;padding:0;font-size:15px;line-height:1.7;">
+            <li>A towel or yoga mat</li>
+            <li>Water</li>
+            <li>Comfortable clothing you can move in</li>
+            <li>An open mind (this one matters most)</li>
+          </ul>
+
+          <hr style="border:none;border-top:1px solid #efe5d9;margin:18px 0;" />
+
+          <p style="margin:0 0 18px;font-size:15px;line-height:1.7;">I&rsquo;ll provide the immersive headsets, so you can drop fully into the experience.</p>
+          <p style="margin:0 0 18px;font-size:15px;line-height:1.7;">Take a breath before you arrive.<br/>Let the ocean do the rest.</p>
+          <p style="margin:0 0 18px;font-size:15px;line-height:1.7;">I can&rsquo;t wait to share this with you.</p>
+          <p style="margin:0;font-size:15px;line-height:1.7;">&mdash;<br/>Arieta<br/>A-WELL YOGA 🤍</p>
+        </div>
+      </div>
     </div>
   `
     : `
@@ -301,6 +324,42 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
       <p>See you soon,<br/>A-WELL Yoga</p>
     </div>
   `;
+
+  // Prefer SMTP when configured (e.g. Namecheap Private Email).
+  if (smtpHost && smtpUser && smtpPass) {
+    const smtpPort = Number.parseInt(smtpPortRaw || '587', 10);
+    const smtpSecure = smtpSecureRaw ? smtpSecureRaw === 'true' : smtpPort === 465;
+
+    try {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpSecure,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass
+        }
+      });
+
+      await transporter.sendMail({
+        from: fromEmail,
+        to: [toEmail],
+        replyTo: replyTo || undefined,
+        subject,
+        text,
+        html
+      });
+
+      return;
+    } catch (error) {
+      console.error('SMTP booking confirmation failed:', (error as Error).message);
+      // Fall through to Resend if available.
+    }
+  }
+
+  if (!resendApiKey) {
+    return;
+  }
 
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
