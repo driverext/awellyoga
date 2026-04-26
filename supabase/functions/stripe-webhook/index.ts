@@ -202,26 +202,95 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
   const location = payload.eventLocation?.trim() || 'A-WELL Yoga';
   const amountLabel = formatAmount(payload.amountTotal, payload.currency);
 
+  const isYogaGlow = eventTitle.toLowerCase() === 'yoga glow';
   const subject = `Booking Confirmed: ${eventTitle}`;
-  const text = [
-    `Hi ${customerName},`,
-    '',
-    `You're confirmed for ${eventTitle}.`,
-    '',
-    `When: ${startsAt}${endsAt ? ` to ${endsAt}` : ''}`,
-    `Where: ${location}`,
-    amountLabel ? `Paid: ${amountLabel}` : null,
-    '',
-    'Please bring anything listed in the class description (mat, water, etc.).',
-    'If you need to make changes, reply to this email.',
-    '',
-    'See you soon,',
-    'A-WELL Yoga'
-  ]
-    .filter(Boolean)
-    .join('\n');
+  const text = isYogaGlow
+    ? [
+        'You’re officially booked for Yoga Glow.',
+        '',
+        'We’ll meet by the ocean — not just for a class, but for an experience.',
+        '',
+        '⸻',
+        '',
+        'Event Details',
+        '',
+        '📍 Location: Flagler Avenue, New Smyrna Beach',
+        'Meet at LUMA Caffè',
+        '🕒 Time: 10:00 AM',
+        '📅 Date: May 2nd, 2026',
+        '',
+        '⸻',
+        '',
+        'What to bring',
+        '',
+        'A towel or yoga mat',
+        'Water',
+        'Comfortable clothing you can move in',
+        'An open mind (this one matters most)',
+        '',
+        '⸻',
+        '',
+        'I’ll provide the immersive headsets, so you can drop fully into the experience.',
+        '',
+        '⸻',
+        '',
+        'Take a breath before you arrive.',
+        'Let the ocean do the rest.',
+        '',
+        '⸻',
+        '',
+        'I can’t wait to share this with you.',
+        '',
+        '—',
+        'Arieta',
+        'A-WELL YOGA 🤍'
+      ].join('\n')
+    : [
+        `Hi ${customerName},`,
+        '',
+        `You're confirmed for ${eventTitle}.`,
+        '',
+        `When: ${startsAt}${endsAt ? ` to ${endsAt}` : ''}`,
+        `Where: ${location}`,
+        amountLabel ? `Paid: ${amountLabel}` : null,
+        '',
+        'Please bring anything listed in the class description (mat, water, etc.).',
+        'If you need to make changes, reply to this email.',
+        '',
+        'See you soon,',
+        'A-WELL Yoga'
+      ]
+        .filter(Boolean)
+        .join('\n');
 
-  const html = `
+  const html = isYogaGlow
+    ? `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2937">
+      <p>You&rsquo;re officially booked for Yoga Glow.</p>
+      <p>We&rsquo;ll meet by the ocean &mdash; not just for a class, but for an experience.</p>
+      <p>⸻</p>
+      <p><strong>Event Details</strong></p>
+      <p>📍 <strong>Location:</strong> Flagler Avenue, New Smyrna Beach<br/>
+      Meet at LUMA Caffè<br/>
+      🕒 <strong>Time:</strong> 10:00 AM<br/>
+      📅 <strong>Date:</strong> May 2nd, 2026</p>
+      <p>⸻</p>
+      <p><strong>What to bring</strong></p>
+      <p>A towel or yoga mat<br/>
+      Water<br/>
+      Comfortable clothing you can move in<br/>
+      An open mind (this one matters most)</p>
+      <p>⸻</p>
+      <p>I&rsquo;ll provide the immersive headsets, so you can drop fully into the experience.</p>
+      <p>⸻</p>
+      <p>Take a breath before you arrive.<br/>
+      Let the ocean do the rest.</p>
+      <p>⸻</p>
+      <p>I can&rsquo;t wait to share this with you.</p>
+      <p>&mdash;<br/>Arieta<br/>A-WELL YOGA 🤍</p>
+    </div>
+  `
+    : `
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#1f2937">
       <p>Hi ${escapeHtml(customerName)},</p>
       <p>You&apos;re confirmed for <strong>${escapeHtml(eventTitle)}</strong>.</p>
