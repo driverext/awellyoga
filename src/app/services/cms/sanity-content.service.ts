@@ -227,7 +227,7 @@ export class SanityContentService {
     );
   }
 
-  getUpcomingEvents(limit = 40): Observable<CmsEvent[]> {
+  getUpcomingEvents(limit = 250): Observable<CmsEvent[]> {
     if (!this.client) {
       return of([]);
     }

@@ -1,5 +1,8 @@
 const DEFAULT_ALLOWED_ORIGINS = [
   'http://localhost:4200',
+  'http://localhost:4173',
+  'http://awellyoga.com',
+  'http://www.awellyoga.com',
   'https://awellyoga.com',
   'https://www.awellyoga.com'
 ];
@@ -11,7 +14,9 @@ function configuredOrigins(): string[] {
     .map((value) => value.trim())
     .filter(Boolean);
 
-  return parsed.length ? parsed : DEFAULT_ALLOWED_ORIGINS;
+  // Keep safe defaults even when ALLOWED_ORIGINS is configured so live domain access
+  // is not accidentally broken by a partial environment override.
+  return Array.from(new Set([...DEFAULT_ALLOWED_ORIGINS, ...parsed]));
 }
 
 function includesWildcard(origins: string[]): boolean {
@@ -25,7 +30,7 @@ export function isOriginAllowed(req: Request): boolean {
   }
 
   const allowedOrigins = configuredOrigins();
-  return includesWildcard(allowedOrigins) || allowedOrigins.includes(origin);
+  return includesWildcard(allowedOrigins) || allowedOrigins.includes(origin) || isDynamicAllowedOrigin(origin);
 }
 
 export function resolveAllowedOrigin(req: Request): string | null {
@@ -36,7 +41,7 @@ export function resolveAllowedOrigin(req: Request): string | null {
     return allowedOrigins[0] || null;
   }
 
-  if (includesWildcard(allowedOrigins) || allowedOrigins.includes(origin)) {
+  if (includesWildcard(allowedOrigins) || allowedOrigins.includes(origin) || isDynamicAllowedOrigin(origin)) {
     return origin;
   }
 
@@ -56,4 +61,20 @@ export function buildCorsHeaders(req: Request, methods = 'POST, OPTIONS'): Recor
   }
 
   return headers;
+}
+
+function isDynamicAllowedOrigin(origin: string): boolean {
+  try {
+    const url = new URL(origin);
+    const host = url.hostname.toLowerCase();
+
+    // Allow Vercel preview + production project domains.
+    if (host.endsWith('.vercel.app')) {
+      return true;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
 }

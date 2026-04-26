@@ -102,7 +102,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.add(
-      this.cmsContent.getUpcomingEvents(50).subscribe((events) => {
+      this.cmsContent.getUpcomingEvents().subscribe((events) => {
         this.events = events;
         void this.refreshLiveSpots();
         this.syncCalendarSelection();

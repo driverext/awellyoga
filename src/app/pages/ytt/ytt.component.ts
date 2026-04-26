@@ -203,7 +203,10 @@ export class YttComponent implements OnInit, OnDestroy {
       this.yttInterestSuccess = 'Thank you. We will email you when NeuroYoga™ YTT 200 opens.';
       this.yttInterestEmail = '';
     } catch (error) {
-      this.yttInterestError = (error as Error).message || 'Could not submit your email. Please try again.';
+      const message = (error as Error).message || '';
+      this.yttInterestError = message.includes('Failed to fetch')
+        ? 'Could not connect. Please refresh and try again. If this continues, open awellyoga.com with https.'
+        : message || 'Could not submit your email. Please try again.';
     } finally {
       this.yttInterestLoading = false;
     }
