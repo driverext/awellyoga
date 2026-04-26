@@ -189,7 +189,7 @@ export class YttComponent implements OnInit, OnDestroy {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          program: 'NeuroYoga(TM) YTT 200',
+          program: 'NeuroYoga™ YTT 200',
           cohort: '2027',
           source: 'ytt-coming-soon-overlay'
         })
@@ -200,7 +200,7 @@ export class YttComponent implements OnInit, OnDestroy {
         throw new Error(result?.error || 'Could not submit your email. Please try again.');
       }
 
-      this.yttInterestSuccess = 'Thank you. We will email you when NeuroYoga(TM) YTT 200 opens.';
+      this.yttInterestSuccess = 'Thank you. We will email you when NeuroYoga™ YTT 200 opens.';
       this.yttInterestEmail = '';
     } catch (error) {
       this.yttInterestError = (error as Error).message || 'Could not submit your email. Please try again.';

@@ -10,6 +10,17 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./workshops.component.css']
 })
 export class WorkshopsComponent implements OnInit {
+  pathInwardWorkshop = {
+    title: 'The Path INWARD',
+    date: 'May 30th, 2026',
+    time: '6:00 PM - 8:00 PM',
+    location: 'CityArt Orlando Florida',
+    price: '$35',
+    description: 'more to come 🤩',
+    image: '/assets/workshop1.jpg',
+    bookingUrl: 'https://buy.stripe.com/fZu6oA3Bx71a8ME7Ay8og05'
+  };
+
   upcomingWorkshops = [
     {
       id: 'yin-immersion',

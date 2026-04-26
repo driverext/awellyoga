@@ -2,16 +2,58 @@
 <section class="page-header">
   <div class="container">
     <h1>Workshops</h1>
-    <p>This section is currently empty. Please check back soon.</p>
+    <p>Special events and transformational experiences.</p>
   </div>
 </section>
 
 <section class="section intro-section">
   <div class="container">
-    <div class="intro-content">
-      <h2>No Workshops Published Yet</h2>
-      <p>We will announce upcoming workshops here once they are ready.</p>
-      <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">View Schedule</a>
+    <div class="workshops-grid">
+      <article class="workshop-card">
+        <div class="workshop-image">
+          <img [src]="pathInwardWorkshop.image" [alt]="pathInwardWorkshop.title">
+        </div>
+
+        <div class="workshop-content">
+          <h2 class="workshop-title">{{ pathInwardWorkshop.title }}</h2>
+          <p class="workshop-description"><strong>Workshop</strong></p>
+
+          <div class="workshop-meta">
+            <span class="meta-item">{{ pathInwardWorkshop.date }}</span>
+            <span class="meta-item">{{ pathInwardWorkshop.time }}</span>
+            <span class="meta-item">{{ pathInwardWorkshop.location }}</span>
+          </div>
+
+          <p class="workshop-description">
+            <strong>Description:</strong> {{ pathInwardWorkshop.description }}
+          </p>
+
+          <div class="workshop-footer">
+            <div class="workshop-price">
+              <span class="price">{{ pathInwardWorkshop.price }}</span>
+            </div>
+
+            <div class="workshop-actions">
+              <a
+                *ngIf="pathInwardWorkshop.bookingUrl"
+                [href]="pathInwardWorkshop.bookingUrl"
+                class="btn btn-primary"
+              >
+                Book Workshop
+              </a>
+              <a
+                *ngIf="!pathInwardWorkshop.bookingUrl"
+                routerLink="/schedule"
+                fragment="calendar"
+                class="btn btn-primary"
+              >
+                Book Workshop
+              </a>
+              <a routerLink="/schedule" fragment="calendar" class="btn-text">View In Schedule</a>
+            </div>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </section>

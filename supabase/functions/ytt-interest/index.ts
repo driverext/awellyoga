@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
   try {
     const payload = (await req.json()) as YttInterestPayload;
     const email = (payload.email || '').trim().toLowerCase();
-    const program = (payload.program || 'NeuroYoga(TM) YTT 200').trim();
+    const program = (payload.program || 'NeuroYoga™ YTT 200').trim();
     const cohort = (payload.cohort || '2027').trim();
     const source = (payload.source || 'ytt-overlay').trim();
 
