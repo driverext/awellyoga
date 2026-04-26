@@ -102,9 +102,8 @@
               </p>
               <p class="event-location" *ngIf="event.location">{{ event.location }}</p>
               <p class="event-price" *ngIf="event.priceLabel">{{ event.priceLabel }}</p>
-              <p class="event-spots" *ngIf="spotsRemaining(event) !== null">
-                <span *ngIf="!isEventFull(event)">{{ spotsRemaining(event) }} spots left</span>
-                <span *ngIf="isEventFull(event)" class="event-full-text">Class Full</span>
+              <p class="event-spots" *ngIf="isEventFull(event)">
+                <span class="event-full-text">Class Full</span>
               </p>
               <p *ngIf="event.summary">{{ event.summary }}</p>
             </div>
