@@ -19,6 +19,7 @@ type StripeEvent = {
 };
 
 const WEBHOOK_TOLERANCE_SECONDS = 300;
+const DEFAULT_STUDIO_TIMEZONE = 'America/New_York';
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
@@ -81,6 +82,18 @@ Deno.serve(async (req) => {
       if (error) {
         return json({ error: error.message }, 400);
       }
+
+      // Confirmation emails are best-effort and must never block webhook acknowledgement.
+      await sendBookingConfirmationEmail({
+        toEmail: session.customer_details?.email || metadata.customer_email || '',
+        customerName: session.customer_details?.name || '',
+        eventTitle: metadata.event_title || null,
+        eventStart: metadata.event_start || null,
+        eventEnd: metadata.event_end || null,
+        eventLocation: metadata.event_location || null,
+        amountTotal: session.amount_total ?? null,
+        currency: session.currency || null
+      });
     } else if (event.type === 'checkout.session.expired') {
       const { error } = await admin
         .from('bookings')
@@ -158,4 +171,128 @@ function json(body: unknown, status = 200): Response {
       'Content-Type': 'application/json'
     }
   });
+}
+
+type ConfirmationEmailPayload = {
+  toEmail: string;
+  customerName: string;
+  eventTitle: string | null;
+  eventStart: string | null;
+  eventEnd: string | null;
+  eventLocation: string | null;
+  amountTotal: number | null;
+  currency: string | null;
+};
+
+async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): Promise<void> {
+  const resendApiKey = (Deno.env.get('RESEND_API_KEY') || '').trim();
+  const fromEmail = (Deno.env.get('BOOKING_EMAIL_FROM') || Deno.env.get('REMINDER_FROM_EMAIL') || '').trim();
+  const replyTo = (Deno.env.get('BOOKING_EMAIL_REPLY_TO') || '').trim();
+  const timezone = (Deno.env.get('BOOKING_EMAIL_TIMEZONE') || DEFAULT_STUDIO_TIMEZONE).trim();
+
+  const toEmail = payload.toEmail.trim().toLowerCase();
+  if (!resendApiKey || !fromEmail || !toEmail || !isValidEmail(toEmail)) {
+    return;
+  }
+
+  const customerName = payload.customerName.trim() || 'there';
+  const eventTitle = payload.eventTitle?.trim() || 'your class';
+  const startsAt = formatDateTime(payload.eventStart, timezone);
+  const endsAt = formatDateTime(payload.eventEnd, timezone);
+  const location = payload.eventLocation?.trim() || 'A-WELL Yoga';
+  const amountLabel = formatAmount(payload.amountTotal, payload.currency);
+
+  const subject = `Booking Confirmed: ${eventTitle}`;
+  const text = [
+    `Hi ${customerName},`,
+    '',
+    `You're confirmed for ${eventTitle}.`,
+    '',
+    `When: ${startsAt}${endsAt ? ` to ${endsAt}` : ''}`,
+    `Where: ${location}`,
+    amountLabel ? `Paid: ${amountLabel}` : null,
+    '',
+    'Please bring anything listed in the class description (mat, water, etc.).',
+    'If you need to make changes, reply to this email.',
+    '',
+    'See you soon,',
+    'A-WELL Yoga'
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.5;color:#1f2937">
+      <p>Hi ${escapeHtml(customerName)},</p>
+      <p>You&apos;re confirmed for <strong>${escapeHtml(eventTitle)}</strong>.</p>
+      <p><strong>When:</strong> ${escapeHtml(startsAt)}${endsAt ? ` to ${escapeHtml(endsAt)}` : ''}<br/>
+      <strong>Where:</strong> ${escapeHtml(location)}${amountLabel ? `<br/><strong>Paid:</strong> ${escapeHtml(amountLabel)}` : ''}</p>
+      <p>Please bring anything listed in the class description (mat, water, etc.).<br/>
+      If you need to make changes, reply to this email.</p>
+      <p>See you soon,<br/>A-WELL Yoga</p>
+    </div>
+  `;
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: fromEmail,
+      to: [toEmail],
+      reply_to: replyTo || undefined,
+      subject,
+      text,
+      html
+    })
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    console.error('Failed to send booking confirmation email:', errorBody);
+  }
+}
+
+function formatDateTime(value: string | null, timeZone: string): string {
+  if (!value) {
+    return 'TBD';
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  }).format(date);
+}
+
+function formatAmount(amountTotal: number | null, currency: string | null): string | null {
+  if (typeof amountTotal !== 'number' || Number.isNaN(amountTotal)) {
+    return null;
+  }
+
+  const code = (currency || 'usd').toUpperCase();
+  try {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: code }).format(amountTotal / 100);
+  } catch {
+    return `${(amountTotal / 100).toFixed(2)} ${code}`;
+  }
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
