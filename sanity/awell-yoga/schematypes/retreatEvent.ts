@@ -85,6 +85,14 @@ export default defineType({
       group: 'booking'
     }),
     defineField({
+      name: 'stripeCouponId',
+      title: 'Stripe Coupon ID (Optional)',
+      type: 'string',
+      description:
+        'Optional coupon ID (example: coupon_123). If set, checkout auto-applies this coupon for this event.',
+      group: 'booking'
+    }),
+    defineField({
       name: 'platformFeePercent',
       title: 'Studio Platform Fee %',
       description:

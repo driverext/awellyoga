@@ -131,6 +131,8 @@ Deno.serve(async (req) => {
     body.set('line_items[0][price]', payload.stripePriceId);
     body.set('line_items[0][quantity]', '1');
     body.set('customer_email', email);
+    body.set('name_collection[individual][enabled]', 'true');
+    body.set('name_collection[individual][optional]', 'false');
     body.set('client_reference_id', insertedBooking.id);
     body.set('metadata[booking_id]', insertedBooking.id);
     body.set('metadata[sanity_event_id]', payload.eventId);
@@ -141,6 +143,14 @@ Deno.serve(async (req) => {
     body.set('metadata[event_location]', payload.location || '');
     body.set('metadata[price_label]', payload.priceLabel || '');
     body.set('metadata[max_spots]', maxSpots > 0 ? String(maxSpots) : '');
+
+    const shouldAllowPromotionCodes =
+      (payload.title || '').toLowerCase().includes('neuroyoga') ||
+      (payload.eventId || '').toLowerCase().includes('neuroyoga');
+
+    if (shouldAllowPromotionCodes) {
+      body.set('allow_promotion_codes', 'true');
+    }
 
     const destinationAccount = (payload.instructorStripeAccountId || '').trim();
     const platformFeePercent = clampPercent(payload.platformFeePercent);

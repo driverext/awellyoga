@@ -8,7 +8,16 @@ type StripeEvent = {
     object: {
       id: string;
       client_reference_id?: string;
-      customer_details?: { email?: string };
+      customer_details?: {
+        email?: string;
+        name?: string;
+        individual_name?: string;
+        business_name?: string;
+      };
+      collected_information?: {
+        individual_name?: string;
+        business_name?: string;
+      };
       payment_status?: string;
       amount_total?: number;
       currency?: string;
@@ -58,6 +67,13 @@ Deno.serve(async (req) => {
     const session = event.data.object;
     const metadata = session.metadata || {};
     const bookingId = metadata.booking_id || session.client_reference_id || '';
+    const collectedName =
+      session.customer_details?.individual_name ||
+      session.customer_details?.name ||
+      session.collected_information?.individual_name ||
+      session.customer_details?.business_name ||
+      session.collected_information?.business_name ||
+      '';
 
     if (!bookingId) {
       return json({ received: true, ignored: true, reason: 'missing booking id' });
@@ -68,7 +84,7 @@ Deno.serve(async (req) => {
         .from('bookings')
         .update({
           stripe_session_id: session.id,
-          stripe_customer_name: session.customer_details?.name || null,
+          stripe_customer_name: collectedName || null,
           stripe_customer_email: session.customer_details?.email || null,
           stripe_payment_intent_id: session.payment_intent || null,
           amount_total: session.amount_total ?? null,
@@ -84,17 +100,32 @@ Deno.serve(async (req) => {
         return json({ error: error.message }, 400);
       }
 
-      // Confirmation emails are best-effort and must never block webhook acknowledgement.
-      await sendBookingConfirmationEmail({
+      const emailPayload = {
         toEmail: session.customer_details?.email || metadata.customer_email || '',
-        customerName: session.customer_details?.name || '',
+        customerName: collectedName,
         eventTitle: metadata.event_title || null,
         eventStart: metadata.event_start || null,
         eventEnd: metadata.event_end || null,
         eventLocation: metadata.event_location || null,
         amountTotal: session.amount_total ?? null,
         currency: session.currency || null
-      });
+      };
+
+      // Emails are best-effort and must never block webhook acknowledgement.
+      try {
+        await sendBookingConfirmationEmail(emailPayload);
+      } catch (error) {
+        console.error('Customer booking confirmation failed:', (error as Error).message);
+      }
+
+      try {
+        await sendInternalBookingAlert({
+          ...emailPayload,
+          bookingId
+        });
+      } catch (error) {
+        console.error('Internal booking alert failed:', (error as Error).message);
+      }
     } else if (event.type === 'checkout.session.expired') {
       const { error } = await admin
         .from('bookings')
@@ -185,22 +216,16 @@ type ConfirmationEmailPayload = {
   currency: string | null;
 };
 
+type InternalAlertPayload = ConfirmationEmailPayload & {
+  bookingId: string;
+};
+
 async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): Promise<void> {
-  const resendApiKey = (Deno.env.get('RESEND_API_KEY') || '').trim();
-  const fromEmail = (Deno.env.get('BOOKING_EMAIL_FROM') || Deno.env.get('REMINDER_FROM_EMAIL') || '').trim();
-  const replyTo = (Deno.env.get('BOOKING_EMAIL_REPLY_TO') || '').trim();
   const timezone = (Deno.env.get('BOOKING_EMAIL_TIMEZONE') || DEFAULT_STUDIO_TIMEZONE).trim();
-  const smtpHost = (Deno.env.get('SMTP_HOST') || '').trim();
-  const smtpPortRaw = (Deno.env.get('SMTP_PORT') || '').trim();
-  const smtpUser = (Deno.env.get('SMTP_USER') || '').trim();
-  const smtpPass = (Deno.env.get('SMTP_PASS') || '').trim();
-  const smtpSecureRaw = (Deno.env.get('SMTP_SECURE') || '').trim().toLowerCase();
 
   const toEmail = payload.toEmail.trim().toLowerCase();
-  if (!resendApiKey || !fromEmail || !toEmail || !isValidEmail(toEmail)) {
-    if (!fromEmail || !toEmail || !isValidEmail(toEmail)) {
-      return;
-    }
+  if (!toEmail || !isValidEmail(toEmail)) {
+    return;
   }
 
   const customerName = payload.customerName.trim() || 'there';
@@ -325,6 +350,90 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
     </div>
   `;
 
+  await sendEmailViaConfiguredProvider({
+    toEmail,
+    subject,
+    text,
+    html
+  });
+}
+
+async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<void> {
+  const timezone = (Deno.env.get('BOOKING_EMAIL_TIMEZONE') || DEFAULT_STUDIO_TIMEZONE).trim();
+  const notifyTo = (Deno.env.get('BOOKING_NOTIFY_TO') || 'info@awellyoga.com').trim().toLowerCase();
+
+  if (!notifyTo || !isValidEmail(notifyTo)) {
+    return;
+  }
+
+  const eventTitle = payload.eventTitle?.trim() || 'Untitled Event';
+  const startsAt = formatDateTime(payload.eventStart, timezone);
+  const endsAt = formatDateTime(payload.eventEnd, timezone);
+  const location = payload.eventLocation?.trim() || 'A-WELL Yoga';
+  const amountLabel = formatAmount(payload.amountTotal, payload.currency) || 'Unknown';
+  const customerName = payload.customerName?.trim() || 'Unknown';
+  const customerEmail = payload.toEmail?.trim().toLowerCase() || 'Unknown';
+
+  const subject = `New Booking: ${eventTitle} (${customerName})`;
+  const text = [
+    'A new booking was paid.',
+    '',
+    `Booking ID: ${payload.bookingId}`,
+    `Customer: ${customerName}`,
+    `Customer Email: ${customerEmail}`,
+    `Event: ${eventTitle}`,
+    `When: ${startsAt}${endsAt ? ` to ${endsAt}` : ''}`,
+    `Location: ${location}`,
+    `Amount: ${amountLabel}`,
+    `Received: ${new Date().toISOString()}`
+  ].join('\n');
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2937;">
+      <h2 style="margin:0 0 12px;">New Booking Paid</h2>
+      <p style="margin:0 0 6px;"><strong>Booking ID:</strong> ${escapeHtml(payload.bookingId)}</p>
+      <p style="margin:0 0 6px;"><strong>Customer:</strong> ${escapeHtml(customerName)}</p>
+      <p style="margin:0 0 6px;"><strong>Customer Email:</strong> ${escapeHtml(customerEmail)}</p>
+      <p style="margin:0 0 6px;"><strong>Event:</strong> ${escapeHtml(eventTitle)}</p>
+      <p style="margin:0 0 6px;"><strong>When:</strong> ${escapeHtml(startsAt)}${endsAt ? ` to ${escapeHtml(endsAt)}` : ''}</p>
+      <p style="margin:0 0 6px;"><strong>Location:</strong> ${escapeHtml(location)}</p>
+      <p style="margin:0;"><strong>Amount:</strong> ${escapeHtml(amountLabel)}</p>
+    </div>
+  `;
+
+  await sendEmailViaConfiguredProvider({
+    toEmail: notifyTo,
+    subject,
+    text,
+    html,
+    replyTo: customerEmail !== 'Unknown' ? customerEmail : undefined
+  });
+}
+
+type SendEmailPayload = {
+  toEmail: string;
+  subject: string;
+  text: string;
+  html: string;
+  replyTo?: string;
+};
+
+async function sendEmailViaConfiguredProvider(payload: SendEmailPayload): Promise<void> {
+  const resendApiKey = (Deno.env.get('RESEND_API_KEY') || '').trim();
+  const fromEmail = (Deno.env.get('BOOKING_EMAIL_FROM') || Deno.env.get('REMINDER_FROM_EMAIL') || '').trim();
+  const defaultReplyTo = (Deno.env.get('BOOKING_EMAIL_REPLY_TO') || '').trim();
+  const smtpHost = (Deno.env.get('SMTP_HOST') || '').trim();
+  const smtpPortRaw = (Deno.env.get('SMTP_PORT') || '').trim();
+  const smtpUser = (Deno.env.get('SMTP_USER') || '').trim();
+  const smtpPass = (Deno.env.get('SMTP_PASS') || '').trim();
+  const smtpSecureRaw = (Deno.env.get('SMTP_SECURE') || '').trim().toLowerCase();
+
+  if (!fromEmail || !payload.toEmail || !isValidEmail(payload.toEmail)) {
+    return;
+  }
+
+  const finalPayload = withClassListFooterIfInfo(payload);
+
   // Prefer SMTP when configured (e.g. Namecheap Private Email).
   if (smtpHost && smtpUser && smtpPass) {
     const smtpPort = Number.parseInt(smtpPortRaw || '587', 10);
@@ -343,16 +452,16 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
 
       await transporter.sendMail({
         from: fromEmail,
-        to: [toEmail],
-        replyTo: replyTo || undefined,
-        subject,
-        text,
-        html
+        to: [finalPayload.toEmail],
+        replyTo: finalPayload.replyTo || defaultReplyTo || undefined,
+        subject: finalPayload.subject,
+        text: finalPayload.text,
+        html: finalPayload.html
       });
 
       return;
     } catch (error) {
-      console.error('SMTP booking confirmation failed:', (error as Error).message);
+      console.error('SMTP booking email failed:', (error as Error).message);
       // Fall through to Resend if available.
     }
   }
@@ -369,17 +478,17 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
     },
     body: JSON.stringify({
       from: fromEmail,
-      to: [toEmail],
-      reply_to: replyTo || undefined,
-      subject,
-      text,
-      html
+      to: [finalPayload.toEmail],
+      reply_to: finalPayload.replyTo || defaultReplyTo || undefined,
+      subject: finalPayload.subject,
+      text: finalPayload.text,
+      html: finalPayload.html
     })
   });
 
   if (!response.ok) {
     const errorBody = await response.text();
-    console.error('Failed to send booking confirmation email:', errorBody);
+    console.error('Failed to send booking email:', errorBody);
   }
 }
 
@@ -423,4 +532,25 @@ function escapeHtml(value: string): string {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
+}
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function withClassListFooterIfInfo(payload: SendEmailPayload): SendEmailPayload {
+  const to = payload.toEmail.trim().toLowerCase();
+  if (to !== 'info@awellyoga.com') {
+    return payload;
+  }
+
+  const classListUrl = (Deno.env.get('BOOKING_CLASS_LIST_URL') || 'https://awellyoga.com/dashboard').trim();
+  const footerText = `If you would like to view full class list click here: ${classListUrl}`;
+  const footerHtml = `<p style="margin-top:16px;">If you would like to view full class list <a href="${escapeHtml(classListUrl)}" target="_blank" rel="noopener noreferrer">click here</a>.</p>`;
+
+  return {
+    ...payload,
+    text: `${payload.text}\n\n${footerText}`,
+    html: `${payload.html}${footerHtml}`
+  };
 }

@@ -56,6 +56,7 @@ export interface CmsEvent {
   ctaUrl?: string;
   bookingUrl?: string;
   stripePriceId?: string;
+  stripeCouponId?: string;
   priceLabel?: string;
   platformFeePercent?: number;
   maxSpots?: number;

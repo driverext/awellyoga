@@ -98,6 +98,7 @@ export class BookingService {
       instructorStripeAccountId: event.instructorStripeAccountId,
       priceLabel: event.priceLabel,
       stripePriceId: event.stripePriceId,
+      stripeCouponId: event.stripeCouponId,
       bookingUrl: event.bookingUrl || event.ctaUrl,
       platformFeePercent: event.platformFeePercent,
       maxSpots: maxSpots || undefined,

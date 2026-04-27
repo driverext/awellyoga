@@ -63,6 +63,7 @@ interface RawEvent {
   ctaUrl?: string;
   bookingUrl?: string;
   stripePriceId?: string;
+  stripeCouponId?: string;
   priceLabel?: string;
   platformFeePercent?: number;
   maxSpots?: number;
@@ -245,6 +246,7 @@ export class SanityContentService {
       ctaUrl,
       bookingUrl,
       stripePriceId,
+      stripeCouponId,
       priceLabel,
       platformFeePercent,
       maxSpots,
@@ -271,6 +273,7 @@ export class SanityContentService {
             ctaUrl: item.ctaUrl,
             bookingUrl: item.bookingUrl,
             stripePriceId: item.stripePriceId,
+            stripeCouponId: item.stripeCouponId,
             priceLabel: item.priceLabel,
             platformFeePercent: this.toNumberOrUndefined(item.platformFeePercent),
             maxSpots: this.toNumberOrUndefined(item.maxSpots),

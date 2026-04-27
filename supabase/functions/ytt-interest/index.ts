@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     });
 
     const subject = `New YTT Candidate Interest (${cohort})`;
-    const text = [
+    let text = [
       'A new YTT candidate requested updates.',
       '',
       `Email: ${email}`,
@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
       `Submitted: ${new Date().toISOString()}`
     ].join('\n');
 
-    const html = `
+    let html = `
       <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2937;">
         <h2 style="margin:0 0 12px;">New YTT Candidate Interest</h2>
         <p style="margin:0 0 6px;"><strong>Email:</strong> ${escapeHtml(email)}</p>
@@ -74,6 +74,12 @@ Deno.serve(async (req) => {
         <p style="margin:0;"><strong>Submitted:</strong> ${new Date().toISOString()}</p>
       </div>
     `;
+
+    if (toEmail.trim().toLowerCase() === 'info@awellyoga.com') {
+      const classListUrl = (Deno.env.get('BOOKING_CLASS_LIST_URL') || 'https://awellyoga.com/dashboard').trim();
+      text = `${text}\n\nIf you would like to view full class list click here: ${classListUrl}`;
+      html = `${html}<p style="margin-top:16px;">If you would like to view full class list <a href="${escapeHtml(classListUrl)}" target="_blank" rel="noopener noreferrer">click here</a>.</p>`;
+    }
 
     await transporter.sendMail({
       from: fromEmail,
