@@ -13,20 +13,21 @@ export class OfferingsComponent {
   classes = [
     {
       id: 'vinyasa',
-      name: 'Vinyasa Flow',
+      name: 'NeuroYoga™ Therapeutic Yoga',
       level: 'All Levels',
-      description: 'A dynamic practice that links breath with movement, flowing from one pose to the next. Build strength, increase flexibility, and cultivate mindfulness.',
+      description:
+        'A guided, nervous system-based session designed to help you regulate your body through breath, intentional movement, and awareness. Each session focuses on understanding how your body responds to stress and learning how to shift into a more balanced, grounded state. Perfect for those experiencing anxiety, overwhelm, or seeking a deeper, therapeutic approach to yoga.',
       benefits: [
-        'Builds strength and flexibility',
-        'Improves cardiovascular health',
-        'Reduces stress and anxiety',
-        'Enhances mind-body connection'
+        'Regulates the nervous system and reduces stress',
+        'Decreases anxiety and emotional overwhelm',
+        'Enhances mind-body awareness and presence',
+        'Builds resilience and emotional stability'
       ],
       image: 'https://images.unsplash.com/photo-1552286450-4a669f880062?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80'
     },
     {
       id: 'gentle',
-      name: 'Gentle Yoga',
+      name: 'Gentle Vinyasa Flow',
       level: 'Beginner Friendly',
       description: 'A slow-paced, nurturing practice focusing on basic poses, proper alignment, and breathwork. Perfect for beginners or those seeking a restorative experience.',
       benefits: [
