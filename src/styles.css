@@ -1,19 +1,31 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --primary-green: #473322;
-  --secondary-green: #826c54;
-  --light-green: #c8b4a7;
-  --caramel: #826c54;
-  --light-caramel: #d4c5b8;
-  --text-dark: #333333;
-  --text-light: #f5f5f5;
+  --ink-900: #271a16;
+  --ink-700: #5d4335;
+  --ink-500: #8f715d;
+  --sand-50: #fcf8f3;
+  --sand-100: #f5ede3;
+  --sand-200: #eadccc;
+  --sand-300: #dbc5b0;
+  --clay-500: #a46944;
+  --clay-600: #915737;
+  --sage-600: #5f7362;
+  --sage-700: #435548;
+  --text-dark: var(--ink-900);
+  --text-medium: #695145;
+  --text-light: #fffaf6;
+  --primary-green: var(--ink-900);
+  --secondary-green: var(--ink-700);
+  --light-green: var(--sand-100);
+  --caramel: var(--clay-500);
+  --light-caramel: var(--sand-200);
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
-  --spacing-xl: 4rem;
-  --border-radius: 8px;
-  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --spacing-xl: 4.5rem;
+  --border-radius: 18px;
+  --box-shadow: 0 18px 50px rgba(40, 24, 17, 0.1);
 }
 
 * {
@@ -22,69 +34,127 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Montserrat', Arial, sans-serif;
-  color: var(--text-dark);
-  line-height: 1.6;
-  background-color: var(--text-light);
+html {
+  scroll-behavior: smooth;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 700;
+body {
+  font-family: 'Manrope', sans-serif;
+  color: var(--text-dark);
+  line-height: 1.6;
+  background: var(--sand-50);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   margin-bottom: var(--spacing-md);
+  color: var(--ink-900);
+}
+
+h1 {
+  font-size: clamp(3rem, 7vw, 5.8rem);
+}
+
+h2 {
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  line-height: 0.98;
+}
+
+h3 {
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  line-height: 1.05;
 }
 
 p {
   margin-bottom: var(--spacing-md);
+  color: var(--text-medium);
 }
 
 a {
   color: var(--primary-green);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: color 0.24s ease, opacity 0.24s ease, transform 0.24s ease;
 }
 
 a:hover {
-  color: var(--secondary-green);
+  color: var(--clay-600);
+}
+
+img {
+  max-width: 100%;
 }
 
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 0 1.25rem;
 }
 
 .btn {
-  display: inline-block;
-  padding: 0.8rem 2rem;
-  border-radius: var(--border-radius);
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, color 0.22s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 .btn-primary {
-  background-color: var(--primary-green);
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, #2f211b 0%, #6b4a39 100%);
   color: var(--text-light);
-  border: none;
+  box-shadow: 0 18px 40px rgba(55, 33, 23, 0.22);
 }
 
 .btn-primary:hover {
-  background-color: var(--secondary-green);
   color: var(--text-light);
+  background: linear-gradient(135deg, #3a2922 0%, #7a5540 100%);
 }
 
 .btn-secondary {
-  background-color: var(--caramel);
-  color: var(--text-dark);
-  border: none;
+  border: 1px solid rgba(70, 44, 29, 0.14);
+  background: rgba(255, 252, 249, 0.88);
+  color: var(--ink-900);
 }
 
 .btn-secondary:hover {
-  background-color: var(--light-caramel);
+  background: #fff4ea;
+  color: var(--ink-900);
+}
+
+.btn-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-weight: 700;
+  color: var(--primary-green);
+}
+
+.btn-text::after {
+  content: '→';
+  transition: transform 0.24s ease;
+}
+
+.btn-text:hover::after {
+  transform: translateX(4px);
 }
 
 .section {
