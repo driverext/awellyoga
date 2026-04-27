@@ -94,7 +94,7 @@ Deno.serve(async (req) => {
       .sort((a, b) => b.revenueCents - a.revenueCents)
       .slice(0, 10);
 
-    const recentBookings = bookings.slice(0, 50).map((row) => ({
+    const recentBookings = bookings.slice(0, 200).map((row) => ({
       id: row.id,
       eventTitle: row.event_title,
       eventStart: row.event_start,

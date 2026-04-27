@@ -35,6 +35,53 @@
     </div>
 
     <div class="table-card" *ngIf="!loading && !error">
+      <h2>Class Calendar</h2>
+      <div class="calendar-toolbar">
+        <button type="button" class="btn btn-secondary" (click)="previousMonth()">Previous</button>
+        <p>{{ monthLabel() }}</p>
+        <button type="button" class="btn btn-secondary" (click)="nextMonth()">Next</button>
+      </div>
+
+      <div class="calendar-grid">
+        <div class="weekday">Sun</div>
+        <div class="weekday">Mon</div>
+        <div class="weekday">Tue</div>
+        <div class="weekday">Wed</div>
+        <div class="weekday">Thu</div>
+        <div class="weekday">Fri</div>
+        <div class="weekday">Sat</div>
+
+        <button
+          type="button"
+          class="calendar-day"
+          *ngFor="let day of calendarDays"
+          [class.other-month]="!day.inCurrentMonth"
+          [class.selected]="isSelected(day)"
+          [class.has-events]="day.eventCount > 0"
+          (click)="selectDate(day)"
+        >
+          <span class="day-number">{{ day.date | date:'d' }}</span>
+          <span class="day-count" *ngIf="day.eventCount > 0">{{ day.eventCount }}</span>
+        </button>
+      </div>
+
+      <div class="day-events">
+        <h3>{{ selectedDateHeading() }}</h3>
+        <div *ngFor="let event of selectedDateEvents()" class="day-event-row">
+          <div>
+            <p class="event-title">{{ event.title }}</p>
+            <p class="event-meta">
+              {{ event.startDate | date:'h:mm a' }}<span *ngIf="event.endDate"> - {{ event.endDate | date:'h:mm a' }}</span>
+              <span *ngIf="event.location"> · {{ event.location }}</span>
+            </p>
+          </div>
+          <button type="button" class="btn btn-primary" (click)="openAttendance(event)">View Attendance</button>
+        </div>
+        <p *ngIf="selectedDateEvents().length === 0" class="empty-note">No classes on this day.</p>
+      </div>
+    </div>
+
+    <div class="table-card" *ngIf="!loading && !error">
       <h2>Revenue by Event</h2>
       <table>
         <thead>
@@ -116,3 +163,34 @@
     </div>
   </div>
 </section>
+
+<div class="modal-backdrop" *ngIf="attendanceModalOpen" (click)="closeAttendanceModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ selectedAttendanceEvent?.title || 'Attendance' }}</h3>
+      <button type="button" class="close-btn" (click)="closeAttendanceModal()">×</button>
+    </div>
+    <p class="modal-subtitle" *ngIf="selectedAttendanceEvent">
+      {{ selectedAttendanceEvent.startDate | date:'EEEE, MMM d, y h:mm a' }}
+      <span *ngIf="selectedAttendanceEvent.location"> · {{ selectedAttendanceEvent.location }}</span>
+    </p>
+
+    <div class="attendance-section">
+      <h4>Confirmed (Paid)</h4>
+      <div class="attendance-row" *ngFor="let attendee of paidAttendees(selectedAttendanceEvent)">
+        <p>{{ attendee.customerName || 'Name not provided' }}</p>
+        <p>{{ attendee.customerEmail || '-' }}</p>
+      </div>
+      <p *ngIf="paidAttendees(selectedAttendanceEvent).length === 0" class="empty-note">No paid attendees yet.</p>
+    </div>
+
+    <div class="attendance-section">
+      <h4>Pending</h4>
+      <div class="attendance-row" *ngFor="let attendee of pendingAttendees(selectedAttendanceEvent)">
+        <p>{{ attendee.customerName || 'Name not provided' }}</p>
+        <p>{{ attendee.customerEmail || '-' }}</p>
+      </div>
+      <p *ngIf="pendingAttendees(selectedAttendanceEvent).length === 0" class="empty-note">No pending attendees.</p>
+    </div>
+  </div>
+</div>
