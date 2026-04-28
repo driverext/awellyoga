@@ -1,9 +1,17 @@
 <!-- Hero Section -->
-<section class="hero-section" [ngStyle]="{'background-image': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + retreat?.image + ')'}">
+<section class="hero-section" [ngStyle]="{'background-image': 'linear-gradient(rgba(22, 12, 8, 0.28), rgba(22, 12, 8, 0.62)), url(' + retreat?.image + ')'}">
+  <div class="hero-overlay"></div>
   <div class="hero-content">
+    <span class="hero-eyebrow">NeuroYoga™ Retreat Experience</span>
     <h1>{{retreat?.title}}</h1>
+    <p class="subtitle" *ngIf="retreat?.subtitle">{{retreat?.subtitle}}</p>
     <p class="location">{{retreat?.location}}</p>
     <p class="dates">{{retreat?.dates}}</p>
+    <div class="hero-meta">
+      <span>{{retreat?.duration}}</span>
+      <span *ngIf="retreat?.teachers?.length">{{retreat?.teachers?.join(' · ')}}</span>
+      <span *ngIf="retreat?.pricingCards?.length">From {{retreat?.pricingCards?.[1]?.price || retreat?.price?.shared}}</span>
+    </div>
     <div class="status-badges" *ngIf="retreat?.status">
       <div class="status-badge sold-out" *ngIf="retreat?.status?.year2025">
         2025: {{retreat?.status?.year2025}}
@@ -20,33 +28,42 @@
   <!-- Introduction -->
   <section class="section intro-section">
     <div class="container">
-      <h2>JOIN US FOR AN INTIMATE RETREAT IN {{retreat?.location}}:</h2>
-      <p class="lead">This retreat includes a unique blend of yoga, ritual, rest, and soul-awakening experiences:</p>
-      <ul class="experience-list">
-        <li *ngFor="let highlight of retreat?.highlights">{{highlight}}</li>
-      </ul>
+      <div class="intro-shell">
+        <div class="intro-copy">
+          <h2>{{retreat?.introTitle || ('JOIN US FOR AN INTIMATE RETREAT IN ' + retreat?.location + ':')}}</h2>
+          <p class="lead">{{retreat?.introLead || 'This retreat includes a unique blend of yoga, ritual, rest, and soul-awakening experiences:'}}</p>
+          <p class="description" *ngIf="retreat?.description">{{retreat?.description}}</p>
+        </div>
+        <div class="intro-highlight-card">
+          <span class="card-label">At A Glance</span>
+          <ul class="experience-list">
+            <li *ngFor="let highlight of retreat?.highlights">{{highlight}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="experience-copy" *ngIf="retreat?.experienceTitle || retreat?.experienceDescription">
+        <h3 *ngIf="retreat?.experienceTitle">{{retreat?.experienceTitle}}</h3>
+        <p *ngIf="retreat?.experienceDescription">{{retreat?.experienceDescription}}</p>
+      </div>
       <div class="tagline">
-        <h3>No performance. No pressure. Just space to return to who you truly are.</h3>
+        <h3>No performance. No expectation. Just real tools that help you return differently.</h3>
       </div>
     </div>
   </section>
 
-  <!-- What Makes It Different -->
+  <!-- The Journey -->
   <section class="section different-section alt-bg">
     <div class="container">
-      <h2>What Makes It Different:</h2>
+      <h2>THE JOURNEY</h2>
       <div class="different-grid">
-        <div class="different-item">
-          <h3>Not performative, but personal</h3>
-          <p>No pressure to "keep up" or "look the part." This is a retreat for real people in real healing, not curated perfection.</p>
-        </div>
-        <div class="different-item">
-          <h3>Intentional over packed</h3>
-          <p>Every offering is meaningful, with enough spaciousness to integrate, reflect, and truly rest.</p>
-        </div>
-        <div class="different-item">
-          <h3>Guided by lived wisdom</h3>
-          <p>Led by experienced teachers who know how to guide deep transformation with gentleness, safety, and power.</p>
+        <div class="different-item journey-card" *ngFor="let phase of retreat?.journey">
+          <span class="journey-day">{{phase.day}}</span>
+          <h3>{{phase.title}}</h3>
+          <p>{{phase.description}}</p>
+          <ul class="journey-list">
+            <li *ngFor="let practice of phase.practices">{{practice}}</li>
+          </ul>
+          <p class="journey-theme">{{phase.theme}}</p>
         </div>
       </div>
     </div>
@@ -58,7 +75,9 @@
       <h2>RETREAT VENUE</h2>
       <p class="venue-description">{{retreat?.venueDescription}}</p>
       <div class="venue-images">
-        <img *ngFor="let imageUrl of retreat?.venueImages" [src]="imageUrl" [alt]="'Puglia Retreat Venue'">
+        <figure class="venue-image-card" *ngFor="let imageUrl of retreat?.venueImages">
+          <img [src]="imageUrl" [alt]="retreat?.location + ' retreat venue'">
+        </figure>
       </div>
     </div>
   </section>
@@ -80,28 +99,63 @@
     </div>
   </section>
 
+  <!-- Who It's For -->
+  <section class="section fit-section">
+    <div class="container two-column-grid">
+      <div class="fit-panel">
+        <h2>WHO THIS IS FOR</h2>
+        <ul class="included-list">
+          <li *ngFor="let item of retreat?.whoItsFor">{{item}}</li>
+        </ul>
+      </div>
+      <div class="fit-panel fit-panel-accent">
+        <h2>WHAT YOU LEAVE WITH</h2>
+        <ul class="included-list">
+          <li *ngFor="let item of retreat?.whatYouLeaveWith">{{item}}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- Pricing -->
   <section class="section pricing-section">
     <div class="container">
-      <h2>PRICING</h2>
+      <h2>INVESTMENT</h2>
       <div class="pricing-grid">
-        <div class="price-item">
-          <h3>Twin Share</h3>
-          <p class="price">{{retreat?.price?.shared}}</p>
-        </div>
-        <div class="price-item">
-          <h3>Private Room</h3>
-          <p class="price">{{retreat?.price?.private}}</p>
+        <div class="price-item" *ngFor="let option of retreat?.pricingCards">
+          <h3>{{option.label}}</h3>
+          <p class="price">{{option.price}}</p>
+          <ul class="price-details">
+            <li *ngFor="let detail of option.details">{{detail}}</li>
+          </ul>
         </div>
       </div>
       <div class="price-special">
-        <h3>Come with a friend & you both SAVE!</h3>
+        <h3>Limited spots to keep the experience intimate.</h3>
         <p>{{retreat?.earlyBird}}</p>
+        <ul class="price-includes" *ngIf="retreat?.pricingIncludes?.length">
+          <li *ngFor="let item of retreat?.pricingIncludes">✔ {{item}}</li>
+        </ul>
       </div>
       <div class="booking-cta">
         <a [href]="'mailto:info@awellyoga.com?subject=Booking Inquiry: ' + retreat?.location + ' Retreat - ' + retreat?.dates + '&body=Hi,%0D%0A%0D%0AI am interested in booking the ' + retreat?.location + ' retreat for ' + retreat?.dates + '.%0D%0A%0D%0APlease send me more information about availability and the booking process.%0D%0A%0D%0AThank you!'" class="btn btn-primary">
           {{retreat?.status?.year2025 ? 'Contact for 2026 Booking' : 'Reserve Your Spot'}}
         </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detailed Experience -->
+  <section class="section itinerary-section alt-bg" *ngIf="retreat?.detailedExperience?.length">
+    <div class="container">
+      <h2>DETAILED EXPERIENCE</h2>
+      <div class="itinerary-grid">
+        <div class="itinerary-card" *ngFor="let day of retreat?.detailedExperience">
+          <h3>{{day.day}}</h3>
+          <ul class="included-list">
+            <li *ngFor="let item of day.items">{{item}}</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>

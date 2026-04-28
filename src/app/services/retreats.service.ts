@@ -10,31 +10,151 @@ export class RetreatsService {
   private retreatsData = [
     {
       id: 'rugova-2026',
-      title: 'Return to the Wild: Rugova Retreat',
-      location: 'Rugova, Kosovo',
-      dates: 'September 17-21, 2026',
-      duration: '5 days / 4 nights',
+      title: 'RESET™ RETREAT',
+      subtitle: 'A 3-Day Nervous System Reset',
+      location: 'Shkrel, Rugova Valley, Kosovo',
+      dates: 'June 19-21, 2026',
+      duration: '3 days / 2 nights',
       teachers: ['Arieta Berisha Kirk'],
       price: {
-        shared: 'Coming soon',
-        private: 'Coming soon',
-        deposit: 'Coming soon'
+        shared: '€480',
+        private: '€550',
+        deposit: 'Inquire to reserve'
       },
-      earlyBird: 'Details and early booking information will be announced soon.',
-      description: 'Join us in Rugova, Kosovo for a retreat immersed in mountain air, grounding practice, and deep restoration. This upcoming experience is designed for students who want space to reconnect through yoga, nervous system healing, nature, and intentional community.',
+      earlyBird: '2 nights / 3 days, all inclusive excluding alcohol. Limited spots to keep the experience intimate.',
+      introTitle: 'This is not a yoga retreat. This is a reset of your nervous system.',
+      introLead: 'A return to the part of you that exists underneath the noise, the pressure, and the constant doing.',
+      description: 'Over three days, we move through a carefully designed arc that mirrors how real change happens in the body. You do not just relax. You release, regulate, rebuild, and return differently. Through NeuroYoga™, a method blending neuroscience, breathwork, and embodied practice, you learn how to work with your system instead of against it. No performance. No pressure to be good at yoga. Just real, applicable tools that shift how you feel in your body.',
+      experienceTitle: 'The Experience',
+      experienceDescription: 'Set between the majestic Albanian Alps and Dinaric Alps chains, this retreat is designed to hold you physically, mentally, and emotionally. You will move, breathe, reset, reflect, and reconnect. Not to escape your life, but to return to it with clarity, steadiness, and a different internal state.',
       highlights: [
-        'Daily yoga, breathwork, and guided nervous system regulation practices',
-        'Mountain stillness, hiking, and time in nature',
-        'Intentional rest, reflection, and community connection',
-        'Locally inspired meals in a peaceful retreat setting',
-        'A spacious rhythm of movement, recovery, and soul-level reset'
+        'Release -> regulate -> rebuild -> return differently',
+        'NeuroYoga™ sessions rooted in breath, neuroscience, and embodied practice',
+        'Tools for regulation that work in real life, not just on retreat',
+        'No performance, no expectation, no pressure to do yoga a certain way',
+        'A slower, deeper experience designed for clarity, steadiness, and lasting change'
       ],
-      image: '/assets/albania7.jpg',
+      journey: [
+        {
+          day: 'Friday - Root',
+          title: 'Letting go. Grounding. Arriving.',
+          description: 'We begin by slowing everything down and returning awareness to the body, where regulation actually happens.',
+          practices: [
+            'Nervous system down-regulation',
+            'Breathwork for anxiety release',
+            'Slow, intentional movement',
+            'Evening integration'
+          ],
+          theme: 'You cannot build on a system that is still in survival mode.'
+        },
+        {
+          day: 'Saturday - Rise & Radiate',
+          title: 'Growth. Expansion. Expression.',
+          description: 'Once the body feels safe, it opens. This is where we begin to build capacity physically and mentally.',
+          practices: [
+            'Structured NeuroYoga™ method',
+            'Breath-led activation practices',
+            'Somatic + intuitive movement',
+            'Strength, balance, and resilience work',
+            'Radiate Circle for reflection, integration, and connection'
+          ],
+          theme: 'Expansion without overwhelm. Strength without tension.'
+        },
+        {
+          day: 'Sunday - Return',
+          title: 'Integration. Coming back differently.',
+          description: 'This is where the shift locks in through stillness, restoration, and practical tools to carry home.',
+          practices: [
+            'Gentle, restorative practice',
+            'Breath + stillness work',
+            'Integration tools to take home',
+            'Closing ritual'
+          ],
+          theme: 'You do not need a new life. You need a new relationship with your body.'
+        }
+      ],
+      whoItsFor: [
+        'You feel overwhelmed, anxious, or constantly on',
+        'You have tried to relax, but your body does not follow',
+        'You want tools that actually work in real life',
+        'You are ready to understand your nervous system instead of fight it'
+      ],
+      whatYouLeaveWith: [
+        'Practical tools to regulate your state anytime',
+        'A deeper understanding of your body and nervous system',
+        'A calmer, more stable baseline',
+        'A different relationship with stress',
+        'The NeuroYoga™ 4-Week Guided Journal to support integration beyond the retreat',
+        'A circle of like-minded women rooted in shared experience and genuine connection',
+        'Ongoing access to support and continued guidance from Arieta and Melita'
+      ],
+      detailedExperience: [
+        {
+          day: 'Friday - Root',
+          items: [
+            'Arrival and check-in',
+            'Opening space + intention setting',
+            'The NeuroYoga™ Method ROOT session with breathwork, slow movement, and sensory awareness',
+            'Evening mindful dining ritual',
+            'Guided wind-down with breath and stillness',
+            'Focus: shifting out of survival mode into safety'
+          ]
+        },
+        {
+          day: 'Saturday - Rise & Radiate',
+          items: [
+            'Morning RISE activation session to build strength, resilience, and stability',
+            'Breakfast',
+            'Free time, SPA, and integration',
+            'Guided nature immersion (Shinrin-yoku) or silent meditation',
+            'Afternoon integration flow balancing effort and ease',
+            'Mindful dining ritual',
+            'Radiate Circle with reflection, nervous system education, and connection',
+            'Optional salt room meditation for deep rest + reset',
+            'Focus: expansion without overwhelm, expression without pressure'
+          ]
+        },
+        {
+          day: 'Sunday - Return',
+          items: [
+            'The NeuroYoga™ Method RETURN session with gentle restorative integration',
+            'Breakfast',
+            'Closing integration + reflection',
+            'Departure',
+            'Focus: leaving grounded, clear, and resourced, not just relaxed'
+          ]
+        }
+      ],
+      pricingCards: [
+        {
+          label: 'Single Occupancy',
+          price: '€550',
+          details: [
+            'Private room with king-size bed',
+            'Front-facing with majestic mountain views'
+          ]
+        },
+        {
+          label: 'Shared Occupancy',
+          price: '€480',
+          details: [
+            'Twin room with two single beds',
+            'Back-facing with peaceful forest and tree views'
+          ]
+        }
+      ],
+      pricingIncludes: [
+        'Accommodation',
+        'Breakfast & dinner',
+        'Spa access',
+        'Full NeuroYoga™ method'
+      ],
+      image: '/assets/shkrel.png',
       featured: true,
       status: {
         year2026: 'UPCOMING'
       },
-      venueDescription: 'Set against the dramatic mountain landscape of Rugova, this retreat will offer a slower, more spacious experience rooted in nature, rest, and embodied practice. Expect crisp air, grounded simplicity, and the kind of setting that makes it easier to actually exhale.',
+      venueDescription: 'Grand Hotel Belushi is our home for the weekend, nestled in Shkrel in the heart of Rugova Valley. Surrounded by mountain air, forest stillness, and expansive alpine views, the setting supports exactly what this retreat is designed to do: help the body exhale, soften, and reset.',
       venueImages: [
         '/assets/albania7.jpg',
         '/assets/albania6.jpg',
@@ -42,17 +162,25 @@ export class RetreatsService {
         '/assets/albania1.jpg'
       ],
       included: [
-        '4 nights accommodation',
-        'Daily yoga and breathwork sessions',
-        'Group reflection and integration practices',
-        'Meals during the retreat',
-        'Curated local excursions and nature experiences'
+        '2 nights / 3 days accommodation',
+        'The NeuroYoga™ Method daily immersive guided sessions',
+        'Breathwork and nervous system regulation practices',
+        'Guided salt room meditation (halotherapy experience)',
+        'Guided nature immersion (Shinrin-yoku) and silent meditation',
+        'SPA access including sauna, jacuzzi, pool, and relaxation areas',
+        'Breakfast',
+        'Evening mindful dining experience with shared group dinners',
+        'Vegetarian, pescetarian, and gluten-friendly options',
+        'Evening integration through the Radiate Circle',
+        'Full retreat experience + closing integration',
+        'And so much more'
       ],
       notIncluded: [
         'Flights',
         'Travel insurance',
-        'Transport outside retreat itinerary',
-        'Additional private treatments or excursions'
+        'Transport to and from the retreat venue',
+        'Alcohol',
+        'Additional private treatments or personal expenses'
       ],
       hostInfo: {
         hosts: [
