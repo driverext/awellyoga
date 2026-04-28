@@ -32,6 +32,7 @@ export default defineType({
     defineField({
       name: 'scheduleImage',
       title: 'Schedule Image',
+      description: 'Upload or replace the image shown above the schedule section.',
       type: 'image',
       options: {hotspot: true},
       group: 'scheduleIntro'

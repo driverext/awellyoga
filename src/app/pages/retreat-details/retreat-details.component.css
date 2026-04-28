@@ -401,6 +401,26 @@ h2 {
   margin-bottom: 0.8rem;
 }
 
+.room-video-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.25rem;
+  min-height: 46px;
+  padding: 0.8rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(133, 96, 71, 0.16);
+  background: rgba(255, 252, 249, 0.96);
+  color: var(--primary-green);
+  font-weight: 700;
+  box-shadow: 0 12px 28px rgba(40, 24, 17, 0.08);
+}
+
+.room-video-button:hover {
+  color: var(--clay-600);
+  background: #fff7f0;
+}
+
 .price-special {
   margin: 2.5rem 0 0;
   padding: 2rem 2.2rem;

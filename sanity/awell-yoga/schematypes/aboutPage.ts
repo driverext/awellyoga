@@ -24,8 +24,15 @@ export default defineType({
     defineField({
       name: 'storyImage',
       title: 'Story Image',
+      description: 'Upload or replace the main image for the story section.',
       type: 'image',
       options: {hotspot: true},
+      group: 'story'
+    }),
+    defineField({
+      name: 'storyImageAlt',
+      title: 'Story Image Alt Text',
+      type: 'string',
       group: 'story'
     }),
     defineField({name: 'philosophyHeading', title: 'Philosophy Heading', type: 'string', group: 'philosophy'}),
@@ -39,8 +46,15 @@ export default defineType({
     defineField({
       name: 'philosophyImage',
       title: 'Philosophy Image',
+      description: 'Upload or replace the main image for the philosophy section.',
       type: 'image',
       options: {hotspot: true},
+      group: 'philosophy'
+    }),
+    defineField({
+      name: 'philosophyImageAlt',
+      title: 'Philosophy Image Alt Text',
+      type: 'string',
       group: 'philosophy'
     }),
     defineField({

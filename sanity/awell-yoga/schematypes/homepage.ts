@@ -15,9 +15,16 @@ export default defineType({
     defineField({
       name: 'heroImage',
       title: 'Hero Image',
-      description: 'Main image at the top of the homepage.',
+      description: 'Main image at the top of the homepage. Click the image box to upload or replace the photo.',
       type: 'image',
       options: {hotspot: true},
+      group: 'hero'
+    }),
+    defineField({
+      name: 'heroImageAlt',
+      title: 'Hero Image Alt Text',
+      description: 'Short description for accessibility and SEO. Example: Woman practicing yoga in softly lit studio.',
+      type: 'string',
       group: 'hero'
     }),
     defineField({name: 'primaryButtonLabel', title: 'Primary Button Text', type: 'string', group: 'buttons'}),

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 
-const ARIETA_BIO = 'Arieta Berisha Kirk is an internationally recognized yoga educator, somatic guide, NBHWC-certified coach, and MBSR practitioner with over 6,500 teaching hours. For more than 15 years, she has led yoga teacher trainings, transformational retreats, workshops, and large-scale events for corporations and communities across the globe.\n\nBlending neuroscience, ancient ritual, and embodied wisdom, Arieta creates deeply transformative spaces that feel both sacred and real. Her trauma-informed approach is rooted in nervous system attunement, presence, and soul-level healing—guiding others not just to practice, but to remember who they are.';
+const ARIETA_BIO = 'Creator of the RESET Method™ (NeuroYoga-Based)\n\nE-RYT 500 • Founder of A-WELL Yoga\nWith over 7,000 teaching hours and a background in clinical psychology and neuroscience\n\nArieta teaches yoga as a path of honest self-inquiry.\nHer work begins with the breath—allowing the nervous system to settle so movement arises from awareness, not performance.\n\nBlending science, embodied practice, and lived experience, she creates spaces that feel both grounded and deeply transformative.\n\nShe believes yoga begins the moment we are willing to meet ourselves with truth.\nHer mission is simple: to help people understand why they practice—so yoga becomes a way of living.';
 
 @Component({
   selector: 'app-ytt',

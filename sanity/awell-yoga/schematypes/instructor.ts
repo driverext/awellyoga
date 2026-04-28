@@ -23,12 +23,18 @@ export default defineType({
     defineField({
       name: 'photo',
       title: 'Profile Photo',
-      description: 'Best results: portrait image with clear face framing.',
+      description: 'Best results: portrait image with clear face framing. Click here anytime to upload or replace the photo.',
       type: 'image',
       options: {hotspot: true},
       group: 'profile'
     }),
-    defineField({name: 'photoAlt', title: 'Photo Alt Text', type: 'string', group: 'profile'}),
+    defineField({
+      name: 'photoAlt',
+      title: 'Photo Alt Text',
+      description: 'Example: Arieta Berisha Kirk smiling in the A-WELL Yoga studio.',
+      type: 'string',
+      group: 'profile'
+    }),
     defineField({
       name: 'bio',
       title: 'Bio',

@@ -9,7 +9,7 @@ export default defineType({
     {name: 'schedule', title: 'Date, Time, Place'},
     {name: 'booking', title: 'Booking & Payment'},
     {name: 'capacity', title: 'Class Capacity'},
-    {name: 'media', title: 'Image'},
+    {name: 'media', title: 'Photos'},
     {name: 'advanced', title: 'Advanced'}
   ],
   fields: [
@@ -127,7 +127,41 @@ export default defineType({
       group: 'capacity',
       validation: (rule) => rule.min(0).max(100)
     }),
-    defineField({name: 'heroImage', title: 'Event Image', type: 'image', options: {hotspot: true}, group: 'media'}),
+    defineField({
+      name: 'heroImage',
+      title: 'Main Event Photo',
+      description: 'This is the main image shown for the event. Click here to upload or replace it.',
+      type: 'image',
+      options: {hotspot: true},
+      group: 'media'
+    }),
+    defineField({
+      name: 'heroImageAlt',
+      title: 'Main Photo Alt Text',
+      description: 'Short description of the main photo.',
+      type: 'string',
+      group: 'media'
+    }),
+    defineField({
+      name: 'galleryImages',
+      title: 'Extra Photos',
+      description: 'Optional additional photos for this event. Upload as many as you want for future use.',
+      type: 'array',
+      group: 'media',
+      of: [
+        {
+          type: 'image',
+          options: {hotspot: true},
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string'
+            })
+          ]
+        }
+      ]
+    }),
     defineField({
       name: 'displayOrder',
       title: 'Display Order',

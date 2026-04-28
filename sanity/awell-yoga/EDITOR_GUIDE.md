@@ -11,6 +11,20 @@
 - Keep your website running locally (`http://localhost:4200`) while editing.
 - This preview shows how the real page looks while you update fields.
 
+## How to replace a photo
+1. Open the page or event you want to edit.
+2. Go to the field labeled **Image**, **Photo**, or **Main Event Photo**.
+3. Click the current image.
+4. Choose **Replace** or drag a new file directly into the image box.
+5. Update the **Alt Text** field if it is shown.
+6. Click **Publish**.
+
+Tips:
+- Photos from iPhone text messages work fine if you save them first.
+- Wider photos work best for banners and hero sections.
+- Portrait photos work best for instructor headshots.
+- If you are unsure, upload it anyway. Cropping can be adjusted with the hotspot tool.
+
 ## Click-to-edit mode (Wix-style)
 - In Sanity Studio, open the **Presentation** tool.
 - Click **Open preview**.
@@ -25,6 +39,7 @@ For each event, fill in:
 - Location
 - Price Text (optional)
 - Stripe Checkout URL (for Book button)
+- Main Event Photo (optional but recommended)
 - Show on Website = ON
 
 If you skip Stripe Checkout URL, the website will fall back to an email booking request.
@@ -39,3 +54,10 @@ If you skip Stripe Checkout URL, the website will fall back to an email booking 
 - Confirm **Show on Website** is ON
 - Check dates are correct (for events/announcements)
 - Save and refresh the website page
+
+## Best places to change photos
+- **Homepage**: hero photo
+- **About Page**: story + philosophy photos
+- **Studio Page**: schedule photo
+- **Instructors**: headshots
+- **Events / Classes**: main event photo + extra photos
