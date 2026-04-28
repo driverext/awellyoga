@@ -3,20 +3,79 @@ import { BehaviorSubject } from 'rxjs';
 
 const ARIETA_BIO = 'Arieta Berisha Kirk is an internationally recognized yoga educator, somatic guide, NBHWC-certified coach, and MBSR practitioner with over 6,500 teaching hours. For more than 15 years, she has led yoga teacher trainings, transformational retreats, workshops, and large-scale events for corporations and communities across the globe.\n\nBlending neuroscience, ancient ritual, and embodied wisdom, Arieta creates deeply transformative spaces that feel both sacred and real. Her trauma-informed approach is rooted in nervous system attunement, presence, and soul-level healing—guiding others not just to practice, but to remember who they are.';
 
-const AURORA_BIO = 'Aurora Kopliku began her journey with Yoga in 2021, motivated by a personal experience that led her to self-taught practice. The healing power of daily practice awakened in her a deep passion and sincere love for this ancient discipline, which pushed her in November of that year to enroll in the "Studio Yoga Brescia" Academy in Italy.\n\nIn 2023, she graduated as a Yoga Teacher, basic level RYT 250h. In 2022, she furthered her training with a Master\'s in Vinyasa Yoga and Myofascial Movement during a retreat held in Tuscany, Italy. Since 2024, she has been offering private lessons in her studio in Shkodra, in a warm and dedicated space for deep inner exploration.\n\nFor her, yoga is not just a physical practice, but a journey toward the self, an act of remembrance, a quiet path that illuminates the hidden light within each of us. Not to change us, but to bring us back to where we\'ve always been… close to ourselves, in love, in peace with our being.';
-
 @Injectable({
   providedIn: 'root'
 })
 export class RetreatsService {
   private retreatsData = [
     {
+      id: 'rugova-2026',
+      title: 'Return to the Wild: Rugova Retreat',
+      location: 'Rugova, Kosovo',
+      dates: 'September 17-21, 2026',
+      duration: '5 days / 4 nights',
+      teachers: ['Arieta Berisha Kirk'],
+      price: {
+        shared: 'Coming soon',
+        private: 'Coming soon',
+        deposit: 'Coming soon'
+      },
+      earlyBird: 'Details and early booking information will be announced soon.',
+      description: 'Join us in Rugova, Kosovo for a retreat immersed in mountain air, grounding practice, and deep restoration. This upcoming experience is designed for students who want space to reconnect through yoga, nervous system healing, nature, and intentional community.',
+      highlights: [
+        'Daily yoga, breathwork, and guided nervous system regulation practices',
+        'Mountain stillness, hiking, and time in nature',
+        'Intentional rest, reflection, and community connection',
+        'Locally inspired meals in a peaceful retreat setting',
+        'A spacious rhythm of movement, recovery, and soul-level reset'
+      ],
+      image: '/assets/albania7.jpg',
+      featured: true,
+      status: {
+        year2026: 'UPCOMING'
+      },
+      venueDescription: 'Set against the dramatic mountain landscape of Rugova, this retreat will offer a slower, more spacious experience rooted in nature, rest, and embodied practice. Expect crisp air, grounded simplicity, and the kind of setting that makes it easier to actually exhale.',
+      venueImages: [
+        '/assets/albania7.jpg',
+        '/assets/albania6.jpg',
+        '/assets/albania3.jpg',
+        '/assets/albania1.jpg'
+      ],
+      included: [
+        '4 nights accommodation',
+        'Daily yoga and breathwork sessions',
+        'Group reflection and integration practices',
+        'Meals during the retreat',
+        'Curated local excursions and nature experiences'
+      ],
+      notIncluded: [
+        'Flights',
+        'Travel insurance',
+        'Transport outside retreat itinerary',
+        'Additional private treatments or excursions'
+      ],
+      hostInfo: {
+        hosts: [
+          {
+            name: 'Arieta Berisha Kirk',
+            bio: ARIETA_BIO,
+            images: [
+              '/assets/arieta12.jpg',
+              '/assets/arieta10.jpg',
+              '/assets/arieta11.jpg'
+            ]
+          }
+        ]
+      },
+      isPast: false
+    },
+    {
       id: 'puglia-2025',
       title: 'Soul Reset: Puglia Edition',
       location: 'Puglia, Italy',
       dates: 'July 12-15, 2025',
       duration: '4 days / 3 nights',
-      teachers: ['Arieta Berisha Kirk', 'Aurora Kopliku'],
+      teachers: ['Arieta Berisha Kirk'],
       price: {
         shared: '€1000/per person',
         private: '€1500/per person',
@@ -35,7 +94,7 @@ export class RetreatsService {
         'Airport transfers from Brindisi or Bari Airports'
       ],
       image: '/assets/mainpuglia.png',
-      featured: true,
+      featured: false,
       venueDescription: 'We\'ll stay in a charming, historic & eco-friendly farmhouse in Puglia, Italy. Nestled into a gentle hill surrounded by 20 hectares of exclusive private land, the property is walking distance from the Ionian Sea.',
       venueImages: [
         '/assets/puglia7.jpg',
@@ -73,20 +132,12 @@ export class RetreatsService {
             images: [
               '/assets/arieta12.jpg',
               '/assets/arieta10.jpg',
-              '/assets/arieta11.jpg',
-            ]
-          },
-          {
-            name: 'Aurora Kopliku',
-            bio: AURORA_BIO,
-            images: [
-              '/assets/aurora1.jpg',
-              '/assets/aurora2.jpg',
-              '/assets/aurora3.jpg'
+              '/assets/arieta11.jpg'
             ]
           }
         ]
-      }
+      },
+      isPast: true
     },
     {
       id: 'albania-2025',
@@ -94,7 +145,7 @@ export class RetreatsService {
       location: 'Koman Lake, Albania',
       dates: 'June 27-29, 2025',
       duration: '3 days / 2 nights',
-      teachers: ['Arieta Berisha Kirk', 'Aurora Kopliku'],
+      teachers: ['Arieta Berisha Kirk'],
       price: {
         shared: '€180',
         private: 'N/A',
@@ -113,7 +164,7 @@ export class RetreatsService {
         'Content Creation'
       ],
       image: '/assets/mainalbania.png',
-      featured: true,
+      featured: false,
       venueDescription: 'We\'ll stay in a charming villa nestled along the untouched shores of Koman Lake. Villa Frenceze is more than just a place to sleep—it\'s a sacred pause from the noise of the world.\n\nSurrounded by majestic peaks, emerald waters, and a silence so pure it echoes, this lakeside haven offers the perfect setting for restoration, reflection, and deep soul remembering.\n\nBuilt with traditional Albanian charm and natural, grounding materials, every corner of the villa invites you to slow down, breathe deeper, and soften into presence.',
       venueImages: [
         '/assets/albania1.jpg',
@@ -148,18 +199,10 @@ export class RetreatsService {
               '/assets/arieta10.jpg',
               '/assets/arieta14.jpg'
             ]
-          },
-          {
-            name: 'Aurora Kopliku',
-            bio: AURORA_BIO,
-            images: [
-              '/assets/aurora1.jpg',
-              '/assets/aurora2.jpg',
-              '/assets/aurora3.jpg'
-            ]
           }
         ]
-      }
+      },
+      isPast: true
     },
     {
       id: 'greece-2026',
@@ -167,7 +210,7 @@ export class RetreatsService {
       location: 'Amorgos, Greece',
       dates: '2025 SOLD OUT -  Book for July 2026',
       duration: '6 days / 5 nights',
-      teachers: ['Arieta Berisha Kirk', 'Aurora Kopliku'],
+      teachers: ['Arieta Berisha Kirk'],
       price: {
         shared: 'SOLD OUT',
         private: '€3200',
@@ -184,7 +227,7 @@ export class RetreatsService {
         'Connection with nature and self'
       ],
       image: '/assets/maingreece.png',
-      featured: true,
+      featured: false,
       status: {
         year2025: 'FULLY BOOKED',
         year2026: 'BOOKING NOW'
@@ -224,18 +267,10 @@ export class RetreatsService {
               '/assets/arieta9.jpg',
               '/assets/arieta7.jpg'
             ]
-          },
-          {
-            name: 'Aurora Kopliku',
-            bio: AURORA_BIO,
-            images: [
-              '/assets/aurora1.jpg',
-              '/assets/aurora2.jpg',
-              '/assets/aurora3.jpg'
-            ]
           }
         ]
-      }
+      },
+      isPast: true
     }
   ];
 
@@ -249,10 +284,18 @@ export class RetreatsService {
   }
 
   getFeaturedRetreats() {
-    return this.retreatsData.filter(retreat => retreat.featured);
+    return this.retreatsData.filter(retreat => retreat.featured && !retreat.isPast);
   }
 
   getAllRetreats() {
     return this.retreatsData;
+  }
+
+  getUpcomingRetreats() {
+    return this.retreatsData.filter(retreat => !retreat.isPast);
+  }
+
+  getPastRetreats() {
+    return this.retreatsData.filter(retreat => retreat.isPast);
   }
 }

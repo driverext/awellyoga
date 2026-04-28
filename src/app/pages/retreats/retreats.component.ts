@@ -24,7 +24,8 @@ export class RetreatsComponent implements OnInit {
   constructor(private retreatsService: RetreatsService) {}
 
   ngOnInit() {
-    this.upcomingRetreats = this.retreatsService.getAllRetreats();
+    this.upcomingRetreats = this.retreatsService.getUpcomingRetreats();
+    this.pastRetreats = this.retreatsService.getPastRetreats();
   }
 
   get featuredRetreats() {
