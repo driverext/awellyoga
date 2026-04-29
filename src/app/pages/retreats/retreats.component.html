@@ -16,7 +16,7 @@
     <div class="featured-retreats-grid">
       <div class="featured-retreat-card" *ngFor="let retreat of featuredRetreats">
         <div class="featured-retreat-image">
-          <img [src]="retreat.image" [alt]="retreat.title">
+          <img [src]="retreat.cardImage || retreat.image" [alt]="retreat.title">
           <div class="retreat-dates">{{ retreat.dates }}</div>
         </div>
         
@@ -114,7 +114,7 @@
     <div class="retreats-grid">
       <div class="retreat-card" *ngFor="let retreat of upcomingRetreats">
         <div class="retreat-image">
-          <img [src]="retreat.image" [alt]="retreat.title">
+          <img [src]="retreat.cardImage || retreat.image" [alt]="retreat.title">
           <div class="retreat-location">
             <span class="material-icons">location_on</span>
             <span>{{ retreat.location }}</span>

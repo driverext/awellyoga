@@ -153,6 +153,7 @@ export class RetreatsService {
         'Spa access',
         'Full NeuroYoga™ method'
       ],
+      cardImage: '/assets/shkrel.png',
       image: '/assets/rugova-photos/mountains.jpeg',
       featured: true,
       status: {
