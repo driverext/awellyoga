@@ -82,6 +82,21 @@
     </div>
   </section>
 
+  <section class="section atmosphere-section alt-bg" *ngIf="retreat?.atmosphereVideos?.length">
+    <div class="container">
+      <h2>A GLIMPSE OF RUGOVA</h2>
+      <div class="atmosphere-grid">
+        <div class="atmosphere-card" *ngFor="let clip of retreat?.atmosphereVideos">
+          <video controls playsinline preload="metadata" class="atmosphere-video-player">
+            <source [src]="clip.url" type="video/quicktime">
+            Your browser does not support the video tag.
+          </video>
+          <p class="atmosphere-caption">{{clip.title}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- What's Included -->
   <section class="section included-section alt-bg">
     <div class="container">
@@ -128,14 +143,13 @@
           <ul class="price-details">
             <li *ngFor="let detail of option.details">{{detail}}</li>
           </ul>
-          <a
-            *ngIf="option.videoUrl"
-            class="room-video-button"
-            [href]="option.videoUrl"
-            target="_blank"
-            rel="noopener noreferrer">
-            {{option.videoLabel || 'View room video'}}
-          </a>
+          <div class="room-video" *ngIf="option.videoUrl">
+            <p class="room-video-label">{{option.videoLabel || 'Room video preview'}}</p>
+            <video controls playsinline preload="metadata" class="room-video-player">
+              <source [src]="option.videoUrl" type="video/quicktime">
+              Your browser does not support the video tag.
+            </video>
+          </div>
         </div>
       </div>
       <div class="price-special">

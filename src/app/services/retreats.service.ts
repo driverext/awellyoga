@@ -15,7 +15,7 @@ export class RetreatsService {
       location: 'Shkrel, Rugova Valley, Kosovo',
       dates: 'June 19-21, 2026',
       duration: '3 days / 2 nights',
-      teachers: ['Arieta Berisha Kirk'],
+      teachers: ['Arieta Berisha Kirk', 'Melita Kabashi'],
       price: {
         shared: '€480',
         private: '€550',
@@ -153,17 +153,29 @@ export class RetreatsService {
         'Spa access',
         'Full NeuroYoga™ method'
       ],
-      image: '/assets/shkrel.png',
+      image: '/assets/rugova-photos/mountains.jpeg',
       featured: true,
       status: {
         year2026: 'UPCOMING'
       },
       venueDescription: 'Grand Hotel Belushi is our home for the weekend, nestled in Shkrel in the heart of Rugova Valley. Surrounded by mountain air, forest stillness, and expansive alpine views, the setting supports exactly what this retreat is designed to do: help the body exhale, soften, and reset.',
       venueImages: [
-        '/assets/albania7.jpg',
-        '/assets/albania6.jpg',
-        '/assets/albania3.jpg',
-        '/assets/albania1.jpg'
+        '/assets/rugova-photos/hotel_drone_front.JPG',
+        '/assets/rugova-photos/balcony_with_landscape_view.JPG',
+        '/assets/rugova-photos/pool2.JPG',
+        '/assets/rugova-photos/food_on_table.JPG',
+        '/assets/rugova-photos/hotel_room_view1.JPG',
+        '/assets/rugova-photos/balcony_relaxing_vertical.jpeg'
+      ],
+      atmosphereVideos: [
+        {
+          title: 'Drive into the mountains',
+          url: '/assets/rugova-photos/driving_through_mountains_vertical.mov'
+        },
+        {
+          title: 'Rugova stream',
+          url: '/assets/rugova-photos/stream_through_rocks_vertical.mov'
+        }
       ],
       included: [
         '2 nights / 3 days accommodation',
@@ -195,6 +207,13 @@ export class RetreatsService {
               '/assets/arieta12.jpg',
               '/assets/arieta10.jpg',
               '/assets/arieta11.jpg'
+            ]
+          },
+          {
+            name: 'Melita Kabashi',
+            bio: 'Melita Kabashi co-hosts the RESET™ RETREAT experience in Rugova Valley.\n\nFull biography coming soon.',
+            images: [
+              '/assets/rugova-photos/melita_kabashi.jpeg'
             ]
           }
         ]
