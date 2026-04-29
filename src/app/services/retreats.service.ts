@@ -169,10 +169,6 @@ export class RetreatsService {
       ],
       atmosphereVideos: [
         {
-          title: 'Drive into the mountains',
-          url: '/assets/rugova-photos/driving_through_mountains_vertical.mov'
-        },
-        {
           title: 'Rugova stream',
           url: '/assets/rugova-photos/stream_through_rocks_vertical.mov'
         }

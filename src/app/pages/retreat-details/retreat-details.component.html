@@ -87,8 +87,7 @@
       <h2>A GLIMPSE OF RUGOVA</h2>
       <div class="atmosphere-grid">
         <div class="atmosphere-card" *ngFor="let clip of retreat?.atmosphereVideos">
-          <video controls playsinline preload="metadata" class="atmosphere-video-player">
-            <source [src]="clip.url" type="video/quicktime">
+          <video controls playsinline preload="metadata" class="atmosphere-video-player" [src]="clip.url">
             Your browser does not support the video tag.
           </video>
           <p class="atmosphere-caption">{{clip.title}}</p>
@@ -145,8 +144,7 @@
           </ul>
           <div class="room-video" *ngIf="option.videoUrl">
             <p class="room-video-label">{{option.videoLabel || 'Room video preview'}}</p>
-            <video controls playsinline preload="metadata" class="room-video-player">
-              <source [src]="option.videoUrl" type="video/quicktime">
+            <video controls playsinline preload="metadata" class="room-video-player" [src]="option.videoUrl">
               Your browser does not support the video tag.
             </video>
           </div>
