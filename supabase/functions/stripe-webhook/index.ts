@@ -30,6 +30,10 @@ type StripeEvent = {
 
 const WEBHOOK_TOLERANCE_SECONDS = 300;
 const DEFAULT_STUDIO_TIMEZONE = 'America/New_York';
+const SUPPORTED_EVENT_TYPES = new Set([
+  'checkout.session.completed',
+  'checkout.session.expired'
+]);
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
@@ -52,17 +56,12 @@ Deno.serve(async (req) => {
     }
 
     const event = JSON.parse(payload) as StripeEvent;
-    const admin = createClient(supabaseUrl, serviceRoleKey);
 
-    const { data: duplicateEvent } = await admin
-      .from('bookings')
-      .select('id')
-      .eq('raw_stripe_event_id', event.id)
-      .limit(1);
-
-    if (duplicateEvent && duplicateEvent.length > 0) {
-      return json({ received: true, ignored: true, reason: 'duplicate event' });
+    if (!SUPPORTED_EVENT_TYPES.has(event.type)) {
+      return json({ received: true, ignored: true, reason: 'unsupported event type' });
     }
+
+    const admin = createClient(supabaseUrl, serviceRoleKey);
 
     const session = event.data.object;
     const metadata = session.metadata || {};
@@ -77,6 +76,16 @@ Deno.serve(async (req) => {
 
     if (!bookingId) {
       return json({ received: true, ignored: true, reason: 'missing booking id' });
+    }
+
+    const { data: duplicateEvent } = await admin
+      .from('bookings')
+      .select('id')
+      .eq('raw_stripe_event_id', event.id)
+      .limit(1);
+
+    if (duplicateEvent && duplicateEvent.length > 0) {
+      return json({ received: true, ignored: true, reason: 'duplicate event' });
     }
 
     if (event.type === 'checkout.session.completed') {
