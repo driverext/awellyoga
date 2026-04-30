@@ -173,8 +173,8 @@ export class RetreatsService {
         '/assets/rugova-photos/balcony_with_landscape_view.jpeg',
         '/assets/rugova-photos/pool2.JPG',
         '/assets/rugova-photos/food_on_table.JPG',
-        '/assets/rugova-photos/beautiful_nature_shot.heic',
-        '/assets/rugova-photos/balcony_relaxing_vertical.heic'
+        '/assets/rugova-photos/beautiful_nature_shot.jpg',
+        '/assets/rugova-photos/balcony_relaxing_vertical.jpg'
       ],
       atmosphereVideos: [
         {
