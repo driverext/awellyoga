@@ -134,7 +134,6 @@ Deno.serve(async (req) => {
 
     const body = new URLSearchParams();
     body.set('mode', 'payment');
-    body.set('adaptive_pricing[enabled]', 'true');
     body.set('success_url', successUrl);
     body.set('cancel_url', cancelUrl);
     body.set('customer_email', email);

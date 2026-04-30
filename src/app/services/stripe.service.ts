@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { environment } from '../../environments/environment';
+import { CurrencyPreferenceService } from './currency-preference.service';
 
 interface RetreatCheckoutResponse {
   url?: string;
@@ -15,7 +16,9 @@ export class StripeService {
   private stripePromise: Promise<Stripe | null>;
   private readonly edgeFunctionsBaseUrl = environment.booking?.edgeFunctionsBaseUrl || '';
 
-  constructor() {
+  constructor(
+    private currencyPreference: CurrencyPreferenceService
+  ) {
     this.stripePromise = loadStripe(environment.stripe.publishableKey);
   }
 
@@ -45,10 +48,20 @@ export class StripeService {
       throw new Error('Booking backend is not configured yet.');
     }
 
-    const amountCents = Number(pricingOption?.amountCents || 0);
+    const isUsd = this.currencyPreference.currency === 'usd';
+    const amountCents = Number(
+      isUsd ? pricingOption?.usdAmountCents || 0 : pricingOption?.amountCents || 0
+    );
+    const currency = String(
+      isUsd ? pricingOption?.usdCurrency || 'usd' : pricingOption?.currency || 'eur'
+    ).toLowerCase();
+
     if (!amountCents) {
       throw new Error('This retreat option is missing a live payment amount.');
     }
+
+    const primaryLabel = isUsd ? pricingOption.usdPrice || pricingOption.price : pricingOption.price || pricingOption.usdPrice;
+    const secondaryLabel = isUsd ? pricingOption.price : pricingOption.usdPrice;
 
     const payload = {
       eventId: retreatData.id,
@@ -57,9 +70,9 @@ export class StripeService {
       endDate: retreatData.endDateIso || '',
       dateLabel: retreatData.dates || '',
       location: retreatData.location,
-      priceLabel: `${pricingOption.label} | ${pricingOption.price}${pricingOption.usdPrice ? ` | Approx. ${pricingOption.usdPrice}` : ''}`,
+      priceLabel: `${pricingOption.label} | ${primaryLabel}${secondaryLabel ? ` | ${isUsd ? secondaryLabel : `Approx. ${secondaryLabel}`}` : ''}`,
       unitAmountCents: amountCents,
-      currency: (pricingOption.currency || 'eur').toLowerCase(),
+      currency,
       successPath: '/payment-success',
       cancelPath
     };

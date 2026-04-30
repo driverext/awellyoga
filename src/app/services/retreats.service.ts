@@ -133,7 +133,9 @@ export class RetreatsService {
           price: '€550',
           usdPrice: '$625 USD',
           amountCents: 55000,
+          usdAmountCents: 62500,
           currency: 'eur',
+          usdCurrency: 'usd',
           details: [
             'Private room with king-size bed',
             'Front-facing with majestic mountain views'
@@ -146,7 +148,9 @@ export class RetreatsService {
           price: '€480',
           usdPrice: '$545 USD',
           amountCents: 48000,
+          usdAmountCents: 54500,
           currency: 'eur',
+          usdCurrency: 'usd',
           details: [
             'Twin room with two single beds',
             'Back-facing with peaceful forest and tree views'
