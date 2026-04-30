@@ -398,3 +398,20 @@
     font-size: 2rem;
   }
 } 
+
+
+.accreditation-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.4rem 0 0.85rem;
+  flex-wrap: wrap;
+}
+
+.accreditation-badge {
+  height: 26px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  opacity: 0.95;
+}
