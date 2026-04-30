@@ -644,3 +644,12 @@ h2 {
   display: block;
   object-fit: contain;
 }
+
+
+.hero-cta {
+  margin-top: 1.4rem;
+}
+
+.hero-cta .btn {
+  min-width: 220px;
+}
