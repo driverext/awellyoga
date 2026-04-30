@@ -11,6 +11,7 @@ import {
 } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
 import { BookingService, PrivateSessionRequestPayload } from '../../services/booking.service';
+import { SeoService } from '../../services/seo.service';
 
 interface CalendarDay {
   date: Date;
@@ -83,10 +84,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   constructor(
     private cmsContent: SanityContentService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private seo: SeoService
   ) {}
 
   ngOnInit(): void {
+    this.updateSeo();
+
     this.subscriptions.add(
       this.cmsContent.getStudioPage().subscribe((content) => {
         if (content) {
@@ -291,6 +295,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.scheduleImageUrl = content.scheduleImageUrl || this.scheduleImageUrl;
     this.scheduleImageAlt = content.scheduleImageAlt || this.scheduleImageAlt;
     this.studioHours = content.studioHours?.length ? content.studioHours : this.studioHours;
+    this.updateSeo();
   }
 
   eventCapacity(event: CmsEvent): number | null {
@@ -488,5 +493,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
       date.getDate()
     ).padStart(2, '0')}`;
+  }
+
+  private updateSeo(): void {
+    this.seo.updatePage({
+      title: this.pageTitle || 'Schedule',
+      description:
+        'Browse upcoming yoga classes, workshops, private sessions, and live booking availability at A-WELL Yoga in Sanford, Florida.',
+      path: '/schedule',
+      image: this.scheduleImageUrl
+    });
   }
 }

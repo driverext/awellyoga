@@ -1,17 +1,79 @@
-<div class="payment-success-container">
-  <div class="success-content">
-    <div class="success-icon">
-      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M8 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <h1>Payment Successful!</h1>
-    <p>Thank you for your purchase. Your payment has been processed successfully.</p>
-    <div class="actions">
-      <a routerLink="/" class="btn btn-primary">Return to Home</a>
+<section class="success-hero">
+  <div class="container">
+    <div class="success-shell">
+      <div class="success-badge">Booking Confirmed</div>
+      <div class="success-mark" aria-hidden="true">✓</div>
+      <h1>Your booking is in.</h1>
+      <p class="success-intro" *ngIf="!loading && summary">
+        {{ summary.customerName || 'You' }}{{ summary.eventTitle ? ' are confirmed for ' + summary.eventTitle : ' are confirmed.' }}
+      </p>
+      <p class="success-intro" *ngIf="loading">Loading your confirmation details...</p>
+      <p class="success-intro error-copy" *ngIf="!loading && error">{{ error }}</p>
     </div>
   </div>
-</div>
+</section>
 
+<section class="section success-section">
+  <div class="container">
+    <div class="success-layout" *ngIf="summary; else fallbackContent">
+      <article class="summary-card">
+        <p class="card-label">Booking Summary</p>
+        <h2>{{ summary.eventTitle || 'Your Reservation' }}</h2>
+        <div class="summary-grid">
+          <div class="summary-item" *ngIf="whenLabel()">
+            <span>When</span>
+            <strong>{{ whenLabel() }}</strong>
+          </div>
+          <div class="summary-item" *ngIf="summary.eventLocation">
+            <span>Where</span>
+            <strong>{{ summary.eventLocation }}</strong>
+          </div>
+          <div class="summary-item" *ngIf="summary.customerEmail">
+            <span>Email</span>
+            <strong>{{ summary.customerEmail }}</strong>
+          </div>
+          <div class="summary-item" *ngIf="summary.amountTotal">
+            <span>Paid</span>
+            <strong>{{ money(summary.amountTotal) | currency:(summary.currency || 'USD'):'symbol':'1.2-2' }}</strong>
+          </div>
+        </div>
+      </article>
 
+      <article class="steps-card">
+        <p class="card-label">What Happens Next</p>
+        <h3>Everything important is already in motion.</h3>
+        <ul class="steps-list">
+          <li>
+            <strong>Check your inbox.</strong>
+            <span>We sent a confirmation email with your booking details.</span>
+          </li>
+          <li>
+            <strong>Plan your arrival.</strong>
+            <span>{{ supportLine }}</span>
+          </li>
+          <li>
+            <strong>Need help?</strong>
+            <span>Email <a href="mailto:info&#64;awellyoga.com">info&#64;awellyoga.com</a> or call <a href="tel:+13212308833">(321) 230-8833</a>.</span>
+          </li>
+        </ul>
+
+        <div class="cta-row">
+          <a [routerLink]="primaryCtaLink" class="btn btn-primary">{{ primaryCtaLabel }}</a>
+          <a routerLink="/about" class="btn btn-secondary">Meet A-WELL Yoga</a>
+        </div>
+      </article>
+    </div>
+
+    <ng-template #fallbackContent>
+      <div class="fallback-card">
+        <h2>Thank you.</h2>
+        <p>Your payment may still be complete even if the full summary did not load here.</p>
+        <p>Please check your email, and if you need anything, contact <a href="mailto:info&#64;awellyoga.com">info&#64;awellyoga.com</a>.</p>
+        <div class="cta-row">
+          <a routerLink="/schedule" class="btn btn-primary">Back To Schedule</a>
+          <a routerLink="/retreats" class="btn btn-secondary">Explore Retreats</a>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</section>

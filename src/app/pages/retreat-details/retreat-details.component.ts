@@ -5,6 +5,7 @@ import { RetreatsService } from '../../services/retreats.service';
 import { NewlinePipe } from '../../pipes/newline.pipe';
 import { PaymentModalComponent } from '../../components/payment-modal/payment-modal.component';
 import { CurrencyPreferenceService } from '../../services/currency-preference.service';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-retreat-details',
@@ -20,13 +21,45 @@ export class RetreatDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private retreatsService: RetreatsService,
-    public currencyPreference: CurrencyPreferenceService
+    public currencyPreference: CurrencyPreferenceService,
+    private seo: SeoService
   ) {}
 
   ngOnInit() {
     const retreatId = this.route.snapshot.paramMap.get('id');
     if (retreatId) {
       this.retreat = this.retreatsService.getRetreatById(retreatId);
+      if (this.retreat) {
+        this.seo.updatePage({
+          title: `${this.retreat.title} Retreat`,
+          description: this.retreat.introLead || this.retreat.description || 'Explore this A-WELL Yoga retreat experience.',
+          path: `/retreats/${retreatId}`,
+          image: this.retreat.cardImage || this.retreat.image,
+          type: 'article'
+        });
+
+        this.seo.setJsonLd('retreat-details', {
+          '@context': 'https://schema.org',
+          '@type': 'Event',
+          name: this.retreat.title,
+          description: this.retreat.description,
+          startDate: this.retreat.startDateIso,
+          endDate: this.retreat.endDateIso,
+          eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+          eventStatus: 'https://schema.org/EventScheduled',
+          location: {
+            '@type': 'Place',
+            name: this.retreat.venue || this.retreat.location,
+            address: this.retreat.location
+          },
+          image: [this.retreat.cardImage || this.retreat.image].filter(Boolean),
+          organizer: {
+            '@type': 'Organization',
+            name: 'A-WELL Yoga',
+            url: 'https://awellyoga.com'
+          }
+        });
+      }
     }
   }
 

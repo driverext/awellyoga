@@ -1,16 +1,45 @@
 <section class="page-header">
   <div class="container">
     <h1>Booking Dashboard</h1>
-    <p>Internal operations view for bookings, revenue, and private session requests</p>
+    <p>Internal operations view for bookings, revenue, attendance, and private session requests.</p>
   </div>
 </section>
 
 <section class="section dashboard-section">
   <div class="container">
     <div class="toolbar">
-      <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="loading">
-        {{ loading ? 'Refreshing...' : 'Refresh Data' }}
-      </button>
+      <div class="filter-grid" *ngIf="!loading && !error">
+        <label>
+          <span>Class</span>
+          <select [(ngModel)]="eventFilter" (ngModelChange)="buildCalendarDays()">
+            <option value="">All classes</option>
+            <option *ngFor="let title of uniqueEventTitles" [value]="title">{{ title }}</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Date</span>
+          <input type="date" [(ngModel)]="dateFilter" (change)="onDateFilterChange()">
+        </label>
+
+        <label>
+          <span>Status</span>
+          <select [(ngModel)]="statusFilter">
+            <option value="all">All statuses</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="expired">Expired</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="toolbar-actions">
+        <button type="button" class="btn btn-secondary" *ngIf="!loading && !error" (click)="clearFilters()">Clear Filters</button>
+        <button type="button" class="btn btn-secondary" *ngIf="!loading && !error" (click)="exportFilteredBookings()">Export CSV</button>
+        <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="loading">
+          {{ loading ? 'Refreshing...' : 'Refresh Data' }}
+        </button>
+      </div>
     </div>
 
     <p class="error" *ngIf="error">{{ error }}</p>
@@ -77,7 +106,7 @@
           </div>
           <button type="button" class="btn btn-primary" (click)="openAttendance(event)">View Attendance</button>
         </div>
-        <p *ngIf="selectedDateEvents().length === 0" class="empty-note">No classes on this day.</p>
+        <p *ngIf="selectedDateEvents().length === 0" class="empty-note">No classes match these filters on this day.</p>
       </div>
     </div>
 
@@ -92,13 +121,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let event of topEvents">
+          <tr *ngFor="let event of filteredTopEvents">
             <td>{{ event.eventTitle }}</td>
             <td>{{ event.bookingsCount }}</td>
             <td>{{ money(event.revenueCents) | currency:(overview.currency || 'USD'): 'symbol':'1.2-2' }}</td>
           </tr>
-          <tr *ngIf="topEvents.length === 0">
-            <td colspan="3">No paid bookings yet.</td>
+          <tr *ngIf="filteredTopEvents.length === 0">
+            <td colspan="3">No paid bookings match these filters yet.</td>
           </tr>
         </tbody>
       </table>
@@ -119,7 +148,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let booking of recentBookings">
+          <tr *ngFor="let booking of filteredRecentBookings">
             <td>{{ booking.createdAt ? (booking.createdAt | date:'MMM d, y h:mm a') : '-' }}</td>
             <td>{{ booking.eventTitle || '-' }}</td>
             <td>{{ booking.customerName || '-' }}</td>
@@ -128,8 +157,8 @@
             <td>{{ money(booking.amountTotal) | currency:(booking.currency || overview.currency || 'USD'): 'symbol':'1.2-2' }}</td>
             <td>{{ booking.bookingStatus || booking.paymentStatus || '-' }}</td>
           </tr>
-          <tr *ngIf="recentBookings.length === 0">
-            <td colspan="7">No bookings yet.</td>
+          <tr *ngIf="filteredRecentBookings.length === 0">
+            <td colspan="7">No bookings match these filters yet.</td>
           </tr>
         </tbody>
       </table>
@@ -170,7 +199,10 @@
   <div class="modal-card" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h3>{{ selectedAttendanceEvent?.title || 'Attendance' }}</h3>
-      <button type="button" class="close-btn" (click)="closeAttendanceModal()">×</button>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary btn-small" *ngIf="selectedAttendanceEvent" (click)="exportAttendance(selectedAttendanceEvent)">Export Attendance</button>
+        <button type="button" class="close-btn" (click)="closeAttendanceModal()">×</button>
+      </div>
     </div>
     <p class="modal-subtitle" *ngIf="selectedAttendanceEvent">
       {{ selectedAttendanceEvent.startDate | date:'EEEE, MMM d, y h:mm a' }}
@@ -182,7 +214,6 @@
       <div class="attendance-row" *ngFor="let attendee of paidAttendees(selectedAttendanceEvent)">
         <p>{{ attendee.customerName || 'Name not provided' }}</p>
         <p>{{ attendee.customerEmail || '-' }}</p>
-        <p *ngIf="attendee.customerWhatsApp">WhatsApp: {{ attendee.customerWhatsApp }}</p>
         <p *ngIf="attendee.customerWhatsApp">WhatsApp: {{ attendee.customerWhatsApp }}</p>
       </div>
       <p *ngIf="paidAttendees(selectedAttendanceEvent).length === 0" class="empty-note">No paid attendees yet.</p>

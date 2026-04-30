@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-offerings',
@@ -10,6 +11,15 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./offerings.component.css']
 })
 export class OfferingsComponent {
+  constructor(private seo: SeoService) {
+    this.seo.updatePage({
+      title: 'Yoga Classes and Offerings',
+      description:
+        'Explore A-WELL Yoga class styles, therapeutic formats, and movement practices designed for real-life nervous system support.',
+      path: '/offerings'
+    });
+  }
+
   classes = [
     {
       id: 'vinyasa',

@@ -4,6 +4,7 @@ import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
 interface CreateCheckoutPayload {
   eventId: string;
   title: string;
+  eventType?: string;
   instructorName?: string;
   instructorStripeAccountId?: string;
   startDate?: string;
@@ -149,6 +150,7 @@ Deno.serve(async (req) => {
     body.set('metadata[booking_id]', insertedBooking.id);
     body.set('metadata[sanity_event_id]', payload.eventId);
     body.set('metadata[event_title]', payload.title);
+    body.set('metadata[event_type]', payload.eventType || '');
     body.set('metadata[instructor_name]', payload.instructorName || '');
     body.set('metadata[event_start]', payload.startDate || '');
     body.set('metadata[event_end]', payload.endDate || '');

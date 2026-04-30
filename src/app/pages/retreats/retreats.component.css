@@ -707,3 +707,52 @@ h2 {
     font-size: 1rem;
   }
 } 
+.trust-section {
+  background: #fcf7f1;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.trust-grid > div {
+  padding: 1.25rem;
+  border-radius: 22px;
+  border: 1px solid #eadbc9;
+  background: white;
+  box-shadow: 0 18px 45px rgba(51, 31, 22, 0.06);
+}
+
+.trust-grid .material-icons {
+  color: var(--caramel);
+  margin-bottom: 0.6rem;
+}
+
+.trust-grid strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--primary-green);
+}
+
+.cta-section {
+  background: linear-gradient(140deg, #f1e6d8 0%, #fbf6ef 100%);
+}
+
+.cta-content {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cta-content p {
+  max-width: 40rem;
+  margin: 0.75rem auto 0;
+}
+
+@media (max-width: 992px) {
+  .trust-grid {
+    grid-template-columns: 1fr;
+  }
+}

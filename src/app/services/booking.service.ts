@@ -10,6 +10,24 @@ interface CreateCheckoutResponse {
   code?: string;
 }
 
+export interface CheckoutSessionSummary {
+  sessionId: string;
+  bookingId?: string | null;
+  customerEmail?: string | null;
+  customerName?: string | null;
+  customerWhatsApp?: string | null;
+  eventId?: string | null;
+  eventType?: string | null;
+  eventTitle?: string | null;
+  eventStart?: string | null;
+  eventEnd?: string | null;
+  eventDateLabel?: string | null;
+  eventLocation?: string | null;
+  amountTotal?: number | null;
+  currency?: string | null;
+  paymentStatus?: string | null;
+}
+
 interface BookingCountResponse {
   counts?: Record<string, number>;
 }
@@ -77,6 +95,10 @@ interface PrivateSessionRequestResponse {
   error?: string;
 }
 
+interface CheckoutSessionSummaryResponse extends CheckoutSessionSummary {
+  error?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BookingService {
   private readonly edgeFunctionsBaseUrl = environment.booking?.edgeFunctionsBaseUrl || '';
@@ -97,6 +119,7 @@ export class BookingService {
       location: event.location,
       instructorName: event.instructorName,
       instructorStripeAccountId: event.instructorStripeAccountId,
+      eventType: event.eventType,
       priceLabel: event.priceLabel,
       stripePriceId: event.stripePriceId,
       stripeCouponId: event.stripeCouponId,
@@ -190,6 +213,26 @@ export class BookingService {
     const data = (await response.json()) as BookingDashboardResponse;
     if (!response.ok) {
       throw new Error(data.error || 'Could not load booking dashboard.');
+    }
+
+    return data;
+  }
+
+  async getCheckoutSessionSummary(sessionId: string): Promise<CheckoutSessionSummary> {
+    if (!this.edgeFunctionsBaseUrl) {
+      throw new Error('Booking backend is not configured yet.');
+    }
+
+    const response = await fetch(
+      `${this.edgeFunctionsBaseUrl}/checkout-session-summary?session_id=${encodeURIComponent(sessionId)}`,
+      {
+        method: 'GET'
+      }
+    );
+
+    const data = (await response.json()) as CheckoutSessionSummaryResponse;
+    if (!response.ok) {
+      throw new Error(data.error || 'Could not load booking confirmation.');
     }
 
     return data;

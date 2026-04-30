@@ -65,6 +65,7 @@ export class StripeService {
 
     const payload = {
       eventId: retreatData.id,
+      eventType: 'Retreat',
       title: `${retreatData.title} - ${pricingOption.label}`,
       startDate: retreatData.startDateIso || '',
       endDate: retreatData.endDateIso || '',

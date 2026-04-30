@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
+import { SeoService } from '../../services/seo.service';
 
 const ARIETA_BIO = 'Creator of the RESET Method™ (NeuroYoga-Based)\n\nE-RYT 500 • Founder of A-WELL Yoga\nWith over 7,000 teaching hours and a background in clinical psychology and neuroscience\n\nArieta teaches yoga as a path of honest self-inquiry.\nHer work begins with the breath—allowing the nervous system to settle so movement arises from awareness, not performance.\n\nBlending science, embodied practice, and lived experience, she creates spaces that feel both grounded and deeply transformative.\n\nShe believes yoga begins the moment we are willing to meet ourselves with truth.\nHer mission is simple: to help people understand why they practice—so yoga becomes a way of living.';
 
@@ -162,7 +163,15 @@ export class YttComponent implements OnInit, OnDestroy {
     }
   ];
 
+  constructor(private seo: SeoService) {}
+
   ngOnInit(): void {
+    this.seo.updatePage({
+      title: 'NeuroYoga™ YTT',
+      description:
+        'Learn more about the NeuroYoga™ teacher training pathway, continuing education, and future cohorts at A-WELL Yoga.',
+      path: '/ytt'
+    });
     this.previousBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
   }

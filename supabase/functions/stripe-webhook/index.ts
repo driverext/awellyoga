@@ -130,6 +130,7 @@ Deno.serve(async (req) => {
         toEmail: session.customer_details?.email || metadata.customer_email || '',
         customerName: collectedName,
         customerWhatsApp: collectedWhatsapp || null,
+        eventType: metadata.event_type || null,
         eventTitle: metadata.event_title || null,
         eventStart: metadata.event_start || null,
         eventEnd: metadata.event_end || null,
@@ -233,10 +234,22 @@ function json(body: unknown, status = 200): Response {
   });
 }
 
+function normalizeEventType(value: string | null | undefined): 'retreat' | 'workshop' | 'class' {
+  const normalized = (value || '').trim().toLowerCase();
+  if (normalized === 'retreat' || normalized.includes('retreat')) {
+    return 'retreat';
+  }
+  if (normalized === 'workshop' || normalized.includes('workshop')) {
+    return 'workshop';
+  }
+  return 'class';
+}
+
 type ConfirmationEmailPayload = {
   toEmail: string;
   customerName: string;
   customerWhatsApp?: string | null;
+  eventType?: string | null;
   eventTitle: string | null;
   eventStart: string | null;
   eventEnd: string | null;
@@ -259,6 +272,7 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
   }
 
   const customerName = payload.customerName.trim() || 'there';
+  const eventType = normalizeEventType(payload.eventType || payload.eventTitle);
   const eventTitle = payload.eventTitle?.trim() || 'your class';
   const startsAt = formatDateTime(payload.eventStart, timezone);
   const endsAt = formatDateTime(payload.eventEnd, timezone);
@@ -267,6 +281,8 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
   const amountLabel = formatAmount(payload.amountTotal, payload.currency);
 
   const isYogaGlow = eventTitle.toLowerCase() === 'yoga glow';
+  const isRetreat = eventType === 'retreat';
+  const isWorkshop = eventType === 'workshop';
   const subject = `Booking Confirmed: ${eventTitle}`;
   const text = isYogaGlow
     ? [
@@ -309,6 +325,41 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
         'Arieta',
         'A-WELL YOGA 🤍'
       ].join('\n')
+    : isRetreat
+    ? [
+        `Hi ${customerName},`,
+        '',
+        `Your retreat reservation is confirmed for ${eventTitle}.`,
+        '',
+        whenLabel ? `Dates: ${whenLabel}` : null,
+        `Location: ${location}`,
+        amountLabel ? `Paid: ${amountLabel}` : null,
+        '',
+        'We will follow up by email with your retreat preparation details and any next steps.',
+        'If you need anything before then, simply reply to this email.',
+        '',
+        'With warmth,',
+        'A-WELL Yoga'
+      ]
+        .filter(Boolean)
+        .join('\n')
+    : isWorkshop
+    ? [
+        `Hi ${customerName},`,
+        '',
+        `You're confirmed for ${eventTitle}.`,
+        '',
+        whenLabel ? `When: ${whenLabel}` : null,
+        `Where: ${location}`,
+        amountLabel ? `Paid: ${amountLabel}` : null,
+        '',
+        'We will send any workshop-specific details to this email address before the event.',
+        '',
+        'See you there,',
+        'A-WELL Yoga'
+      ]
+        .filter(Boolean)
+        .join('\n')
     : [
         `Hi ${customerName},`,
         '',
@@ -369,6 +420,45 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
       </div>
     </div>
   `
+    : isRetreat
+    ? `
+    <div style="margin:0;padding:24px;background:#f6f3ef;font-family:Arial,sans-serif;color:#1f2937;">
+      <div style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e8e1d8;">
+        <div style="padding:24px 28px;background:linear-gradient(135deg,#f1e2d3 0%,#fbf6ef 100%);border-bottom:1px solid #efe5d9;">
+          <p style="margin:0 0 8px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#7d6651;">A-WELL YOGA RETREAT</p>
+          <h1 style="margin:0;font-size:26px;line-height:1.2;color:#3f2f24;">Your retreat reservation is confirmed.</h1>
+        </div>
+        <div style="padding:24px 28px;">
+          <p style="margin:0 0 14px;font-size:16px;line-height:1.7;">Hi ${escapeHtml(customerName)},</p>
+          <p style="margin:0 0 14px;font-size:16px;line-height:1.7;">We saved your place for <strong>${escapeHtml(eventTitle)}</strong>.</p>
+          <div style="background:#fcf9f4;border:1px solid #eee3d8;border-radius:12px;padding:14px 16px;font-size:15px;line-height:1.7;">
+            ${whenLabel ? `<div><strong>Dates:</strong> ${escapeHtml(whenLabel)}</div>` : ''}
+            <div><strong>Location:</strong> ${escapeHtml(location)}</div>
+            ${amountLabel ? `<div><strong>Paid:</strong> ${escapeHtml(amountLabel)}</div>` : ''}
+          </div>
+          <p style="margin:18px 0 0;font-size:15px;line-height:1.7;">We will follow up with any preparation details and next steps by email.</p>
+          <p style="margin:18px 0 0;font-size:15px;line-height:1.7;">With warmth,<br/>A-WELL Yoga</p>
+        </div>
+      </div>
+    </div>
+  `
+    : isWorkshop
+    ? `
+    <div style="margin:0;padding:24px;background:#f6f3ef;font-family:Arial,sans-serif;color:#1f2937;">
+      <div style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e8e1d8;">
+        <div style="padding:24px 28px;background:linear-gradient(135deg,#f7efe5 0%,#fff7ee 100%);border-bottom:1px solid #efe5d9;">
+          <p style="margin:0 0 8px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#7d6651;">A-WELL YOGA WORKSHOP</p>
+          <h1 style="margin:0;font-size:26px;line-height:1.2;color:#3f2f24;">You&rsquo;re booked.</h1>
+        </div>
+        <div style="padding:24px 28px;">
+          <p style="margin:0 0 14px;font-size:16px;line-height:1.7;">Hi ${escapeHtml(customerName)},</p>
+          <p style="margin:0 0 14px;font-size:16px;line-height:1.7;">Your place is confirmed for <strong>${escapeHtml(eventTitle)}</strong>.</p>
+          <p style="margin:0;font-size:15px;line-height:1.7;">${whenLabel ? `<strong>When:</strong> ${escapeHtml(whenLabel)}<br/>` : ''}<strong>Where:</strong> ${escapeHtml(location)}${amountLabel ? `<br/><strong>Paid:</strong> ${escapeHtml(amountLabel)}` : ''}</p>
+          <p style="margin:18px 0 0;font-size:15px;line-height:1.7;">We&rsquo;ll email any workshop-specific details before the event.</p>
+        </div>
+      </div>
+    </div>
+  `
     : `
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#1f2937">
       <p>Hi ${escapeHtml(customerName)},</p>
@@ -398,6 +488,7 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
   }
 
   const eventTitle = payload.eventTitle?.trim() || 'Untitled Event';
+  const eventType = normalizeEventType(payload.eventType || payload.eventTitle);
   const startsAt = formatDateTime(payload.eventStart, timezone);
   const endsAt = formatDateTime(payload.eventEnd, timezone);
   const whenLabel = buildWhenLabel(payload.eventDateLabel, startsAt, endsAt);
@@ -407,9 +498,11 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
   const customerEmail = payload.toEmail?.trim().toLowerCase() || 'Unknown';
   const customerWhatsApp = payload.customerWhatsApp?.trim() || '';
 
-  const subject = `New Booking: ${eventTitle} (${customerName})`;
+  const labelPrefix =
+    eventType === 'retreat' ? 'Retreat Booking' : eventType === 'workshop' ? 'Workshop Booking' : 'Class Booking';
+  const subject = `${labelPrefix}: ${eventTitle} (${customerName})`;
   const text = [
-    'A new booking was paid.',
+    `${labelPrefix} paid.`,
     '',
     `Booking ID: ${payload.bookingId}`,
     `Customer: ${customerName}`,
@@ -424,7 +517,7 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
 
   const html = `
     <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2937;">
-      <h2 style="margin:0 0 12px;">New Booking Paid</h2>
+      <h2 style="margin:0 0 12px;">${escapeHtml(labelPrefix)} Paid</h2>
       <p style="margin:0 0 6px;"><strong>Booking ID:</strong> ${escapeHtml(payload.bookingId)}</p>
       <p style="margin:0 0 6px;"><strong>Customer:</strong> ${escapeHtml(customerName)}</p>
       <p style="margin:0 0 6px;"><strong>Customer Email:</strong> ${escapeHtml(customerEmail)}</p>

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CmsInstructor } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-about',
@@ -18,9 +19,38 @@ export class AboutComponent implements OnInit, OnDestroy {
   instructors: CmsInstructor[] = this.getFallbackInstructors();
   private readonly subscriptions = new Subscription();
 
-  constructor(private cmsContent: SanityContentService) {}
+  constructor(
+    private cmsContent: SanityContentService,
+    private seo: SeoService
+  ) {}
 
   ngOnInit(): void {
+    this.seo.updatePage({
+      title: 'About A-WELL Yoga',
+      description:
+        'Meet the teachers behind A-WELL Yoga in Sanford, Florida, and learn more about the studio’s nervous-system-aware, therapeutic approach to yoga.',
+      path: '/about',
+      image: '/assets/Arieta_Bio.jpg'
+    });
+
+    this.seo.setJsonLd('about-organization', {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'A-WELL Yoga',
+      url: 'https://awellyoga.com',
+      email: 'info@awellyoga.com',
+      telephone: '+1-321-230-8833',
+      founder: 'Arieta Berisha Kirk',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '214 Hickman Dr',
+        addressLocality: 'Sanford',
+        addressRegion: 'FL',
+        postalCode: '32771',
+        addressCountry: 'US'
+      }
+    });
+
     this.subscriptions.add(
       this.cmsContent.getAboutPageMeta().subscribe((meta) => {
         if (!meta) {
@@ -59,9 +89,9 @@ export class AboutComponent implements OnInit, OnDestroy {
         imageUrl: '/assets/Arieta_Bio.jpg',
         photoAlt: 'Arieta Berisha Kirk - Founder and Lead Instructor',
         bioParagraphs: [
-          'Arieta Berisha Kirk, E-RYT 500, founder of A-WELL Yoga in Sanford, Florida, and online, teaches yoga as a path of honest self-inquiry.',
-          'With a background in clinical psychology and neuroscience, and over a decade of yoga teaching experience, her classes begin with quiet observation of self, meeting the breath before movement so the nervous system can settle and practice can arise from awareness, not performance.',
-          'Arieta believes yoga begins the moment we are willing to meet ourselves with truth. Her mission is simple: to help people understand why they practice, so yoga becomes a way of living.'
+          'Creator of the RESET Method™ (NeuroYoga-Based).',
+          'E-RYT 500 • Founder of A-WELL Yoga • 7,000+ teaching hours.',
+          'Arieta teaches yoga as a path of honest self-inquiry, blending science, embodied practice, and lived experience to create spaces that feel grounded and deeply transformative.'
         ]
       },
       {
@@ -70,28 +100,8 @@ export class AboutComponent implements OnInit, OnDestroy {
         imageUrl: '/assets/Sommer_Bio.jpg',
         photoAlt: 'Sommer Renee - Yoga, Breathwork, Sound Baths & Hypnotherapy',
         bioParagraphs: [
-          'Sommer Reńee is a guide for those ready to come home to themselves. Blending yoga, breathwork, sound baths, and hypnotherapy, her offerings are more than just classes—they’re immersive healing experiences. What began as a personal journey has evolved into a space where regulation meets release, and stillness becomes transformative.',
-          'Expect soulful flows, grounding presence, and deeply restorative practices that weave together movement, sound, and subconscious exploration—inviting you to feel it all, gently, honestly, and without judgment.'
-        ]
-      },
-      {
-        name: 'Elena Rodriguez',
-        title: 'Ashtanga & Power Yoga',
-        imageUrl:
-          'https://images.pexels.com/photos/6787201/pexels-photo-6787201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        photoAlt: 'Elena Rodriguez - Ashtanga & Power Yoga',
-        bioParagraphs: [
-          "Elena's dynamic teaching style challenges students to discover their strength while maintaining alignment and breath awareness."
-        ]
-      },
-      {
-        name: 'James Wilson',
-        title: 'Meditation & Yoga Philosophy',
-        imageUrl:
-          'https://images.unsplash.com/photo-1552286450-4a669f880062?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80',
-        photoAlt: 'James Wilson - Meditation & Yoga Philosophy',
-        bioParagraphs: [
-          'James brings ancient wisdom to modern practice, guiding students through meditation and exploring the philosophical aspects of yoga.'
+          'Sommer Reńee is a guide for those ready to come home to themselves. Blending yoga, breathwork, sound baths, and hypnotherapy, her offerings are immersive healing experiences.',
+          'Expect soulful flows, grounding presence, and deeply restorative practices that weave together movement, sound, and subconscious exploration.'
         ]
       }
     ];

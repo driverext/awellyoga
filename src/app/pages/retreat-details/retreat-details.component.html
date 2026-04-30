@@ -28,6 +28,15 @@
   </div>
 </section>
 
+<div class="sticky-retreat-cta" *ngIf="retreat">
+  <div class="sticky-retreat-copy">
+    <span class="sticky-eyebrow">RESET™ RETREAT</span>
+    <strong>{{ retreat?.dates }}</strong>
+    <span>From {{ currencyPreference.primaryPrice(retreat?.pricingCards?.[1] || retreat?.pricingCards?.[0] || {}) }}</span>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="openPaymentModal()">Reserve Your Spot</button>
+</div>
+
 <!-- Main Content -->
 <div class="retreat-details">
   <!-- Introduction -->
