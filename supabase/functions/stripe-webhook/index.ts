@@ -29,6 +29,10 @@ type StripeEvent = {
         type?: string;
         text?: { value?: string };
       }>;
+      presentment_details?: {
+        presentment_amount?: number;
+        presentment_currency?: string;
+      };
     };
   };
 };
@@ -98,6 +102,9 @@ Deno.serve(async (req) => {
     }
 
     if (event.type === 'checkout.session.completed') {
+      const presentmentAmount = session.presentment_details?.presentment_amount ?? session.amount_total ?? null;
+      const presentmentCurrency = session.presentment_details?.presentment_currency || session.currency || null;
+
       const { error } = await admin
         .from('bookings')
         .update({
@@ -106,8 +113,8 @@ Deno.serve(async (req) => {
           stripe_customer_email: session.customer_details?.email || null,
           stripe_customer_whatsapp: collectedWhatsapp || null,
           stripe_payment_intent_id: session.payment_intent || null,
-          amount_total: session.amount_total ?? null,
-          currency: session.currency || null,
+          amount_total: presentmentAmount,
+          currency: presentmentCurrency,
           payment_status: session.payment_status || 'paid',
           booking_status: 'paid',
           reservation_expires_at: null,
@@ -128,8 +135,8 @@ Deno.serve(async (req) => {
         eventEnd: metadata.event_end || null,
         eventDateLabel: metadata.event_dates_label || null,
         eventLocation: metadata.event_location || null,
-        amountTotal: session.amount_total ?? null,
-        currency: session.currency || null
+        amountTotal: presentmentAmount,
+        currency: presentmentCurrency
       };
 
       // Emails are best-effort and must never block webhook acknowledgement.

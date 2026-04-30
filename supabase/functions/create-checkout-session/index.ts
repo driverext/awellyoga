@@ -134,6 +134,7 @@ Deno.serve(async (req) => {
 
     const body = new URLSearchParams();
     body.set('mode', 'payment');
+    body.set('adaptive_pricing[enabled]', 'true');
     body.set('success_url', successUrl);
     body.set('cancel_url', cancelUrl);
     body.set('customer_email', email);
@@ -198,7 +199,8 @@ Deno.serve(async (req) => {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${stripeSecretKey}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Stripe-Version': '2024-12-18.acacia'
       },
       body: body.toString()
     });

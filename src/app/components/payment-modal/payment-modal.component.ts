@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StripeService } from '../../services/stripe.service';
+import { CurrencyPreferenceService } from '../../services/currency-preference.service';
 
 @Component({
   selector: 'app-payment-modal',
@@ -21,7 +22,10 @@ export class PaymentModalComponent implements OnChanges {
   bookingError = '';
   selectedOptionIndex = -1;
 
-  constructor(private stripeService: StripeService) {}
+  constructor(
+    private stripeService: StripeService,
+    public currencyPreference: CurrencyPreferenceService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['retreat'] || changes['isVisible']) {
@@ -97,16 +101,6 @@ export class PaymentModalComponent implements OnChanges {
     if (event.target === event.currentTarget) {
       this.closeModal();
     }
-  }
-
-  formatPrice(option: any): string {
-    if (!option) {
-      return '';
-    }
-
-    const eur = option.price || '';
-    const usd = option.usdPrice ? ` / ${option.usdPrice}` : '';
-    return `${eur}${usd ? ` (${usd.replace(/^\s*\/\s*/, 'approx. ')})` : ''}`;
   }
 
   private resetForm(): void {

@@ -43,8 +43,8 @@
             <div class="pricing-option-header">
               <div>
                 <p class="pricing-option-label">{{ option.label }}</p>
-                <p class="pricing-option-price">{{ option.price }}</p>
-                <p class="pricing-option-usd" *ngIf="option.usdPrice">Approx. {{ option.usdPrice }}</p>
+                <p class="pricing-option-price">{{ currencyPreference.primaryPrice(option) }}</p>
+                <p class="pricing-option-usd" *ngIf="currencyPreference.secondaryPrice(option)">{{ currencyPreference.secondaryLabel(option) }}</p>
               </div>
               <span class="material-icons">{{ selectedOptionIndex === i ? 'radio_button_checked' : 'radio_button_unchecked' }}</span>
             </div>
@@ -65,7 +65,7 @@
           placeholder="you@example.com"
           required
         >
-        <p class="field-note">Required. Stripe checkout will also ask for your full name and offers an optional WhatsApp field.</p>
+        <p class="field-note">Required. Stripe checkout will also ask for your full name, offers an optional WhatsApp field, and shows your local currency when Stripe supports it.</p>
         <p class="booking-error" *ngIf="bookingError">{{ bookingError }}</p>
       </form>
 

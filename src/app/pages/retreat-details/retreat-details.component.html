@@ -10,7 +10,7 @@
     <div class="hero-meta">
       <span>{{retreat?.duration}}</span>
       <span *ngIf="retreat?.teachers?.length">{{retreat?.teachers?.join(' · ')}}</span>
-      <span *ngIf="retreat?.pricingCards?.length">From {{retreat?.pricingCards?.[1]?.price || retreat?.price?.shared}}<span *ngIf="retreat?.pricingCards?.[1]?.usdPrice"> / Approx. {{retreat?.pricingCards?.[1]?.usdPrice}}</span></span>
+      <span *ngIf="retreat?.pricingCards?.length">From {{ currencyPreference.primaryPrice(retreat?.pricingCards?.[1] || retreat?.pricingCards?.[0] || {}) }}<span *ngIf="currencyPreference.secondaryPrice(retreat?.pricingCards?.[1] || retreat?.pricingCards?.[0] || {})"> / {{ currencyPreference.secondaryLabel(retreat?.pricingCards?.[1] || retreat?.pricingCards?.[0] || {}) }}</span></span>
     </div>
     <div class="status-badges" *ngIf="retreat?.status">
       <div class="status-badge sold-out" *ngIf="retreat?.status?.year2025">
@@ -138,8 +138,8 @@
       <div class="pricing-grid">
         <div class="price-item" *ngFor="let option of retreat?.pricingCards">
           <h3>{{option.label}}</h3>
-          <p class="price">{{option.price}}</p>
-          <p class="price-usd" *ngIf="option.usdPrice">Approx. {{ option.usdPrice }}</p>
+          <p class="price">{{ currencyPreference.primaryPrice(option) }}</p>
+          <p class="price-usd" *ngIf="currencyPreference.secondaryPrice(option)">{{ currencyPreference.secondaryLabel(option) }}</p>
           <ul class="price-details">
             <li *ngFor="let detail of option.details">{{detail}}</li>
           </ul>
