@@ -337,3 +337,43 @@
   font-size: 0.92rem;
   line-height: 1.6;
 }
+
+
+.currency-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.currency-toggle-label {
+  margin: 0;
+  color: #5b4638;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.currency-toggle {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: #f7efe6;
+}
+
+.currency-toggle-btn {
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #7d6651;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.currency-toggle-btn.active {
+  background: #8B5A3C;
+  color: #fff;
+}

@@ -90,6 +90,14 @@ export class PaymentModalComponent implements OnChanges {
     this.bookingError = '';
   }
 
+  chooseUsd(): void {
+    this.currencyPreference.setCurrencyOverride('usd');
+  }
+
+  chooseEur(): void {
+    this.currencyPreference.setCurrencyOverride('eur');
+  }
+
   closeModal(): void {
     if (this.isLoading) {
       return;

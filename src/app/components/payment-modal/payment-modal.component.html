@@ -32,6 +32,15 @@
 
       <div class="payment-info" *ngIf="pricingOptions.length">
         <h4>Choose Your Room</h4>
+
+      <div class="currency-toggle-row">
+        <p class="currency-toggle-label">Currency</p>
+        <div class="currency-toggle">
+          <button type="button" class="currency-toggle-btn" [class.active]="currencyPreference.currency === 'usd'" (click)="chooseUsd()">USD</button>
+          <button type="button" class="currency-toggle-btn" [class.active]="currencyPreference.currency === 'eur'" (click)="chooseEur()">EUR</button>
+        </div>
+      </div>
+
         <div class="pricing-options">
           <button
             type="button"

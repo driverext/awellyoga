@@ -31,6 +31,7 @@ export class RetreatDetailsComponent implements OnInit {
   }
 
   openPaymentModal(): void {
+    this.currencyPreference.setCurrencyOverride(this.currencyPreference.isUsdPrimary ? 'usd' : 'eur');
     this.isPaymentModalVisible = true;
   }
 
