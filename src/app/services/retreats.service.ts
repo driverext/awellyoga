@@ -162,7 +162,7 @@ export class RetreatsService {
       venueDescription: 'Grand Hotel Belushi is our home for the weekend, nestled in Shkrel in the heart of Rugova Valley. Surrounded by mountain air, forest stillness, and expansive alpine views, the setting supports exactly what this retreat is designed to do: help the body exhale, soften, and reset.',
       venueImages: [
         '/assets/rugova-photos/hotel_drone_front.JPG',
-        '/assets/rugova-photos/balcony_with_landscape_view.JPG',
+        '/assets/rugova-photos/balcony_with_landscape_view.jpeg',
         '/assets/rugova-photos/pool2.JPG',
         '/assets/rugova-photos/food_on_table.JPG',
         '/assets/rugova-photos/hotel_room_view1.JPG',
@@ -201,16 +201,14 @@ export class RetreatsService {
             name: 'Arieta Berisha Kirk',
             bio: ARIETA_BIO,
             images: [
-              '/assets/arieta12.jpg',
-              '/assets/arieta10.jpg',
-              '/assets/arieta11.jpg'
+              '/assets/rugova-photos/arieta.jpeg'
             ]
           },
           {
             name: 'Melita Kabashi',
             bio: 'MELITA KABASHI – a devoted advocate for human rights and a passionate yoga teacher, Melita has spent years creating positive change in her community. As the founder of DRITH YOGA, a vibrant studio in the heart of Prishtina, Kosovo, she has inspired and empowered hundreds of students to embrace the transformative power of yoga.\n\nBeyond the studio, Melita dedicated years of her life to Save the Children, championing the rights and well-being of children across Kosovo. Her work didn’t stop there—she has played a significant role in bringing yoga into schools, helping students discover mindfulness, balance, and resilience at an early age.\n\nWith a warm and approachable spirit, Melita’s mission is to make yoga and its benefits accessible to all, creating a ripple of growth, healing, and empowerment throughout her community.',
             images: [
-              '/assets/rugova-photos/melita_kabashi.jpeg'
+              '/assets/rugova-photos/melita_kabashi.JPG'
             ]
           }
         ]
