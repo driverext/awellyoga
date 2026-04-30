@@ -208,7 +208,7 @@ export class RetreatsService {
           },
           {
             name: 'Melita Kabashi',
-            bio: 'Melita Kabashi co-hosts the RESET™ RETREAT experience in Rugova Valley.\n\nFull biography coming soon.',
+            bio: 'MELITA KABASHI – a devoted advocate for human rights and a passionate yoga teacher, Melita has spent years creating positive change in her community. As the founder of DRITH YOGA, a vibrant studio in the heart of Prishtina, Kosovo, she has inspired and empowered hundreds of students to embrace the transformative power of yoga.\n\nBeyond the studio, Melita dedicated years of her life to Save the Children, championing the rights and well-being of children across Kosovo. Her work didn’t stop there—she has played a significant role in bringing yoga into schools, helping students discover mindfulness, balance, and resilience at an early age.\n\nWith a warm and approachable spirit, Melita’s mission is to make yoga and its benefits accessible to all, creating a ripple of growth, healing, and empowerment throughout her community.',
             images: [
               '/assets/rugova-photos/melita_kabashi.jpeg'
             ]
