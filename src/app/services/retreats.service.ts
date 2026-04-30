@@ -14,6 +14,8 @@ export class RetreatsService {
       subtitle: 'A 3-Day Nervous System Reset',
       location: 'Shkrel, Rugova Valley, Kosovo',
       dates: 'June 19-21, 2026',
+      startDateIso: '',
+      endDateIso: '',
       duration: '3 days / 2 nights',
       teachers: ['Arieta Berisha Kirk', 'Melita Kabashi'],
       price: {
@@ -129,6 +131,9 @@ export class RetreatsService {
         {
           label: 'Single Occupancy',
           price: '€550',
+          usdPrice: '$625 USD',
+          amountCents: 55000,
+          currency: 'eur',
           details: [
             'Private room with king-size bed',
             'Front-facing with majestic mountain views'
@@ -139,6 +144,9 @@ export class RetreatsService {
         {
           label: 'Shared Occupancy',
           price: '€480',
+          usdPrice: '$545 USD',
+          amountCents: 48000,
+          currency: 'eur',
           details: [
             'Twin room with two single beds',
             'Back-facing with peaceful forest and tree views'

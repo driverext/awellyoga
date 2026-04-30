@@ -34,6 +34,7 @@ export interface DashboardBooking {
   eventStart?: string | null;
   customerName?: string | null;
   customerEmail?: string | null;
+  customerWhatsApp?: string | null;
   amountTotal?: number | null;
   currency?: string | null;
   paymentStatus?: string | null;

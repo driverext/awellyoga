@@ -113,6 +113,7 @@
             <th>Event</th>
             <th>Name</th>
             <th>Email</th>
+            <th>WhatsApp</th>
             <th>Amount</th>
             <th>Status</th>
           </tr>
@@ -123,11 +124,12 @@
             <td>{{ booking.eventTitle || '-' }}</td>
             <td>{{ booking.customerName || '-' }}</td>
             <td>{{ booking.customerEmail || '-' }}</td>
+            <td>{{ booking.customerWhatsApp || '-' }}</td>
             <td>{{ money(booking.amountTotal) | currency:(booking.currency || overview.currency || 'USD'): 'symbol':'1.2-2' }}</td>
             <td>{{ booking.bookingStatus || booking.paymentStatus || '-' }}</td>
           </tr>
           <tr *ngIf="recentBookings.length === 0">
-            <td colspan="6">No bookings yet.</td>
+            <td colspan="7">No bookings yet.</td>
           </tr>
         </tbody>
       </table>
@@ -180,6 +182,8 @@
       <div class="attendance-row" *ngFor="let attendee of paidAttendees(selectedAttendanceEvent)">
         <p>{{ attendee.customerName || 'Name not provided' }}</p>
         <p>{{ attendee.customerEmail || '-' }}</p>
+        <p *ngIf="attendee.customerWhatsApp">WhatsApp: {{ attendee.customerWhatsApp }}</p>
+        <p *ngIf="attendee.customerWhatsApp">WhatsApp: {{ attendee.customerWhatsApp }}</p>
       </div>
       <p *ngIf="paidAttendees(selectedAttendanceEvent).length === 0" class="empty-note">No paid attendees yet.</p>
     </div>

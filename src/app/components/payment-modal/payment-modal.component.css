@@ -237,3 +237,103 @@
     justify-content: center;
   }
 } 
+
+.booking-form {
+  margin-bottom: 24px;
+}
+
+.booking-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.booking-form input {
+  width: 100%;
+  border: 1px solid #d6d0ca;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+.field-note {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.booking-error {
+  margin: 12px 0 0;
+  color: #b42318;
+  font-size: 0.9rem;
+}
+
+.pricing-options {
+  display: grid;
+  gap: 12px;
+}
+
+.pricing-option {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e8ddd3;
+  border-radius: 14px;
+  padding: 16px;
+  background: #fffaf5;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.pricing-option:hover {
+  border-color: #c89068;
+  box-shadow: 0 12px 24px rgba(139, 90, 60, 0.08);
+  transform: translateY(-1px);
+}
+
+.pricing-option.selected {
+  border-color: #8B5A3C;
+  box-shadow: 0 12px 24px rgba(139, 90, 60, 0.12);
+  background: #fff;
+}
+
+.pricing-option-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.pricing-option-label {
+  margin: 0 0 6px;
+  color: #3f2f24;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pricing-option-price {
+  margin: 0;
+  color: #8B5A3C;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.pricing-option-usd {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.pricing-option .material-icons {
+  color: #8B5A3C;
+}
+
+.pricing-option-details {
+  margin: 14px 0 0;
+  padding-left: 18px;
+  color: #5b5b5b;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}

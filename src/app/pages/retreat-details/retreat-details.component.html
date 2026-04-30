@@ -10,7 +10,7 @@
     <div class="hero-meta">
       <span>{{retreat?.duration}}</span>
       <span *ngIf="retreat?.teachers?.length">{{retreat?.teachers?.join(' · ')}}</span>
-      <span *ngIf="retreat?.pricingCards?.length">From {{retreat?.pricingCards?.[1]?.price || retreat?.price?.shared}}</span>
+      <span *ngIf="retreat?.pricingCards?.length">From {{retreat?.pricingCards?.[1]?.price || retreat?.price?.shared}}<span *ngIf="retreat?.pricingCards?.[1]?.usdPrice"> / Approx. {{retreat?.pricingCards?.[1]?.usdPrice}}</span></span>
     </div>
     <div class="status-badges" *ngIf="retreat?.status">
       <div class="status-badge sold-out" *ngIf="retreat?.status?.year2025">
@@ -139,6 +139,7 @@
         <div class="price-item" *ngFor="let option of retreat?.pricingCards">
           <h3>{{option.label}}</h3>
           <p class="price">{{option.price}}</p>
+          <p class="price-usd" *ngIf="option.usdPrice">Approx. {{ option.usdPrice }}</p>
           <ul class="price-details">
             <li *ngFor="let detail of option.details">{{detail}}</li>
           </ul>
@@ -158,9 +159,9 @@
         </ul>
       </div>
       <div class="booking-cta">
-        <a [href]="'mailto:info@awellyoga.com?subject=Booking Inquiry: ' + retreat?.location + ' Retreat - ' + retreat?.dates + '&body=Hi,%0D%0A%0D%0AI am interested in booking the ' + retreat?.location + ' retreat for ' + retreat?.dates + '.%0D%0A%0D%0APlease send me more information about availability and the booking process.%0D%0A%0D%0AThank you!'" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" (click)="openPaymentModal()">
           {{retreat?.status?.year2025 ? 'Contact for 2026 Booking' : 'Reserve Your Spot'}}
-        </a>
+        </button>
       </div>
     </div>
   </section>
@@ -196,3 +197,9 @@
     </div>
   </section>
 </div>
+
+<app-payment-modal
+  [retreat]="retreat"
+  [isVisible]="isPaymentModalVisible"
+  (close)="closePaymentModal()">
+</app-payment-modal>

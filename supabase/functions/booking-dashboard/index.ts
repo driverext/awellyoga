@@ -8,6 +8,7 @@ type BookingRow = {
   event_start: string | null;
   stripe_customer_name: string | null;
   stripe_customer_email: string | null;
+  stripe_customer_whatsapp: string | null;
   amount_total: number | null;
   currency: string | null;
   payment_status: string | null;
@@ -56,7 +57,7 @@ Deno.serve(async (req) => {
     const { data: bookingData, error: bookingError } = await admin
       .from('bookings')
       .select(
-        'id, sanity_event_id, event_title, event_start, stripe_customer_name, stripe_customer_email, amount_total, currency, payment_status, booking_status, created_at'
+        'id, sanity_event_id, event_title, event_start, stripe_customer_name, stripe_customer_email, stripe_customer_whatsapp, amount_total, currency, payment_status, booking_status, created_at'
       )
       .order('created_at', { ascending: false })
       .limit(200);
@@ -100,6 +101,7 @@ Deno.serve(async (req) => {
       eventStart: row.event_start,
       customerName: row.stripe_customer_name,
       customerEmail: row.stripe_customer_email,
+      customerWhatsApp: row.stripe_customer_whatsapp,
       amountTotal: row.amount_total,
       currency: row.currency,
       paymentStatus: row.payment_status,

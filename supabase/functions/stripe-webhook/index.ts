@@ -24,6 +24,11 @@ type StripeEvent = {
       payment_intent?: string;
       expires_at?: number;
       metadata?: Record<string, string>;
+      custom_fields?: Array<{
+        key?: string;
+        type?: string;
+        text?: { value?: string };
+      }>;
     };
   };
 };
@@ -73,6 +78,10 @@ Deno.serve(async (req) => {
       session.customer_details?.business_name ||
       session.collected_information?.business_name ||
       '';
+    const collectedWhatsapp =
+      session.custom_fields?.find((field) => field?.key === 'whatsapp')?.text?.value ||
+      metadata.customer_whatsapp ||
+      '';
 
     if (!bookingId) {
       return json({ received: true, ignored: true, reason: 'missing booking id' });
@@ -95,6 +104,7 @@ Deno.serve(async (req) => {
           stripe_session_id: session.id,
           stripe_customer_name: collectedName || null,
           stripe_customer_email: session.customer_details?.email || null,
+          stripe_customer_whatsapp: collectedWhatsapp || null,
           stripe_payment_intent_id: session.payment_intent || null,
           amount_total: session.amount_total ?? null,
           currency: session.currency || null,
@@ -112,9 +122,11 @@ Deno.serve(async (req) => {
       const emailPayload = {
         toEmail: session.customer_details?.email || metadata.customer_email || '',
         customerName: collectedName,
+        customerWhatsApp: collectedWhatsapp || null,
         eventTitle: metadata.event_title || null,
         eventStart: metadata.event_start || null,
         eventEnd: metadata.event_end || null,
+        eventDateLabel: metadata.event_dates_label || null,
         eventLocation: metadata.event_location || null,
         amountTotal: session.amount_total ?? null,
         currency: session.currency || null
@@ -217,9 +229,11 @@ function json(body: unknown, status = 200): Response {
 type ConfirmationEmailPayload = {
   toEmail: string;
   customerName: string;
+  customerWhatsApp?: string | null;
   eventTitle: string | null;
   eventStart: string | null;
   eventEnd: string | null;
+  eventDateLabel?: string | null;
   eventLocation: string | null;
   amountTotal: number | null;
   currency: string | null;
@@ -241,6 +255,7 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
   const eventTitle = payload.eventTitle?.trim() || 'your class';
   const startsAt = formatDateTime(payload.eventStart, timezone);
   const endsAt = formatDateTime(payload.eventEnd, timezone);
+  const whenLabel = buildWhenLabel(payload.eventDateLabel, startsAt, endsAt);
   const location = payload.eventLocation?.trim() || 'A-WELL Yoga';
   const amountLabel = formatAmount(payload.amountTotal, payload.currency);
 
@@ -292,7 +307,7 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
         '',
         `You're confirmed for ${eventTitle}.`,
         '',
-        `When: ${startsAt}${endsAt ? ` to ${endsAt}` : ''}`,
+        whenLabel ? `When: ${whenLabel}` : null,
         `Where: ${location}`,
         amountLabel ? `Paid: ${amountLabel}` : null,
         '',
@@ -351,7 +366,7 @@ async function sendBookingConfirmationEmail(payload: ConfirmationEmailPayload): 
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#1f2937">
       <p>Hi ${escapeHtml(customerName)},</p>
       <p>You&apos;re confirmed for <strong>${escapeHtml(eventTitle)}</strong>.</p>
-      <p><strong>When:</strong> ${escapeHtml(startsAt)}${endsAt ? ` to ${escapeHtml(endsAt)}` : ''}<br/>
+      <p>${whenLabel ? `<strong>When:</strong> ${escapeHtml(whenLabel)}<br/>` : ''}
       <strong>Where:</strong> ${escapeHtml(location)}${amountLabel ? `<br/><strong>Paid:</strong> ${escapeHtml(amountLabel)}` : ''}</p>
       <p>Please bring anything listed in the class description (mat, water, etc.).<br/>
       If you need to make changes, reply to this email.</p>
@@ -378,10 +393,12 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
   const eventTitle = payload.eventTitle?.trim() || 'Untitled Event';
   const startsAt = formatDateTime(payload.eventStart, timezone);
   const endsAt = formatDateTime(payload.eventEnd, timezone);
+  const whenLabel = buildWhenLabel(payload.eventDateLabel, startsAt, endsAt);
   const location = payload.eventLocation?.trim() || 'A-WELL Yoga';
   const amountLabel = formatAmount(payload.amountTotal, payload.currency) || 'Unknown';
   const customerName = payload.customerName?.trim() || 'Unknown';
   const customerEmail = payload.toEmail?.trim().toLowerCase() || 'Unknown';
+  const customerWhatsApp = payload.customerWhatsApp?.trim() || '';
 
   const subject = `New Booking: ${eventTitle} (${customerName})`;
   const text = [
@@ -390,8 +407,9 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
     `Booking ID: ${payload.bookingId}`,
     `Customer: ${customerName}`,
     `Customer Email: ${customerEmail}`,
+    customerWhatsApp ? `Customer WhatsApp: ${customerWhatsApp}` : null,
     `Event: ${eventTitle}`,
-    `When: ${startsAt}${endsAt ? ` to ${endsAt}` : ''}`,
+    whenLabel ? `When: ${whenLabel}` : null,
     `Location: ${location}`,
     `Amount: ${amountLabel}`,
     `Received: ${new Date().toISOString()}`
@@ -403,8 +421,9 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
       <p style="margin:0 0 6px;"><strong>Booking ID:</strong> ${escapeHtml(payload.bookingId)}</p>
       <p style="margin:0 0 6px;"><strong>Customer:</strong> ${escapeHtml(customerName)}</p>
       <p style="margin:0 0 6px;"><strong>Customer Email:</strong> ${escapeHtml(customerEmail)}</p>
+      ${customerWhatsApp ? `<p style="margin:0 0 6px;"><strong>Customer WhatsApp:</strong> ${escapeHtml(customerWhatsApp)}</p>` : ''}
       <p style="margin:0 0 6px;"><strong>Event:</strong> ${escapeHtml(eventTitle)}</p>
-      <p style="margin:0 0 6px;"><strong>When:</strong> ${escapeHtml(startsAt)}${endsAt ? ` to ${escapeHtml(endsAt)}` : ''}</p>
+      ${whenLabel ? `<p style="margin:0 0 6px;"><strong>When:</strong> ${escapeHtml(whenLabel)}</p>` : ''}
       <p style="margin:0 0 6px;"><strong>Location:</strong> ${escapeHtml(location)}</p>
       <p style="margin:0;"><strong>Amount:</strong> ${escapeHtml(amountLabel)}</p>
     </div>
@@ -499,6 +518,19 @@ async function sendEmailViaConfiguredProvider(payload: SendEmailPayload): Promis
     const errorBody = await response.text();
     console.error('Failed to send booking email:', errorBody);
   }
+}
+
+function buildWhenLabel(dateLabel: string | null | undefined, startsAt: string, endsAt: string): string {
+  const label = (dateLabel || '').trim();
+  if (label) {
+    return label;
+  }
+
+  if (!startsAt || startsAt === 'TBD') {
+    return '';
+  }
+
+  return endsAt && endsAt !== 'TBD' ? `${startsAt} to ${endsAt}` : startsAt;
 }
 
 function formatDateTime(value: string | null, timeZone: string): string {

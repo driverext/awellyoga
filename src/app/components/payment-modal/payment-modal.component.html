@@ -2,7 +2,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <h2>Reserve Your Retreat</h2>
-      <button class="close-btn" (click)="closeModal()">
+      <button class="close-btn" (click)="closeModal()" type="button" aria-label="Close retreat booking modal">
         <span class="material-icons">close</span>
       </button>
     </div>
@@ -10,7 +10,7 @@
     <div class="modal-body" *ngIf="retreat">
       <div class="retreat-summary">
         <img [src]="retreat.image" [alt]="retreat.title" class="retreat-image">
-        
+
         <div class="retreat-info">
           <h3>{{ retreat.title }}</h3>
           <div class="retreat-details">
@@ -26,16 +26,51 @@
               <span class="material-icons">schedule</span>
               <span>{{ retreat.duration }}</span>
             </div>
-            <div class="detail-item" *ngIf="checkoutData">
-              <span class="material-icons">attach_money</span>
-              <span>${{ checkoutData.amount }}</span>
-            </div>
           </div>
         </div>
       </div>
 
+      <div class="payment-info" *ngIf="pricingOptions.length">
+        <h4>Choose Your Room</h4>
+        <div class="pricing-options">
+          <button
+            type="button"
+            class="pricing-option"
+            *ngFor="let option of pricingOptions; let i = index"
+            [class.selected]="selectedOptionIndex === i"
+            (click)="selectOption(i)"
+          >
+            <div class="pricing-option-header">
+              <div>
+                <p class="pricing-option-label">{{ option.label }}</p>
+                <p class="pricing-option-price">{{ option.price }}</p>
+                <p class="pricing-option-usd" *ngIf="option.usdPrice">Approx. {{ option.usdPrice }}</p>
+              </div>
+              <span class="material-icons">{{ selectedOptionIndex === i ? 'radio_button_checked' : 'radio_button_unchecked' }}</span>
+            </div>
+            <ul class="pricing-option-details">
+              <li *ngFor="let detail of option.details">{{ detail }}</li>
+            </ul>
+          </button>
+        </div>
+      </div>
+
+      <form class="booking-form" (ngSubmit)="proceedToPayment()">
+        <label for="retreat-booking-email">Email</label>
+        <input
+          id="retreat-booking-email"
+          name="retreatBookingEmail"
+          type="email"
+          [(ngModel)]="bookingEmail"
+          placeholder="you@example.com"
+          required
+        >
+        <p class="field-note">Required. Stripe checkout will also ask for your full name and offers an optional WhatsApp field.</p>
+        <p class="booking-error" *ngIf="bookingError">{{ bookingError }}</p>
+      </form>
+
       <div class="payment-info">
-        <h4>What's Included:</h4>
+        <h4>What&apos;s Included</h4>
         <ul class="included-items">
           <li *ngFor="let highlight of retreat.highlights?.slice(0, 5)">
             <span class="material-icons">check</span>
@@ -43,31 +78,26 @@
           </li>
         </ul>
       </div>
-
-      <div class="payment-notice" *ngIf="checkoutData && !checkoutData.sessionReady">
-        <div class="notice-box">
-          <span class="material-icons">info</span>
-          <p>{{ checkoutData.message }}</p>
-        </div>
-      </div>
     </div>
 
     <div class="modal-footer">
-      <button 
-        class="btn btn-secondary" 
-        (click)="closeModal()" 
+      <button
+        class="btn btn-secondary"
+        type="button"
+        (click)="closeModal()"
         [disabled]="isLoading">
         Cancel
       </button>
-      
-      <button 
-        class="btn btn-primary" 
-        (click)="proceedToPayment()" 
+
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="proceedToPayment()"
         [disabled]="isLoading">
         <span *ngIf="isLoading" class="loading-spinner"></span>
-        <span *ngIf="!isLoading">Reserve Now</span>
-        <span *ngIf="isLoading">Processing...</span>
+        <span *ngIf="!isLoading">Continue to Payment</span>
+        <span *ngIf="isLoading">Starting Checkout...</span>
       </button>
     </div>
   </div>
-</div> 
+</div>

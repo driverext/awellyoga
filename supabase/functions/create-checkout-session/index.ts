@@ -6,14 +6,19 @@ interface CreateCheckoutPayload {
   title: string;
   instructorName?: string;
   instructorStripeAccountId?: string;
-  startDate: string;
+  startDate?: string;
   endDate?: string;
+  dateLabel?: string;
   location?: string;
   priceLabel?: string;
   stripePriceId?: string;
   bookingUrl?: string;
   platformFeePercent?: number;
   maxSpots?: number;
+  unitAmountCents?: number;
+  currency?: string;
+  successPath?: string;
+  cancelPath?: string;
   email: string;
 }
 
@@ -32,8 +37,8 @@ Deno.serve(async (req) => {
     }
 
     const payload = (await req.json()) as CreateCheckoutPayload;
-    if (!payload?.eventId || !payload?.title || !payload?.startDate) {
-      return json(req, { error: 'Missing event id, title, or start date.' }, 400);
+    if (!payload?.eventId || !payload?.title) {
+      return json(req, { error: 'Missing event id or title.' }, 400);
     }
 
     const email = (payload.email || '').trim().toLowerCase();
@@ -41,7 +46,10 @@ Deno.serve(async (req) => {
       return json(req, { error: 'A valid email address is required.' }, 400);
     }
 
-    if (!payload.stripePriceId) {
+    const hasDynamicAmount = typeof payload.unitAmountCents === 'number' && payload.unitAmountCents > 0;
+    const normalizedCurrency = (payload.currency || 'usd').trim().toLowerCase();
+
+    if (!payload.stripePriceId && !hasDynamicAmount) {
       if (payload.bookingUrl) {
         return json(req, {
           fallbackUrl: payload.bookingUrl,
@@ -49,7 +57,7 @@ Deno.serve(async (req) => {
         });
       }
       return json(req, {
-        error: 'No Stripe Price ID was configured for this event. Add one in Sanity before booking.'
+        error: 'No Stripe Price ID or custom payment amount was configured for this booking.'
       }, 400);
     }
 
@@ -105,7 +113,7 @@ Deno.serve(async (req) => {
       .insert({
         sanity_event_id: payload.eventId,
         event_title: payload.title,
-        event_start: payload.startDate,
+        event_start: payload.startDate || null,
         event_end: payload.endDate || null,
         event_location: payload.location || null,
         stripe_customer_email: email,
@@ -121,28 +129,46 @@ Deno.serve(async (req) => {
     }
 
     const origin = resolveRedirectOrigin(req);
-    const successUrl = `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${origin}/schedule#calendar`;
+    const successUrl = resolveRedirectUrl(origin, payload.successPath, `/payment-success?session_id={CHECKOUT_SESSION_ID}`);
+    const cancelUrl = resolveRedirectUrl(origin, payload.cancelPath, '/schedule#calendar');
 
     const body = new URLSearchParams();
     body.set('mode', 'payment');
     body.set('success_url', successUrl);
     body.set('cancel_url', cancelUrl);
-    body.set('line_items[0][price]', payload.stripePriceId);
-    body.set('line_items[0][quantity]', '1');
     body.set('customer_email', email);
     body.set('name_collection[individual][enabled]', 'true');
     body.set('name_collection[individual][optional]', 'false');
+    body.set('custom_fields[0][key]', 'whatsapp');
+    body.set('custom_fields[0][label][type]', 'custom');
+    body.set('custom_fields[0][label][custom]', 'WhatsApp (optional)');
+    body.set('custom_fields[0][type]', 'text');
+    body.set('custom_fields[0][optional]', 'true');
+    body.set('custom_fields[0][text][maximum_length]', '32');
     body.set('client_reference_id', insertedBooking.id);
     body.set('metadata[booking_id]', insertedBooking.id);
     body.set('metadata[sanity_event_id]', payload.eventId);
     body.set('metadata[event_title]', payload.title);
     body.set('metadata[instructor_name]', payload.instructorName || '');
-    body.set('metadata[event_start]', payload.startDate);
+    body.set('metadata[event_start]', payload.startDate || '');
     body.set('metadata[event_end]', payload.endDate || '');
+    body.set('metadata[event_dates_label]', payload.dateLabel || '');
     body.set('metadata[event_location]', payload.location || '');
     body.set('metadata[price_label]', payload.priceLabel || '');
     body.set('metadata[max_spots]', maxSpots > 0 ? String(maxSpots) : '');
+
+    if (payload.stripePriceId) {
+      body.set('line_items[0][price]', payload.stripePriceId);
+      body.set('line_items[0][quantity]', '1');
+    } else if (hasDynamicAmount) {
+      body.set('line_items[0][price_data][currency]', normalizedCurrency);
+      body.set('line_items[0][price_data][unit_amount]', String(payload.unitAmountCents));
+      body.set('line_items[0][price_data][product_data][name]', payload.title);
+      if (payload.priceLabel) {
+        body.set('line_items[0][price_data][product_data][description]', payload.priceLabel);
+      }
+      body.set('line_items[0][quantity]', '1');
+    }
 
     const shouldAllowPromotionCodes =
       (payload.title || '').toLowerCase().includes('neuroyoga') ||
@@ -154,7 +180,7 @@ Deno.serve(async (req) => {
 
     const destinationAccount = (payload.instructorStripeAccountId || '').trim();
     const platformFeePercent = clampPercent(payload.platformFeePercent);
-    if (destinationAccount.startsWith('acct_') && platformFeePercent > 0) {
+    if (payload.stripePriceId && destinationAccount.startsWith('acct_') && platformFeePercent > 0) {
       const priceInfo = await fetchStripePrice(payload.stripePriceId, stripeSecretKey);
       const unitAmount = priceInfo?.unit_amount ?? null;
       if (typeof unitAmount === 'number' && unitAmount > 0) {
@@ -247,6 +273,23 @@ function resolveRedirectOrigin(req: Request): string {
   const fullAllowlist = allowedOrigins.length ? allowedOrigins : fallbackAllowed;
 
   return fullAllowlist.includes(requestedOrigin) ? requestedOrigin : siteUrl;
+}
+
+function resolveRedirectUrl(origin: string, candidatePath: string | undefined, fallbackPath: string): string {
+  const raw = (candidatePath || '').trim();
+  if (!raw) {
+    return `${origin}${fallbackPath}`;
+  }
+
+  try {
+    const url = new URL(raw, origin);
+    if (url.origin !== origin) {
+      return `${origin}${fallbackPath}`;
+    }
+    return url.toString();
+  } catch {
+    return `${origin}${fallbackPath}`;
+  }
 }
 
 function json(req: Request, body: unknown, status = 200): Response {
