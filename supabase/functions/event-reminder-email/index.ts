@@ -88,7 +88,8 @@ Deno.serve(async (req) => {
       fromName,
       subject,
       eventTitle,
-      location
+      location,
+      meetingPoint: 'Chases on the Beach\n3401 S Atlantic Ave\nNew Smyrna Beach, FL 32169'
     });
 
     if (mode === 'preview') {
@@ -183,13 +184,13 @@ function dedupeRecipients(bookings: BookingRow[]) {
     if (!isValidEmail(email) || map.has(email)) continue;
     map.set(email, {
       email,
-      name: row.stripe_customer_name?.trim() || 'there'
+      name: row.stripe_customer_name?.trim() || ''
     });
   }
   return [...map.values()];
 }
 
-function buildReminderEmail(input: { message: string; fromName: string; subject: string; eventTitle: string; location: string }) {
+function buildReminderEmail(input: { message: string; fromName: string; subject: string; eventTitle: string; location: string; meetingPoint: string }) {
   const bodyHtml = input.message
     .split('\n')
     .map((line) => line.trim())
@@ -212,7 +213,7 @@ function buildReminderEmail(input: { message: string; fromName: string; subject:
           ${bodyHtml}
           <div style="margin:22px 0 0;padding:18px 20px;background:#fcf7f0;border:1px solid #eee2d4;border-radius:14px;">
             <p style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#8b6d56;">Meeting Point</p>
-            <p style="margin:0;font-size:16px;line-height:1.75;color:#2a2a2a;"><strong>${escapeHtml(input.location)}</strong></p>
+            <p style="margin:0;font-size:16px;line-height:1.75;color:#2a2a2a;"><strong>${escapeHtml(input.meetingPoint).replaceAll('\n', '<br>')}</strong></p>
           </div>
           <p style="margin:22px 0 0;font-size:16px;line-height:1.75;color:#2a2a2a;">With warmth,<br>${escapeHtml(input.fromName)}</p>
         </div>
@@ -224,11 +225,17 @@ function buildReminderEmail(input: { message: string; fromName: string; subject:
 }
 
 function personalizeHtml(html: string, name: string) {
-  return html.replaceAll('{{NAME}}', escapeHtml(name || 'there'));
+  if (!name?.trim()) {
+    return html.replaceAll('Hi {{NAME}},', 'Hi,');
+  }
+  return html.replaceAll('{{NAME}}', escapeHtml(name));
 }
 
 function personalizeText(text: string, name: string) {
-  return text.replaceAll('{{NAME}}', name || 'there');
+  if (!name?.trim()) {
+    return text.replaceAll('Hi {{NAME}},', 'Hi,');
+  }
+  return text.replaceAll('{{NAME}}', name);
 }
 
 function validateDashboardAuth(req: Request): string | null {
