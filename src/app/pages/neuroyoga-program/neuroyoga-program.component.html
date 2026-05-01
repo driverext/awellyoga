@@ -1,0 +1,111 @@
+<section class="program-hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">4-Week Therapeutic Program</p>
+      <h1>NeuroYoga™ Therapeutic Yoga</h1>
+      <p class="hero-text">
+        This is a guided 4-week experience for people who want more than a single drop-in class.
+        Through breath, intentional movement, and nervous system awareness, the program is designed
+        to help you build steadiness week by week.
+      </p>
+      <div class="hero-pills">
+        <span>$280 total</span>
+        <span>Starts in July</span>
+        <span>Date TBA with group</span>
+      </div>
+      <div class="hero-actions">
+        <a href="#apply" class="btn btn-primary">Apply Now</a>
+        <a routerLink="/schedule" fragment="calendar" class="btn btn-secondary">View Drop-In Classes</a>
+      </div>
+    </div>
+
+    <div class="hero-panel">
+      <div class="detail-card" *ngFor="let detail of details">
+        <span>{{ detail.label }}</span>
+        <strong>{{ detail.value }}</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section overview-section">
+  <div class="container overview-grid">
+    <div>
+      <p class="eyebrow">Why this format</p>
+      <h2>A better fit than a one-off booking.</h2>
+      <p>
+        Because this work builds over time, the best flow is not the calendar. This program gives students
+        four weekly sessions in a consistent container, so there is time to learn the work, integrate it,
+        and notice what changes in real life.
+      </p>
+    </div>
+
+    <div class="panel-list">
+      <h3>What you will leave with</h3>
+      <ul>
+        <li *ngFor="let outcome of outcomes">{{ outcome }}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section structure-section">
+  <div class="container structure-grid">
+    <div class="panel-list soft-panel">
+      <p class="eyebrow">Who it is for</p>
+      <h2>Support for people who want more than a general class.</h2>
+      <ul>
+        <li *ngFor="let item of whoItsFor">{{ item }}</li>
+      </ul>
+    </div>
+
+    <div class="panel-list dark-panel">
+      <p class="eyebrow">What to expect</p>
+      <h2>Four sessions. One intentional arc.</h2>
+      <ul>
+        <li *ngFor="let item of whatToExpect">{{ item }}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section application-section" id="apply">
+  <div class="container application-grid">
+    <div class="application-copy">
+      <p class="eyebrow">Apply Now</p>
+      <h2>Reserve your place in the July cohort.</h2>
+      <p>
+        The program begins in July 2026. The exact day and time will be finalized around the group,
+        so this application helps us shape the cohort and reach out with the best options.
+      </p>
+      <p>
+        Once we receive your application, we’ll follow up with next steps and scheduling details.
+      </p>
+    </div>
+
+    <form class="application-form" (ngSubmit)="submitApplication()">
+      <label>
+        Full Name
+        <input type="text" name="name" [(ngModel)]="application.name" autocomplete="name" required />
+      </label>
+
+      <label>
+        Email
+        <input type="email" name="email" [(ngModel)]="application.email" autocomplete="email" required />
+      </label>
+
+      <label>
+        WhatsApp (optional)
+        <input type="text" name="whatsapp" [(ngModel)]="application.whatsapp" autocomplete="tel" />
+      </label>
+
+      <p class="form-note">Investment: $280 for the full 4-week program.</p>
+      <p class="form-success" *ngIf="success">{{ success }}</p>
+      <p class="form-error" *ngIf="error">{{ error }}</p>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Submitting...' : 'Apply Now' }}
+      </button>
+    </form>
+  </div>
+</section>

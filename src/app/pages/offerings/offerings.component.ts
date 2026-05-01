@@ -3,6 +3,19 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 
+interface OfferingClass {
+  id: string;
+  name: string;
+  level: string;
+  description: string;
+  benefits: string[];
+  image: string;
+  programMeta?: string;
+  ctaLabel?: string;
+  ctaRoute?: string;
+  ctaFragment?: string;
+}
+
 @Component({
   selector: 'app-offerings',
   standalone: true,
@@ -11,6 +24,8 @@ import { SeoService } from '../../services/seo.service';
   styleUrls: ['./offerings.component.css']
 })
 export class OfferingsComponent {
+  readonly scheduleRoute = '/schedule';
+
   constructor(private seo: SeoService) {
     this.seo.updatePage({
       title: 'Yoga Classes and Offerings',
@@ -20,20 +35,23 @@ export class OfferingsComponent {
     });
   }
 
-  classes = [
+  classes: OfferingClass[] = [
     {
       id: 'vinyasa',
       name: 'NeuroYoga™ Therapeutic Yoga',
       level: 'All Levels',
       description:
-        'A guided, nervous system-based session designed to help you regulate your body through breath, intentional movement, and awareness. Each session focuses on understanding how your body responds to stress and learning how to shift into a more balanced, grounded state. Perfect for those experiencing anxiety, overwhelm, or seeking a deeper, therapeutic approach to yoga.',
+        'A guided, nervous system-based session designed to help you regulate your body through breath, intentional movement, and awareness. This offering now runs as a 4-week program with one session each week, giving you time to build consistency and feel the work integrate over time.',
       benefits: [
         'Regulates the nervous system and reduces stress',
         'Decreases anxiety and emotional overwhelm',
         'Enhances mind-body awareness and presence',
         'Builds resilience and emotional stability'
       ],
-      image: 'https://images.unsplash.com/photo-1552286450-4a669f880062?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80'
+      image: 'https://images.unsplash.com/photo-1552286450-4a669f880062?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80',
+      programMeta: '$280 • 4 weeks • 4 sessions',
+      ctaLabel: 'Apply Now',
+      ctaRoute: '/neuroyoga-program'
     },
     {
       id: 'gentle',
@@ -46,7 +64,10 @@ export class OfferingsComponent {
         'Builds foundational strength',
         'Enhances body awareness'
       ],
-      image: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80'
+      image: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
+      ctaLabel: 'Book a Class',
+      ctaRoute: '/schedule',
+      ctaFragment: 'calendar'
     },
     {
       id: 'yin',
@@ -59,7 +80,10 @@ export class OfferingsComponent {
         'Reduces stress and anxiety',
         'Balances the nervous system'
       ],
-      image: 'https://images.unsplash.com/photo-1545389336-cf090694435e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80'
+      image: 'https://images.unsplash.com/photo-1545389336-cf090694435e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80',
+      ctaLabel: 'Book a Class',
+      ctaRoute: '/schedule',
+      ctaFragment: 'calendar'
     },
     {
       id: 'power',
@@ -72,7 +96,10 @@ export class OfferingsComponent {
         'Increases flexibility',
         'Enhances mental focus'
       ],
-      image: 'https://images.pexels.com/photos/4057535/pexels-photo-4057535.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+      image: 'https://images.pexels.com/photos/4057535/pexels-photo-4057535.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      ctaLabel: 'Book a Class',
+      ctaRoute: '/schedule',
+      ctaFragment: 'calendar'
     },
     {
       id: 'hatha',
@@ -85,7 +112,10 @@ export class OfferingsComponent {
         'Reduces stress',
         'Increases bodily awareness'
       ],
-      image: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80'
+      image: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
+      ctaLabel: 'Book a Class',
+      ctaRoute: '/schedule',
+      ctaFragment: 'calendar'
     },
     {
       id: 'restorative',
@@ -98,7 +128,10 @@ export class OfferingsComponent {
         'Improves sleep quality',
         'Enhances emotional wellbeing'
       ],
-      image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80'
+      image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
+      ctaLabel: 'Book a Class',
+      ctaRoute: '/schedule',
+      ctaFragment: 'calendar'
     },
     {
       id: 'prenatal',
@@ -111,7 +144,10 @@ export class OfferingsComponent {
         'Strengthens the pelvic floor',
         'Creates community with other mothers'
       ],
-      image: 'https://images.unsplash.com/photo-1623886797222-9a0856e870b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80'
+      image: 'https://images.unsplash.com/photo-1623886797222-9a0856e870b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
+      ctaLabel: 'Book a Class',
+      ctaRoute: '/schedule',
+      ctaFragment: 'calendar'
     },
     {
       id: 'meditation',
@@ -124,7 +160,10 @@ export class OfferingsComponent {
         'Promotes emotional stability',
         'Enhances self-awareness'
       ],
-      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80'
+      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
+      ctaLabel: 'Book a Class',
+      ctaRoute: '/schedule',
+      ctaFragment: 'calendar'
     }
   ];
-} 
+}

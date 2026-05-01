@@ -126,6 +126,15 @@
   margin-bottom: 1rem;
 }
 
+.class-meta {
+  margin-bottom: 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--clay-600);
+}
+
 .class-description {
   margin-bottom: 1.5rem;
   line-height: 1.6;

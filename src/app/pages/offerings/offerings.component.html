@@ -22,7 +22,7 @@
   <div class="container">
     <div class="filters">
       <div class="filter-info">
-        <p>Ready to pick a time?</p>
+        <p>Looking for weekly classes? Use the live schedule. Looking for the NeuroYoga program? Apply separately.</p>
         <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">View Full Schedule</a>
       </div>
     </div>
@@ -40,6 +40,7 @@
         </div>
         <div class="class-content">
           <h3>{{ class.name }}</h3>
+          <p class="class-meta" *ngIf="class.programMeta">{{ class.programMeta }}</p>
           <p class="class-description">{{ class.description }}</p>
           <div class="benefits">
             <h4>Benefits:</h4>
@@ -47,7 +48,13 @@
               <li *ngFor="let benefit of class.benefits">{{ benefit }}</li>
             </ul>
           </div>
-          <a routerLink="/schedule" fragment="calendar" class="btn btn-primary">Book a Class</a>
+          <a
+            [routerLink]="class.ctaRoute || scheduleRoute"
+            [fragment]="class.ctaFragment || undefined"
+            class="btn btn-primary"
+          >
+            {{ class.ctaLabel || 'Book a Class' }}
+          </a>
         </div>
       </div>
     </div>
