@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
   CmsAnnouncement,
@@ -24,6 +24,7 @@ interface PrivateSessionFormModel {
   name: string;
   email: string;
   phone: string;
+  preferredTeacher: string;
   goal: string;
   availability: string;
   notes: string;
@@ -38,7 +39,7 @@ interface PrivateSessionFormModel {
 })
 export class ScheduleComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
-  private readonly defaultClassCapacity = 7;
+  private readonly defaultClassCapacity = 6;
 
   pageTitle = 'Schedule';
   pageSubtitle = 'Flexible options to support your yoga journey';
@@ -70,6 +71,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   bookingError = '';
   bookingLoading = false;
   privateSessionModalOpen = false;
+  privateSessionCheckoutEvent: CmsEvent | null = null;
   privateSessionLoading = false;
   privateSessionError = '';
   privateSessionSuccess = '';
@@ -77,12 +79,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     name: '',
     email: '',
     phone: '',
+    preferredTeacher: '',
     goal: '',
     availability: '',
     notes: ''
   };
 
   constructor(
+    private route: ActivatedRoute,
     private cmsContent: SanityContentService,
     private bookingService: BookingService,
     private seo: SeoService
@@ -90,6 +94,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.updateSeo();
+    this.subscriptions.add(
+      this.route.queryParamMap.subscribe((params) => {
+        if (params.get('membership') === 'success') {
+          this.pricingFlowMessage =
+            'Your membership checkout was successful. Use the same email at booking and choose Use Membership to reserve your spot.';
+        }
+      })
+    );
 
     this.subscriptions.add(
       this.cmsContent.getStudioPage().subscribe((content) => {
@@ -157,6 +169,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   openBooking(event: CmsEvent): void {
+    if (this.isPrivateSessionEvent(event)) {
+      this.privateSessionCheckoutEvent = event;
+      this.privateSessionSuccess = '';
+      this.privateSessionError = '';
+      this.privateSessionModalOpen = true;
+      return;
+    }
+
     if (!this.canBookEvent(event)) {
       this.pricingFlowMessage = `Booking is missing for "${event.title}". Add a Stripe Price ID or booking URL in Sanity.`;
       return;
@@ -228,6 +248,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   bookPrivateSession(): void {
     this.privateSessionSuccess = '';
     this.privateSessionError = '';
+    this.privateSessionCheckoutEvent = null;
     this.privateSessionModalOpen = true;
   }
 
@@ -238,6 +259,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
     this.privateSessionModalOpen = false;
     this.privateSessionError = '';
+    this.privateSessionCheckoutEvent = null;
   }
 
   async submitPrivateSessionRequest(): Promise<void> {
@@ -254,6 +276,24 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       if (!result.id) {
         this.privateSessionError = result.error || 'Could not submit your request. Please try again.';
         return;
+      }
+
+      if (this.privateSessionCheckoutEvent) {
+        const checkoutResult = await this.bookingService.createCheckoutSession(
+          this.privateSessionCheckoutEvent,
+          payload.email,
+          this.eventCapacity(this.privateSessionCheckoutEvent)
+        );
+
+        if (checkoutResult.url) {
+          window.location.href = checkoutResult.url;
+          return;
+        }
+
+        if (checkoutResult.error) {
+          this.privateSessionError = checkoutResult.error;
+          return;
+        }
       }
 
       this.privateSessionSuccess =
@@ -282,6 +322,20 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       return;
     }
     window.location.hash = '#calendar';
+  }
+
+  async startMembershipCheckout(plan: 'intro' | 'standard'): Promise<void> {
+    try {
+      const result = await this.bookingService.createMembershipCheckout(plan);
+      if (result.url) {
+        window.location.href = result.url;
+        return;
+      }
+
+      this.pricingFlowMessage = result.error || 'Could not start membership checkout.';
+    } catch (error) {
+      this.pricingFlowMessage = (error as Error).message || 'Could not start membership checkout.';
+    }
   }
 
   private applyStudioPageContent(content: CmsStudioPage): void {
@@ -328,6 +382,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   bookingButtonLabel(event: CmsEvent): string {
     if (this.isEventFull(event)) {
       return 'Class Full';
+    }
+
+    if (this.isPrivateSessionEvent(event)) {
+      return 'Request + Pay';
     }
 
     return 'Book';
@@ -384,6 +442,51 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     return !!event.stripePriceId || !!this.buildBookingUrl(event, 'placeholder@example.com');
   }
 
+  canUseMembership(event: CmsEvent): boolean {
+    return (
+      event.eventType === 'Yoga Class' &&
+      !this.isPrivateSessionEvent(event) &&
+      (event.priceLabel || '').includes('$25')
+    );
+  }
+
+  async reserveWithMembership(): Promise<void> {
+    if (!this.bookingEvent) {
+      return;
+    }
+
+    const email = this.bookingEmail.trim();
+    if (!this.isValidEmail(email)) {
+      this.bookingError = 'Please enter a valid email address.';
+      return;
+    }
+
+    this.bookingLoading = true;
+    this.bookingError = '';
+
+    try {
+      const result = await this.bookingService.createMemberReservation(
+        this.bookingEvent,
+        email,
+        this.eventCapacity(this.bookingEvent)
+      );
+
+      this.closeBookingModal();
+      this.pricingFlowMessage =
+        result.message || 'Your member reservation is confirmed. We look forward to seeing you in class.';
+    } catch (error) {
+      this.bookingError =
+        (error as Error).message ||
+        'Could not reserve this class with membership. Please verify your membership email or try again.';
+    } finally {
+      this.bookingLoading = false;
+    }
+  }
+
+  private isPrivateSessionEvent(event: CmsEvent): boolean {
+    return /private session/i.test(event.title || '');
+  }
+
   private async refreshLiveSpots(): Promise<void> {
     const eventIds = this.events
       .map((event) => event.id || '')
@@ -436,6 +539,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       return null;
     }
 
+    if (!this.privateSessionForm.preferredTeacher.trim()) {
+      this.privateSessionError = 'Please choose who you would like to work with.';
+      return null;
+    }
+
     if (!goal) {
       this.privateSessionError = 'Please share your private session goals.';
       return null;
@@ -450,10 +558,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       name,
       email,
       phone,
+      preferredTeacher: this.privateSessionForm.preferredTeacher.trim(),
       goal,
       availability,
-      notes,
-      source: 'schedule-page'
+      notes: this.decoratePrivateSessionNotes(notes),
+      source: this.privateSessionCheckoutEvent ? 'schedule-private-session-booking' : 'schedule-page'
     };
   }
 
@@ -462,10 +571,24 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       name: '',
       email: '',
       phone: '',
+      preferredTeacher: '',
       goal: '',
       availability: '',
       notes: ''
     };
+  }
+
+  private decoratePrivateSessionNotes(notes: string): string {
+    const teacher = this.privateSessionForm.preferredTeacher.trim();
+    if (!teacher) {
+      return notes;
+    }
+
+    if (!notes) {
+      return `Teacher preference: ${teacher}`;
+    }
+
+    return `Teacher preference: ${teacher}\n\n${notes}`;
   }
 
   private syncCalendarSelection(): void {

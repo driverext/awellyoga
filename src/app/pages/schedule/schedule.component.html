@@ -131,7 +131,12 @@
 <div class="booking-modal-overlay" *ngIf="bookingEvent" (click)="closeBookingModal()">
   <section class="booking-modal" (click)="$event.stopPropagation()">
     <h3>Book {{ bookingEvent.title }}</h3>
-    <p>Enter your email to continue to Stripe checkout. Stripe will also ask for your full name before payment.</p>
+    <p *ngIf="canUseMembership(bookingEvent)">
+      Enter your email to either pay the drop-in rate or reserve this spot using an active membership.
+    </p>
+    <p *ngIf="!canUseMembership(bookingEvent)">
+      Enter your email to continue to Stripe checkout. Stripe will also ask for your full name before payment.
+    </p>
     <form (ngSubmit)="submitBooking()">
       <label for="booking-email">Email</label>
       <input
@@ -145,8 +150,17 @@
       <p class="booking-error" *ngIf="bookingError">{{ bookingError }}</p>
       <div class="booking-modal-actions">
         <button type="button" class="btn btn-secondary" [disabled]="bookingLoading" (click)="closeBookingModal()">Cancel</button>
+        <button
+          *ngIf="canUseMembership(bookingEvent)"
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="bookingLoading"
+          (click)="reserveWithMembership()"
+        >
+          {{ bookingLoading ? 'Checking Membership...' : 'Use Membership' }}
+        </button>
         <button type="submit" class="btn btn-primary" [disabled]="bookingLoading">
-          {{ bookingLoading ? 'Starting Checkout...' : 'Continue to Payment' }}
+          {{ bookingLoading ? 'Starting Checkout...' : 'Drop-In $25' }}
         </button>
       </div>
     </form>
@@ -156,7 +170,12 @@
 <div class="booking-modal-overlay" *ngIf="privateSessionModalOpen" (click)="closePrivateSessionModal()">
   <section class="booking-modal private-session-modal" (click)="$event.stopPropagation()">
     <h3>Request a Private Session</h3>
-    <p>Share a few details and we will follow up to confirm your session time.</p>
+    <p *ngIf="privateSessionCheckoutEvent">
+      Share a few details, choose your teacher, and continue to the $120 private-session checkout.
+    </p>
+    <p *ngIf="!privateSessionCheckoutEvent">
+      Share a few details and we will follow up to confirm your session time.
+    </p>
     <form (ngSubmit)="submitPrivateSessionRequest()">
       <label for="ps-name">Full Name</label>
       <input
@@ -186,6 +205,18 @@
         [(ngModel)]="privateSessionForm.phone"
         placeholder="(321) 555-1234"
       >
+
+      <label for="ps-teacher">Preferred Teacher</label>
+      <select
+        id="ps-teacher"
+        name="psTeacher"
+        [(ngModel)]="privateSessionForm.preferredTeacher"
+        required
+      >
+        <option value="" disabled>Select a teacher</option>
+        <option value="Arieta Berisha Kirk">Arieta Berisha Kirk</option>
+        <option value="Sommer Renee">Sommer Renee</option>
+      </select>
 
       <label for="ps-goal">What are your goals?</label>
       <textarea
@@ -220,12 +251,52 @@
       <div class="booking-modal-actions">
         <button type="button" class="btn btn-secondary" [disabled]="privateSessionLoading" (click)="closePrivateSessionModal()">Cancel</button>
         <button type="submit" class="btn btn-primary" [disabled]="privateSessionLoading">
-          {{ privateSessionLoading ? 'Submitting...' : 'Submit Request' }}
+          {{ privateSessionLoading ? 'Submitting...' : (privateSessionCheckoutEvent ? 'Request + Continue to Payment' : 'Submit Request') }}
         </button>
       </div>
     </form>
   </section>
 </div>
+
+<section class="section membership-section" id="membership-options">
+  <div class="container">
+    <div class="membership-header text-center">
+      <h2>Memberships and Drop-Ins</h2>
+      <p>
+        Keep studio class booking simple: use a $25 drop-in when you want flexibility, or start a membership and
+        reserve eligible classes with the same email you used at checkout.
+      </p>
+    </div>
+
+    <div class="membership-grid">
+      <article class="membership-card">
+        <p class="membership-kicker">Drop-In</p>
+        <h3>$25</h3>
+        <p>Perfect for occasional visits, guest bookings, and trying a class without a monthly commitment.</p>
+        <span class="membership-note">Book directly from the calendar.</span>
+      </article>
+
+      <article class="membership-card featured">
+        <p class="membership-kicker">Monthly Membership</p>
+        <h3>$140<span>/month</span></h3>
+        <p>Built for regular students who want a consistent studio rhythm without repurchasing each class.</p>
+        <button type="button" class="btn btn-primary" (click)="startMembershipCheckout('standard')">Start Membership</button>
+      </article>
+
+      <article class="membership-card">
+        <p class="membership-kicker">First Month Offer</p>
+        <h3>$49<span> first month</span></h3>
+        <p>For first-time monthly members who want an easier on-ramp into the studio schedule.</p>
+        <button type="button" class="btn btn-secondary" (click)="startMembershipCheckout('intro')">Claim Intro Offer</button>
+      </article>
+    </div>
+
+    <p class="membership-footnote text-center">
+      Already a member? Open any eligible studio class, enter your membership email, and choose
+      <strong>Use Membership</strong> instead of paying the drop-in rate.
+    </p>
+  </div>
+</section>
 
 <!-- Registration Process -->
 <section class="section registration-section">
@@ -330,7 +401,10 @@
     <div class="private-content">
       <div class="private-text">
         <h2>Private Sessions</h2>
-        <p>Looking for personalized attention? Our private sessions offer one-on-one instruction tailored to your specific needs and goals.</p>
+        <p>
+          Looking for personalized attention? Friday private sessions are available by appointment from 12:00 PM-6:00 PM
+          with either Arieta or Sommer. Each private session is $120 and tailored to your goals.
+        </p>
         <button type="button" class="btn btn-primary" (click)="bookPrivateSession()">Book a Private Session</button>
         <p class="private-session-success" *ngIf="privateSessionSuccess">{{ privateSessionSuccess }}</p>
       </div>

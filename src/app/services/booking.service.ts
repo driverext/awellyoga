@@ -83,6 +83,7 @@ export interface PrivateSessionRequestPayload {
   name: string;
   email: string;
   phone?: string;
+  preferredTeacher?: string;
   goal: string;
   availability: string;
   notes?: string;
@@ -96,6 +97,12 @@ interface PrivateSessionRequestResponse {
 }
 
 interface CheckoutSessionSummaryResponse extends CheckoutSessionSummary {
+  error?: string;
+}
+
+interface MemberReservationResponse {
+  ok?: boolean;
+  message?: string;
   error?: string;
 }
 
@@ -184,6 +191,63 @@ export class BookingService {
     const data = (await response.json()) as PrivateSessionRequestResponse;
     if (!response.ok) {
       throw new Error(data.error || 'Could not submit private session request.');
+    }
+
+    return data;
+  }
+
+  async createMembershipCheckout(plan: 'intro' | 'standard', email?: string): Promise<CreateCheckoutResponse> {
+    if (!this.edgeFunctionsBaseUrl) {
+      return {
+        error: 'Booking backend is not configured yet.'
+      };
+    }
+
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/membership-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        plan,
+        email: email?.trim().toLowerCase() || ''
+      })
+    });
+
+    const data = (await response.json()) as CreateCheckoutResponse;
+    if (!response.ok) {
+      throw new Error(data.error || 'Could not start membership checkout.');
+    }
+
+    return data;
+  }
+
+  async createMemberReservation(event: CmsEvent, email: string, maxSpots: number | null): Promise<MemberReservationResponse> {
+    if (!this.edgeFunctionsBaseUrl) {
+      return {
+        error: 'Booking backend is not configured yet.'
+      };
+    }
+
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/member-reservation`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        eventId: event.id,
+        title: event.title,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        location: event.location,
+        email: email.trim().toLowerCase(),
+        maxSpots: maxSpots || undefined
+      })
+    });
+
+    const data = (await response.json()) as MemberReservationResponse;
+    if (!response.ok) {
+      throw new Error(data.error || 'Could not reserve class with membership.');
     }
 
     return data;
