@@ -48,7 +48,7 @@ export class OfferingsComponent {
         'Enhances mind-body awareness and presence',
         'Builds resilience and emotional stability'
       ],
-      image: 'https://images.unsplash.com/photo-1552286450-4a669f880062?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80',
+      image: '/assets/classes-photos/neuroyoga.jpeg',
       programMeta: '$280 • 4 weeks • 4 sessions • 90 minutes each',
       ctaLabel: 'Apply Now',
       ctaRoute: '/neuroyoga-program'
@@ -80,23 +80,7 @@ export class OfferingsComponent {
         'Reduces stress and anxiety',
         'Balances the nervous system'
       ],
-      image: 'https://images.unsplash.com/photo-1545389336-cf090694435e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80',
-      ctaLabel: 'Book a Class',
-      ctaRoute: '/schedule',
-      ctaFragment: 'calendar'
-    },
-    {
-      id: 'power',
-      name: 'Power Yoga',
-      level: 'Intermediate to Advanced',
-      description: 'A vigorous, fitness-based approach to vinyasa-style yoga. Build strength, endurance, and flexibility through this challenging practice.',
-      benefits: [
-        'Builds significant strength and stamina',
-        'Improves cardiovascular fitness',
-        'Increases flexibility',
-        'Enhances mental focus'
-      ],
-      image: 'https://images.pexels.com/photos/4057535/pexels-photo-4057535.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      image: '/assets/classes-photos/yin-yoga.jpeg',
       ctaLabel: 'Book a Class',
       ctaRoute: '/schedule',
       ctaFragment: 'calendar'
@@ -128,7 +112,7 @@ export class OfferingsComponent {
         'Improves sleep quality',
         'Enhances emotional wellbeing'
       ],
-      image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
+      image: '/assets/classes-photos/restorative-yoga.jpeg',
       ctaLabel: 'Book a Class',
       ctaRoute: '/schedule',
       ctaFragment: 'calendar'
@@ -144,23 +128,23 @@ export class OfferingsComponent {
         'Strengthens the pelvic floor',
         'Creates community with other mothers'
       ],
-      image: 'https://images.unsplash.com/photo-1623886797222-9a0856e870b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
+      image: '/assets/classes-photos/prenatal-yoga.jpeg',
       ctaLabel: 'Book a Class',
       ctaRoute: '/schedule',
       ctaFragment: 'calendar'
     },
     {
-      id: 'meditation',
-      name: 'Meditation & Mindfulness',
-      level: 'All Levels',
-      description: 'Guided sessions focusing on breath awareness, visualization, and mindfulness techniques. Cultivate mental clarity, emotional stability, and inner peace.',
+      id: 'kids',
+      name: 'Kids Yoga',
+      level: 'Kids',
+      description: 'A playful, supportive class designed to help children build body awareness, focus, confidence, and calm through age-appropriate movement, breath, and mindfulness.',
       benefits: [
-        'Reduces stress and anxiety',
-        'Improves concentration and focus',
-        'Promotes emotional stability',
-        'Enhances self-awareness'
+        'Supports focus and emotional regulation',
+        'Builds confidence and body awareness',
+        'Encourages healthy movement habits',
+        'Creates a fun introduction to mindfulness'
       ],
-      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
+      image: '/assets/classes-photos/kids-yoga.jpg',
       ctaLabel: 'Book a Class',
       ctaRoute: '/schedule',
       ctaFragment: 'calendar'
