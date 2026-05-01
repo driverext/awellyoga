@@ -12,10 +12,9 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(33, 23, 18, 0.28), rgba(33, 23, 18, 0.14)),
-    url('/assets/arieta13.jpg') center 24% / cover no-repeat;
-  mix-blend-mode: soft-light;
-  opacity: 0.5;
+    linear-gradient(180deg, rgba(24, 15, 11, 0.72), rgba(24, 15, 11, 0.42)),
+    url('/assets/arieta13.jpg') center 34% / cover no-repeat;
+  opacity: 0.9;
 }
 
 .hero-shell {
@@ -36,7 +35,11 @@
   font-size: 0.84rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 241, 230, 0.8);
+  color: #7c5c49;
+}
+
+.home-hero .eyebrow {
+  color: rgba(255, 241, 230, 0.88);
 }
 
 .home-hero h1 {
@@ -45,13 +48,15 @@
   font-size: clamp(3.4rem, 8vw, 6.6rem);
   line-height: 0.95;
   color: #fff6ee;
+  text-shadow: 0 10px 30px rgba(18, 10, 7, 0.28);
 }
 
 .hero-text {
   max-width: 34rem;
   font-size: 1.15rem;
   line-height: 1.8;
-  color: rgba(255, 243, 235, 0.9);
+  color: rgba(255, 243, 235, 0.96);
+  text-shadow: 0 6px 18px rgba(18, 10, 7, 0.24);
 }
 
 .hero-actions {
@@ -69,9 +74,9 @@
 
 .hero-notes div {
   padding: 1rem 1.1rem;
-  border: 1px solid rgba(255, 241, 232, 0.16);
+  border: 1px solid rgba(255, 241, 232, 0.2);
   border-radius: 20px;
-  background: rgba(255, 248, 242, 0.08);
+  background: rgba(46, 29, 20, 0.34);
   backdrop-filter: blur(12px);
 }
 
@@ -94,7 +99,7 @@
   overflow: hidden;
   border: 1px solid rgba(255, 240, 230, 0.16);
   border-radius: 30px;
-  background: rgba(255, 249, 245, 0.09);
+  background: rgba(52, 34, 25, 0.5);
   box-shadow: 0 28px 80px rgba(17, 11, 8, 0.28);
   backdrop-filter: blur(10px);
 }
@@ -104,6 +109,7 @@
   width: 100%;
   height: 420px;
   object-fit: cover;
+  object-position: center 42%;
 }
 
 .hero-card-copy {
@@ -115,7 +121,20 @@
   font-size: 0.82rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.hero-card .card-kicker {
   color: #ffe7d4;
+}
+
+.offering-card .card-kicker,
+.statement-block .eyebrow,
+.section-heading .eyebrow,
+.rhythm-copy .eyebrow,
+.retreat-copy .eyebrow,
+.cta-panel .eyebrow,
+.testimonials-heading .eyebrow {
+  color: #8a6249;
 }
 
 .hero-card-copy h2 {
@@ -127,7 +146,7 @@
 
 .hero-card-copy p {
   margin: 0;
-  color: rgba(255, 241, 232, 0.82);
+  color: rgba(255, 241, 232, 0.9);
 }
 
 .home-intro {
@@ -172,6 +191,7 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: 2rem;
   line-height: 1.15;
+  color: #f8ede4;
 }
 
 .offerings-spotlight {
@@ -362,8 +382,9 @@
     grid-template-columns: 1fr;
   }
 
-  .hero-card img {
+.hero-card img {
     height: 340px;
+    object-position: center 36%;
   }
 
   .rhythm-visual img {
@@ -382,6 +403,12 @@
 @media (max-width: 720px) {
   .home-hero {
     padding: 4rem 0 3rem;
+  }
+
+  .hero-layer {
+    background:
+      linear-gradient(180deg, rgba(24, 15, 11, 0.78), rgba(24, 15, 11, 0.48)),
+      url('/assets/arieta13.jpg') 58% 28% / cover no-repeat;
   }
 
   .home-hero h1 {
