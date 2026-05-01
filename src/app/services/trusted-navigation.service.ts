@@ -37,6 +37,8 @@ export class TrustedNavigationService {
       return false;
     }
 
+    // Keep all browser redirects running through one place so checkout flows do not
+    // accidentally start trusting arbitrary URLs from CMS content or API responses.
     window.location.assign(trustedUrl);
     return true;
   }
@@ -59,6 +61,8 @@ export class TrustedNavigationService {
   }
 
   private isTrustedRedirectHost(url: URL): boolean {
+    // Same-origin links are safe for internal flows. External redirects are limited
+    // to Stripe checkout domains on purpose.
     if (typeof window !== 'undefined' && url.origin === window.location.origin) {
       return true;
     }

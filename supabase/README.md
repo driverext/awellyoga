@@ -1,47 +1,91 @@
 # Supabase Booking Backend
 
-This folder powers class checkout + auto seat tracking for the Schedule page.
+This folder handles the live operational side of the site:
 
-## What it includes
+- checkout session creation
+- booking persistence
+- seat counting
+- membership reservations
+- webhook fulfillment
+- internal dashboard data
+- lead / inquiry capture for a few forms
 
-- SQL migrations for bookings/capacity
-- Edge Function: `create-checkout-session`
-- Edge Function: `event-booking-counts`
-- Edge Function: `stripe-webhook`
+## Main pieces
 
-## Required Supabase secrets
+- SQL migrations
+- `create-checkout-session`
+- `checkout-session-summary`
+- `event-booking-counts`
+- `stripe-webhook`
+- `private-session-request`
+- `membership-checkout`
+- `member-reservation`
+- `booking-dashboard`
+- `ytt-interest`
+- `neuroyoga-interest`
 
-Set these in your Supabase project (`Project Settings -> Edge Functions -> Secrets`):
+## Required secrets
+
+Set these in `Project Settings -> Edge Functions -> Secrets`.
+
+Core:
 
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `SITE_URL`
+
+Stripe:
+
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
-- `SITE_URL` (example: `http://localhost:4200` for local)
 
-## Deploy
+Optional / feature-specific:
+
+- `DASHBOARD_USERNAME`
+- `DASHBOARD_PASSWORD`
+- `BOOKING_NOTIFY_TO`
+- `BOOKING_CLASS_LIST_URL`
+- SMTP-related secrets if internal / customer emails are being sent from functions
+
+## Deploy flow
+
+Database:
 
 ```bash
 supabase db push
-supabase functions deploy create-checkout-session
-supabase functions deploy event-booking-counts
-supabase functions deploy stripe-webhook --no-verify-jwt
+```
+
+Functions:
+
+```bash
+supabase functions deploy create-checkout-session --no-verify-jwt --use-api
+supabase functions deploy checkout-session-summary --no-verify-jwt --use-api
+supabase functions deploy event-booking-counts --no-verify-jwt --use-api
+supabase functions deploy stripe-webhook --no-verify-jwt --use-api
+supabase functions deploy private-session-request --no-verify-jwt --use-api
+supabase functions deploy membership-checkout --no-verify-jwt --use-api
+supabase functions deploy member-reservation --no-verify-jwt --use-api
+supabase functions deploy booking-dashboard --no-verify-jwt --use-api
+supabase functions deploy ytt-interest --no-verify-jwt --use-api
+supabase functions deploy neuroyoga-interest --no-verify-jwt --use-api
 ```
 
 ## Stripe webhook endpoint
 
-Use this URL in Stripe Webhooks:
+Use this URL in Stripe:
 
 `https://<your-project-ref>.functions.supabase.co/stripe-webhook`
 
-Events to send:
+Current subscribed events:
 
 - `checkout.session.completed`
 - `checkout.session.expired`
 
-## Local dev note
+## Local note
 
-When running locally, set `src/environments/environment.ts`:
+The frontend points at the hosted Supabase project by default. If that changes, update:
 
-- `booking.edgeFunctionsBaseUrl` (`https://<project-ref>.functions.supabase.co`)
+- `booking.edgeFunctionsBaseUrl` in the Angular environment config
+
+That value is only the base function URL. Billing logic, seat checks, and fulfillment still live in the Edge Functions themselves.

@@ -1,137 +1,141 @@
 # A-WELL Yoga Website
 
-Production-focused Angular website for a yoga studio, with CMS-managed content, class booking workflows, and Stripe/Supabase backend integration.
+Production site for A-WELL Yoga. The frontend is Angular, content is managed in Sanity, and booking/payment flows run through Supabase + Stripe.
 
-## Highlights
+## What lives here
 
-- Angular 19 frontend with responsive pages and calendar-based scheduling UI
-- Sanity Studio CMS for non-technical content editing
-- Supabase Edge Functions for booking and dashboard APIs
-- Stripe checkout integration for class booking payments
-- Capacity tracking for events (paid + active pending reservations)
-- Security hardening for dashboard access, CORS allowlists, and webhook validation
+- Marketing pages for classes, workshops, retreats, YTT, and studio information
+- A schedule page with live booking / capacity tracking
+- A lightweight internal dashboard for attendance and booking review
+- A Sanity Studio workspace for day-to-day content editing
+- Supabase Edge Functions for checkout, webhooks, reminders, memberships, and admin data
 
-## Tech Stack
+## Stack
 
-- Frontend: Angular, RxJS, TypeScript
-- CMS: Sanity Studio (`sanity/awell-yoga`)
+- Frontend: Angular 19, RxJS, TypeScript
+- CMS: Sanity Studio in `sanity/awell-yoga`
 - Backend: Supabase (Postgres + Edge Functions)
 - Payments: Stripe Checkout
-- Deployment: Vercel (frontend), Sanity hosted studio, Supabase hosted functions
+- Hosting: Vercel for the app, Supabase for functions, Sanity-hosted studio
 
-## Project Structure
+## Project structure
 
 ```text
 .
 ├── src/
 │   ├── app/
+│   │   ├── components/            # Shared UI
+│   │   ├── guards/                # Route guards / dashboard gate
 │   │   ├── pages/                 # Route-level standalone components
-│   │   ├── services/              # CMS + booking + payment services
-│   │   ├── components/            # Shared UI blocks
-│   │   └── guards/                # Route guards (dashboard auth flow)
-│   └── environments/              # Angular env config
+│   │   └── services/              # CMS, booking, SEO, Stripe helpers
+│   └── environments/              # Frontend runtime config
 ├── sanity/
-│   └── awell-yoga/                # Canonical Sanity Studio project
+│   └── awell-yoga/                # Sanity Studio workspace
 ├── supabase/
-│   ├── functions/                 # Edge Functions (checkout, webhook, dashboard, etc.)
-│   └── migrations/                # SQL migrations
-└── vercel.json
+│   ├── functions/                 # Edge Functions used by the live site
+│   └── migrations/                # Database schema changes
+└── docs/
 ```
 
-## Core Routes
+## Main routes
 
 - `/home`
 - `/about`
 - `/offerings`
 - `/schedule`
-- `/ytt`
 - `/workshops`
 - `/retreats`
+- `/ytt`
 - `/recipes`
 - `/blog`
-- `/dashboard` (protected flow + backend auth)
+- `/dashboard`
+- `/payment-success`
+- `/neuroyoga-program`
 
 Legacy routes:
 - `/studio` redirects to `/schedule`
 - `/shop` redirects to `/home`
 
-## Local Development
+## Local setup
 
-### 1) Install dependencies
+### Frontend
 
 ```bash
 npm install
-```
-
-### 2) Run Angular app
-
-```bash
 npm start
 ```
 
-App runs at `http://localhost:4200`.
+The app runs at `http://localhost:4200`.
 
-### 3) Build
+Production build:
 
 ```bash
 npm run build
 ```
 
-## CMS (Sanity Studio)
-
-Studio lives in `sanity/awell-yoga`.
+### Sanity Studio
 
 ```bash
 npm run cms:install
 npm run cms:dev
 ```
 
-Use `.env` in `sanity/awell-yoga` with:
+Studio env values live in `sanity/awell-yoga/.env`:
 
 - `SANITY_STUDIO_PROJECT_ID`
 - `SANITY_STUDIO_DATASET`
+- `SANITY_STUDIO_PREVIEW_ORIGIN`
 
-## Supabase Functions
+If someone on the content side is editing regularly, point them to [sanity/awell-yoga/EDITOR_GUIDE.md](/Users/jacob/Projects/awellyoga/sanity/awell-yoga/EDITOR_GUIDE.md).
 
-Supabase functions and migrations are in `supabase/`.
+## Supabase overview
 
-Primary functions:
+Supabase functions and migrations live in `supabase/`.
+
+Key functions in the current booking flow:
 
 - `create-checkout-session`
+- `checkout-session-summary`
 - `event-booking-counts`
 - `stripe-webhook`
 - `private-session-request`
-- `my-bookings`
+- `membership-checkout`
+- `member-reservation`
 - `booking-dashboard`
+- `ytt-interest`
+- `neuroyoga-interest`
 
-See [supabase/README.md](/Users/jacob/Projects/awellyoga/supabase/README.md) for deployment and secret requirements.
+See [supabase/README.md](/Users/jacob/Projects/awellyoga/supabase/README.md) for secrets and deployment notes.
 
-## NPM Scripts
+## Useful scripts
 
-- `npm start` – run Angular dev server
-- `npm run build` – production build
-- `npm run test` – unit tests
-- `npm run cms:install` – install Sanity Studio deps
-- `npm run cms:dev` – run Sanity Studio locally
-- `npm run cms:build` – build Sanity Studio
-- `npm run cms:deploy` – deploy Sanity Studio
+- `npm start` - run Angular locally
+- `npm run build` - production frontend build
+- `npm run test` - unit tests
+- `npm run cms:install` - install Studio dependencies
+- `npm run cms:dev` - run Sanity Studio locally
+- `npm run cms:build` - build Sanity Studio
+- `npm run cms:deploy` - deploy Sanity Studio
 
-## Deployment
+## Deployment notes
 
-See [docs/DEPLOYMENT.md](/Users/jacob/Projects/awellyoga/docs/DEPLOYMENT.md) for Vercel + Sanity + Supabase deployment steps.
+See [docs/DEPLOYMENT.md](/Users/jacob/Projects/awellyoga/docs/DEPLOYMENT.md).
 
-## Security Notes
+In practice, the live stack is split like this:
 
-- Dashboard API now enforces backend authorization (not UI-only protection)
-- CORS is restricted by allowlist via Supabase function secrets
-- Stripe webhook verification includes timestamp tolerance and duplicate-event protection
-- Keep all API keys/secrets in environment/secret managers, never in source files
+- Vercel deploys the Angular frontend from `master`
+- Supabase functions are deployed separately from the CLI
+- Sanity Studio is deployed separately from `sanity/awell-yoga`
 
-## Portfolio Context
+## Security notes
 
-This repository demonstrates:
+- Booking redirects are restricted to trusted destinations
+- Dashboard access still uses a simple browser prompt, but real data access is enforced on the backend
+- Stripe webhook verification is handled server-side
+- CORS is managed in Supabase function config / secrets, not by the frontend
 
-- Full-stack product thinking across frontend + CMS + backend + payments
-- Migration from static content to editor-friendly headless CMS
-- Practical operational features for a real service business
-- Security remediation on active production workflows
+## A couple of maintenance notes
+
+- Avoid committing random media and local CLI config files unless they are intentionally part of the site
+- If booking behavior changes, check both the frontend service layer and the matching Supabase Edge Function
+- Sanity preview / visual editing is optional; if it ever causes trouble, `src/main.ts` is the first place to look

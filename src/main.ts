@@ -6,6 +6,8 @@ bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
 
 if (isSanityPreviewMode()) {
+  // Visual editing is only loaded when preview mode is actually in play.
+  // Keeping it lazy avoids shipping the editor overlay to every normal visitor.
   void import('@sanity/visual-editing')
     .then(({ enableVisualEditing }) => {
       enableVisualEditing({
@@ -56,7 +58,8 @@ function isSanityPreviewMode(): boolean {
     return true;
   }
 
-  // Fallback for Presentation iframe cases where query params are not forwarded.
+  // Presentation mode sometimes loads the site in an iframe without forwarding the
+  // normal preview params, so referrer is the last fallback.
   if (window.self !== window.top) {
     try {
       const referrer = document.referrer ? new URL(document.referrer) : null;

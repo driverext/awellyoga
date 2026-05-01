@@ -1,12 +1,26 @@
-# Sanity Clean Content Studio
+# Sanity Studio
 
-For day-to-day editing, use:
-- `EDITOR_GUIDE.md` (quick non-technical guide for content updates)
+This is the active Sanity Studio workspace for the A-WELL site.
 
-Congratulations, you have now installed the Sanity Content Studio, an open-source real-time content editing environment connected to the Sanity backend.
+For content editing:
+- start with [EDITOR_GUIDE.md](/Users/jacob/Projects/awellyoga/sanity/awell-yoga/EDITOR_GUIDE.md)
 
-Now you can do the following things:
+For local Studio work:
 
-- [Read “getting started” in the docs](https://www.sanity.io/docs/introduction/getting-started?utm_source=readme)
-- [Join the Sanity community](https://www.sanity.io/community/join?utm_source=readme)
-- [Extend and build plugins](https://www.sanity.io/docs/content-studio/extending?utm_source=readme)
+```bash
+npm install
+npm run dev
+```
+
+For production deployment:
+
+```bash
+npm run build
+npm run deploy
+```
+
+A couple of quick notes:
+
+- this Studio is intentionally trimmed down for a small content team
+- not every page on the site is fully CMS-driven yet
+- schedule-related content is the most mature part of the editor workflow right now

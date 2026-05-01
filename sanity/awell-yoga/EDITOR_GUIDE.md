@@ -1,4 +1,4 @@
-# A-WELL Schedule CMS Quick Guide (Non-Technical)
+# A-WELL CMS Quick Guide
 
 ## Edit order (best workflow)
 1. **Schedule Page Settings**: heading text + studio hours
@@ -25,7 +25,7 @@ Tips:
 - Portrait photos work best for instructor headshots.
 - If you are unsure, upload it anyway. Cropping can be adjusted with the hotspot tool.
 
-## Click-to-edit mode (Wix-style)
+## Click-to-edit mode
 - In Sanity Studio, open the **Presentation** tool.
 - Click **Open preview**.
 - In preview mode, click content on the page to jump to its document/field in Studio.
@@ -38,11 +38,11 @@ For each event, fill in:
 - Start Date & Time
 - Location
 - Price Text (optional)
-- Stripe Checkout URL (for Book button)
+- Stripe Checkout URL or Stripe Price ID (depending on how that event is set up)
 - Main Event Photo (optional but recommended)
 - Show on Website = ON
 
-If you skip Stripe Checkout URL, the website will fall back to an email booking request.
+If something is missing on the booking side, stop and check with the dev side before publishing. Some events are powered by custom Stripe / Supabase flows rather than a simple link.
 
 ## Delete an event
 - Open **Events / Classes**
@@ -54,6 +54,7 @@ If you skip Stripe Checkout URL, the website will fall back to an email booking 
 - Confirm **Show on Website** is ON
 - Check dates are correct (for events/announcements)
 - Save and refresh the website page
+- If it still does not show, it may be because that section is not fully CMS-driven yet
 
 ## Best places to change photos
 - **Homepage**: hero photo
@@ -61,3 +62,9 @@ If you skip Stripe Checkout URL, the website will fall back to an email booking 
 - **Studio Page**: schedule photo
 - **Instructors**: headshots
 - **Events / Classes**: main event photo + extra photos
+
+## When to ask for help
+- booking button goes somewhere unexpected
+- class is published but won’t show on the calendar
+- payment text and actual checkout amount don’t match
+- an old image keeps showing after you replaced it
