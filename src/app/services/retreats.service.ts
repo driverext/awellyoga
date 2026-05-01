@@ -188,8 +188,8 @@ export class RetreatsService {
       venueDescription: 'Grand Hotel Belushi is our home for the weekend, nestled in Shkrel in the heart of Rugova Valley. Surrounded by mountain air, forest stillness, and expansive alpine views, the setting supports exactly what this retreat is designed to do: help the body exhale, soften, and reset.',
       venueImages: [
         '/assets/rugova-photos/hotel_drone_front.JPG',
-        '/assets/rugova-photos/beautiful_nature_shot.jpg',
         '/assets/rugova-photos/pool2.JPG',
+        '/assets/rugova-photos/beautiful_nature_shot.jpg',
         '/assets/rugova-photos/food_on_table.jpeg',
         '/assets/rugova-photos/yoga_poses.PNG',
         '/assets/rugova-photos/balcony_relaxing_vertical.jpg'
