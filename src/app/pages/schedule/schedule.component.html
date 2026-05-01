@@ -131,7 +131,7 @@
 <div class="booking-modal-overlay" *ngIf="bookingEvent" (click)="closeBookingModal()">
   <section class="booking-modal" (click)="$event.stopPropagation()">
     <h3>Book {{ bookingEvent.title }}</h3>
-    <p>Enter your email to continue to Stripe checkout. Stripe will also ask for your full name and offers an optional WhatsApp field.</p>
+    <p>Enter your email to continue to Stripe checkout. Stripe will also ask for your full name before payment.</p>
     <form (ngSubmit)="submitBooking()">
       <label for="booking-email">Email</label>
       <input

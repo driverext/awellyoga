@@ -140,12 +140,6 @@ Deno.serve(async (req) => {
     body.set('customer_email', email);
     body.set('name_collection[individual][enabled]', 'true');
     body.set('name_collection[individual][optional]', 'false');
-    body.set('custom_fields[0][key]', 'whatsapp');
-    body.set('custom_fields[0][label][type]', 'custom');
-    body.set('custom_fields[0][label][custom]', 'WhatsApp (optional)');
-    body.set('custom_fields[0][type]', 'text');
-    body.set('custom_fields[0][optional]', 'true');
-    body.set('custom_fields[0][text][maximum_length]', '32');
     body.set('client_reference_id', insertedBooking.id);
     body.set('metadata[booking_id]', insertedBooking.id);
     body.set('metadata[sanity_event_id]', payload.eventId);
