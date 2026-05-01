@@ -16,6 +16,12 @@ const ARIETA_ABOUT_BIO = [
   'She believes yoga begins the moment we are willing to meet ourselves with truth. Her mission is simple: to help people understand why they practice—so yoga becomes a way of living.'
 ];
 
+const MELITA_ABOUT_BIO = [
+  'A devoted advocate for human rights and a passionate yoga teacher, Melita has spent years creating positive change in her community. As the founder of DRITH YOGA, a vibrant studio in the heart of Prishtina, Kosovo, she has inspired and empowered hundreds of students to embrace the transformative power of yoga.',
+  'Beyond the studio, Melita dedicated years of her life to Save the Children, championing the rights and well-being of children across Kosovo. Her work didn’t stop there—she has played a significant role in bringing yoga into schools, helping students discover mindfulness, balance, and resilience at an early age.',
+  'With a warm and approachable spirit, Melita’s mission is to make yoga and its benefits accessible to all, creating a ripple of growth, healing, and empowerment throughout her community.'
+];
+
 @Component({
   selector: 'app-about',
   standalone: true,
@@ -108,6 +114,13 @@ export class AboutComponent implements OnInit, OnDestroy {
           'Sommer Reńee is a guide for those ready to come home to themselves. Blending yoga, breathwork, sound baths, and hypnotherapy, her offerings are immersive healing experiences.',
           'Expect soulful flows, grounding presence, and deeply restorative practices that weave together movement, sound, and subconscious exploration.'
         ]
+      },
+      {
+        name: 'Melita Kabashi',
+        title: 'Yoga Teacher',
+        imageUrl: '/assets/rugova-photos/melita_kabashi.JPG',
+        photoAlt: 'Melita Kabashi - Yoga Teacher',
+        bioParagraphs: MELITA_ABOUT_BIO
       }
     ];
   }
