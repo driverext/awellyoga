@@ -6,6 +6,16 @@ import { CmsInstructor } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
 import { SeoService } from '../../services/seo.service';
 
+const ARIETA_ABOUT_BIO = [
+  'Creator of the RESET Method™ (NeuroYoga-Based)',
+  '200hr, 300hr Neuro-Based Yoga Teacher Training Developer',
+  'Founder of A-WELL Yoga',
+  'With over 7,000 teaching hours, bridging clinical psychology, neuroscience, and embodied practice.',
+  'Arieta teaches yoga as a path of honest self-inquiry. Her work begins with the breath—allowing the nervous system to settle so movement arises from awareness, not performance.',
+  'Blending science, embodied practice, and lived experience, she creates spaces that feel both grounded and deeply transformative.',
+  'She believes yoga begins the moment we are willing to meet ourselves with truth. Her mission is simple: to help people understand why they practice—so yoga becomes a way of living.'
+];
+
 @Component({
   selector: 'app-about',
   standalone: true,
@@ -83,21 +93,17 @@ export class AboutComponent implements OnInit, OnDestroy {
     return [
       {
         name: 'Arieta Berisha Kirk',
-        title: 'Founder and Lead Instructor',
+        title: 'Founder',
         isFounder: true,
         imageUrl: '/assets/Arieta_Bio.jpg',
-        photoAlt: 'Arieta Berisha Kirk - Founder and Lead Instructor',
-        bioParagraphs: [
-          'Creator of the RESET Method™ (NeuroYoga-Based).',
-          'E-RYT 500 • Founder of A-WELL Yoga • 7,000+ teaching hours.',
-          'Arieta teaches yoga as a path of honest self-inquiry, blending science, embodied practice, and lived experience to create spaces that feel grounded and deeply transformative.'
-        ]
+        photoAlt: 'Arieta Berisha Kirk - Founder',
+        bioParagraphs: ARIETA_ABOUT_BIO
       },
       {
         name: 'Sommer Renee',
-        title: 'Yoga, Breathwork, Sound Baths & Hypnotherapy',
+        title: 'Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
         imageUrl: '/assets/Sommer_Bio.jpg',
-        photoAlt: 'Sommer Renee - Yoga, Breathwork, Sound Baths & Hypnotherapy',
+        photoAlt: 'Sommer Renee - Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
         bioParagraphs: [
           'Sommer Reńee is a guide for those ready to come home to themselves. Blending yoga, breathwork, sound baths, and hypnotherapy, her offerings are immersive healing experiences.',
           'Expect soulful flows, grounding presence, and deeply restorative practices that weave together movement, sound, and subconscious exploration.'
@@ -114,11 +120,30 @@ export class AboutComponent implements OnInit, OnDestroy {
     const byName = new Map<string, CmsInstructor>();
 
     for (const instructor of this.fallbackInstructors) {
-      byName.set(instructor.name, instructor);
+      byName.set(this.normalizeName(instructor.name), instructor);
     }
 
     for (const instructor of cmsInstructors) {
-      byName.set(instructor.name, instructor);
+      const key = this.normalizeName(instructor.name);
+      const fallback = byName.get(key);
+
+      if (!fallback) {
+        byName.set(key, this.normalizeInstructor(instructor));
+        continue;
+      }
+
+      byName.set(key, this.normalizeInstructor({
+        ...fallback,
+        ...instructor,
+        title: instructor.title?.trim() || fallback.title,
+        bioParagraphs: instructor.bioParagraphs?.length ? instructor.bioParagraphs : fallback.bioParagraphs,
+        imageUrl:
+          instructor.imageUrl && instructor.imageUrl !== '/assets/Arieta_Bio.jpg'
+            ? instructor.imageUrl
+            : fallback.imageUrl,
+        photoAlt: instructor.photoAlt?.trim() || fallback.photoAlt,
+        isFounder: instructor.isFounder ?? fallback.isFounder
+      }));
     }
 
     return Array.from(byName.values()).sort((a, b) => {
@@ -132,5 +157,30 @@ export class AboutComponent implements OnInit, OnDestroy {
 
       return a.name.localeCompare(b.name);
     });
+  }
+
+  private normalizeInstructor(instructor: CmsInstructor): CmsInstructor {
+    const normalizedName = instructor.name.trim();
+    const isArieta = this.normalizeName(normalizedName) === this.normalizeName('Arieta Berisha Kirk');
+
+    if (!isArieta) {
+      return {
+        ...instructor,
+        name: normalizedName
+      };
+    }
+
+    return {
+      ...instructor,
+      name: 'Arieta Berisha Kirk',
+      title: 'Founder',
+      isFounder: true,
+      photoAlt: 'Arieta Berisha Kirk - Founder',
+      bioParagraphs: ARIETA_ABOUT_BIO
+    };
+  }
+
+  private normalizeName(value: string): string {
+    return value.trim().toLowerCase().replace(/\s+/g, ' ');
   }
 }
