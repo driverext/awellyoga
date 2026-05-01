@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StripeService } from '../../services/stripe.service';
 import { CurrencyPreferenceService } from '../../services/currency-preference.service';
+import { TrustedNavigationService } from '../../services/trusted-navigation.service';
 
 @Component({
   selector: 'app-payment-modal',
@@ -24,7 +25,8 @@ export class PaymentModalComponent implements OnChanges {
 
   constructor(
     private stripeService: StripeService,
-    public currencyPreference: CurrencyPreferenceService
+    public currencyPreference: CurrencyPreferenceService,
+    private trustedNavigation: TrustedNavigationService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,8 +74,7 @@ export class PaymentModalComponent implements OnChanges {
         typeof window !== 'undefined' ? window.location.pathname : '/retreats'
       );
 
-      if (result.url) {
-        window.location.href = result.url;
+      if (result.url && this.trustedNavigation.redirectToTrustedUrl(result.url)) {
         return;
       }
 

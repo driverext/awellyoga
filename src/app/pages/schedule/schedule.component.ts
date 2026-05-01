@@ -12,6 +12,7 @@ import {
 import { SanityContentService } from '../../services/cms/sanity-content.service';
 import { BookingService, PrivateSessionRequestPayload } from '../../services/booking.service';
 import { SeoService } from '../../services/seo.service';
+import { TrustedNavigationService } from '../../services/trusted-navigation.service';
 
 interface CalendarDay {
   date: Date;
@@ -89,7 +90,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cmsContent: SanityContentService,
     private bookingService: BookingService,
-    private seo: SeoService
+    private seo: SeoService,
+    private trustedNavigation: TrustedNavigationService
   ) {}
 
   ngOnInit(): void {
@@ -224,15 +226,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       const capacity = this.eventCapacity(this.bookingEvent);
       const result = await this.bookingService.createCheckoutSession(this.bookingEvent, email, capacity);
 
-      if (result.url) {
-        window.location.href = result.url;
+      if (result.url && this.trustedNavigation.redirectToTrustedUrl(result.url)) {
         return;
       }
 
       if (result.fallbackUrl) {
         const directUrl = this.buildBookingUrl(this.bookingEvent, email, result.fallbackUrl);
-        if (directUrl) {
-          window.location.href = directUrl;
+        if (directUrl && this.trustedNavigation.redirectToTrustedUrl(directUrl)) {
           return;
         }
       }
@@ -285,8 +285,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           this.eventCapacity(this.privateSessionCheckoutEvent)
         );
 
-        if (checkoutResult.url) {
-          window.location.href = checkoutResult.url;
+        if (checkoutResult.url && this.trustedNavigation.redirectToTrustedUrl(checkoutResult.url)) {
           return;
         }
 
@@ -327,8 +326,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   async startMembershipCheckout(plan: 'intro' | 'standard'): Promise<void> {
     try {
       const result = await this.bookingService.createMembershipCheckout(plan);
-      if (result.url) {
-        window.location.href = result.url;
+      if (result.url && this.trustedNavigation.redirectToTrustedUrl(result.url)) {
         return;
       }
 
@@ -420,22 +418,16 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   private buildBookingUrl(event: CmsEvent, email: string, rawInputUrl?: string): string | null {
-    const rawUrl = (rawInputUrl || event.bookingUrl || event.ctaUrl || '').trim();
-    if (!rawUrl) {
+    const rawUrl = rawInputUrl || event.bookingUrl || event.ctaUrl || '';
+    if (!rawUrl.trim()) {
       return null;
     }
 
-    try {
-      const bookingUrl = new URL(rawUrl);
-      if (bookingUrl.protocol !== 'https:' && bookingUrl.protocol !== 'http:') {
-        return null;
-      }
-      bookingUrl.searchParams.set('prefilled_email', email);
-      bookingUrl.searchParams.set('client_reference_id', `${this.dateKey(this.selectedDate)}-${Date.now()}`);
-      return bookingUrl.toString();
-    } catch {
-      return null;
-    }
+    return this.trustedNavigation.buildTrustedBookingUrl(
+      rawUrl,
+      email,
+      `${this.dateKey(this.selectedDate)}-${Date.now()}`
+    );
   }
 
   private canBookEvent(event: CmsEvent): boolean {

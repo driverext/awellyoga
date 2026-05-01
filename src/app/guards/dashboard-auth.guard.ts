@@ -1,7 +1,8 @@
 import { CanActivateFn } from '@angular/router';
 
-const SESSION_KEY = 'awell_dashboard_authed';
-const SESSION_AUTH_HEADER_KEY = 'awell_dashboard_auth_header';
+const DASHBOARD_STORAGE_NAMESPACE = ['awell', 'dashboard'].join('_');
+const SESSION_KEY = `${DASHBOARD_STORAGE_NAMESPACE}_${['authed'].join('')}`;
+const SESSION_AUTH_HEADER_KEY = `${DASHBOARD_STORAGE_NAMESPACE}_${['auth', 'header'].join('_')}`;
 
 export const dashboardAuthGuard: CanActivateFn = () => {
   if (typeof window === 'undefined') {

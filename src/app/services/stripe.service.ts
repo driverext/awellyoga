@@ -19,7 +19,7 @@ export class StripeService {
   constructor(
     private currencyPreference: CurrencyPreferenceService
   ) {
-    this.stripePromise = loadStripe(environment.stripe.publishableKey);
+    this.stripePromise = loadStripe(this.getPublishableKey());
   }
 
   async redirectToCheckout(sessionId: string): Promise<void> {
@@ -99,5 +99,16 @@ export class StripeService {
 
   async createPaymentIntent(amount: number, currency: string = 'usd') {
     throw new Error('Payment Intent creation should be done on the backend');
+  }
+
+  private getPublishableKey(): string {
+    if (typeof document === 'undefined') {
+      return '';
+    }
+
+    return document
+      .querySelector('meta[name="stripe-publishable-key"]')
+      ?.getAttribute('content')
+      ?.trim() || '';
   }
 }
