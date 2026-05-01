@@ -142,7 +142,7 @@
             <th>Event</th>
             <th>Name</th>
             <th>Email</th>
-            <th>WhatsApp</th>
+            <th>Backup Contact</th>
             <th>Amount</th>
             <th>Status</th>
           </tr>
@@ -214,7 +214,7 @@
       <div class="attendance-row" *ngFor="let attendee of paidAttendees(selectedAttendanceEvent)">
         <p>{{ attendee.customerName || 'Name not provided' }}</p>
         <p>{{ attendee.customerEmail || '-' }}</p>
-        <p *ngIf="attendee.customerWhatsApp">WhatsApp: {{ attendee.customerWhatsApp }}</p>
+        <p *ngIf="attendee.customerWhatsApp">Backup Contact: {{ attendee.customerWhatsApp }}</p>
       </div>
       <p *ngIf="paidAttendees(selectedAttendanceEvent).length === 0" class="empty-note">No paid attendees yet.</p>
     </div>

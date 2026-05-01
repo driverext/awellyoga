@@ -10,6 +10,7 @@ type StripeSession = {
   customer_details?: {
     email?: string | null;
     name?: string | null;
+    phone?: string | null;
   } | null;
   custom_fields?: Array<{
     key?: string;
@@ -58,6 +59,7 @@ Deno.serve(async (req) => {
     }
 
     const bookingId = (session.metadata?.booking_id || '').trim();
+    const phoneFromSession = session.customer_details?.phone?.trim() || null;
     const whatsappFromSession =
       session.custom_fields?.find((field) => field.key === 'whatsapp')?.text?.value?.trim() || null;
 
@@ -80,7 +82,7 @@ Deno.serve(async (req) => {
       customerName:
         (bookingRow?.['stripe_customer_name'] as string | undefined) || session.customer_details?.name || null,
       customerWhatsApp:
-        (bookingRow?.['stripe_customer_whatsapp'] as string | undefined) || whatsappFromSession,
+        (bookingRow?.['stripe_customer_whatsapp'] as string | undefined) || whatsappFromSession || phoneFromSession,
       eventId: session.metadata?.sanity_event_id || null,
       eventType: inferEventType(session.metadata?.event_type || session.metadata?.event_title || ''),
       eventTitle: session.metadata?.event_title || null,

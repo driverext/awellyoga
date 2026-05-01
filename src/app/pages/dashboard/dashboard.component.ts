@@ -205,7 +205,7 @@ export class DashboardComponent implements OnInit {
       event_title: booking.eventTitle || '',
       customer_name: booking.customerName || '',
       customer_email: booking.customerEmail || '',
-      customer_whatsapp: booking.customerWhatsApp || '',
+      backup_contact: booking.customerWhatsApp || '',
       amount: this.money(booking.amountTotal),
       currency: booking.currency || this.overview.currency || 'usd',
       status: booking.bookingStatus || booking.paymentStatus || ''
@@ -213,7 +213,7 @@ export class DashboardComponent implements OnInit {
 
     this.downloadCsv(
       `awell-bookings-${this.dateStamp()}.csv`,
-      ['created_at', 'event_title', 'customer_name', 'customer_email', 'customer_whatsapp', 'amount', 'currency', 'status'],
+      ['created_at', 'event_title', 'customer_name', 'customer_email', 'backup_contact', 'amount', 'currency', 'status'],
       rows
     );
   }
@@ -229,7 +229,7 @@ export class DashboardComponent implements OnInit {
       location: event.location || '',
       customer_name: attendee.customerName || '',
       customer_email: attendee.customerEmail || '',
-      customer_whatsapp: attendee.customerWhatsApp || '',
+      backup_contact: attendee.customerWhatsApp || '',
       amount: this.money(attendee.amountTotal),
       currency: attendee.currency || this.overview.currency || 'usd',
       status: attendee.bookingStatus || attendee.paymentStatus || ''
@@ -237,7 +237,7 @@ export class DashboardComponent implements OnInit {
 
     this.downloadCsv(
       `attendance-${this.slugify(event.title)}-${this.dateStamp()}.csv`,
-      ['event_title', 'event_start', 'location', 'customer_name', 'customer_email', 'customer_whatsapp', 'amount', 'currency', 'status'],
+      ['event_title', 'event_start', 'location', 'customer_name', 'customer_email', 'backup_contact', 'amount', 'currency', 'status'],
       rows
     );
   }

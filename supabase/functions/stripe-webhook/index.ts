@@ -11,6 +11,7 @@ type StripeEvent = {
       customer_details?: {
         email?: string;
         name?: string;
+        phone?: string;
         individual_name?: string;
         business_name?: string;
       };
@@ -82,10 +83,12 @@ Deno.serve(async (req) => {
       session.customer_details?.business_name ||
       session.collected_information?.business_name ||
       '';
+    const collectedPhone = session.customer_details?.phone || '';
     const collectedWhatsapp =
       session.custom_fields?.find((field) => field?.key === 'whatsapp')?.text?.value ||
       metadata.customer_whatsapp ||
       '';
+    const backupContact = collectedWhatsapp || collectedPhone;
 
     if (!bookingId) {
       return json({ received: true, ignored: true, reason: 'missing booking id' });
@@ -111,7 +114,7 @@ Deno.serve(async (req) => {
           stripe_session_id: session.id,
           stripe_customer_name: collectedName || null,
           stripe_customer_email: session.customer_details?.email || null,
-          stripe_customer_whatsapp: collectedWhatsapp || null,
+          stripe_customer_whatsapp: backupContact || null,
           stripe_payment_intent_id: session.payment_intent || null,
           amount_total: presentmentAmount,
           currency: presentmentCurrency,
@@ -129,7 +132,7 @@ Deno.serve(async (req) => {
       const emailPayload = {
         toEmail: session.customer_details?.email || metadata.customer_email || '',
         customerName: collectedName,
-        customerWhatsApp: collectedWhatsapp || null,
+        customerBackupContact: backupContact || null,
         eventType: metadata.event_type || null,
         eventTitle: metadata.event_title || null,
         eventStart: metadata.event_start || null,
@@ -248,7 +251,7 @@ function normalizeEventType(value: string | null | undefined): 'retreat' | 'work
 type ConfirmationEmailPayload = {
   toEmail: string;
   customerName: string;
-  customerWhatsApp?: string | null;
+  customerBackupContact?: string | null;
   eventType?: string | null;
   eventTitle: string | null;
   eventStart: string | null;
@@ -496,7 +499,8 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
   const amountLabel = formatAmount(payload.amountTotal, payload.currency) || 'Unknown';
   const customerName = payload.customerName?.trim() || 'Unknown';
   const customerEmail = payload.toEmail?.trim().toLowerCase() || 'Unknown';
-  const customerWhatsApp = payload.customerWhatsApp?.trim() || '';
+  const customerBackupContact = payload.customerBackupContact?.trim() || '';
+  const backupContactLabel = eventType === 'retreat' ? 'Customer WhatsApp' : 'Customer Phone';
 
   const labelPrefix =
     eventType === 'retreat' ? 'Retreat Booking' : eventType === 'workshop' ? 'Workshop Booking' : 'Class Booking';
@@ -507,7 +511,7 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
     `Booking ID: ${payload.bookingId}`,
     `Customer: ${customerName}`,
     `Customer Email: ${customerEmail}`,
-    customerWhatsApp ? `Customer WhatsApp: ${customerWhatsApp}` : null,
+    customerBackupContact ? `${backupContactLabel}: ${customerBackupContact}` : null,
     `Event: ${eventTitle}`,
     whenLabel ? `When: ${whenLabel}` : null,
     `Location: ${location}`,
@@ -521,7 +525,7 @@ async function sendInternalBookingAlert(payload: InternalAlertPayload): Promise<
       <p style="margin:0 0 6px;"><strong>Booking ID:</strong> ${escapeHtml(payload.bookingId)}</p>
       <p style="margin:0 0 6px;"><strong>Customer:</strong> ${escapeHtml(customerName)}</p>
       <p style="margin:0 0 6px;"><strong>Customer Email:</strong> ${escapeHtml(customerEmail)}</p>
-      ${customerWhatsApp ? `<p style="margin:0 0 6px;"><strong>Customer WhatsApp:</strong> ${escapeHtml(customerWhatsApp)}</p>` : ''}
+      ${customerBackupContact ? `<p style="margin:0 0 6px;"><strong>${escapeHtml(backupContactLabel)}:</strong> ${escapeHtml(customerBackupContact)}</p>` : ''}
       <p style="margin:0 0 6px;"><strong>Event:</strong> ${escapeHtml(eventTitle)}</p>
       ${whenLabel ? `<p style="margin:0 0 6px;"><strong>When:</strong> ${escapeHtml(whenLabel)}</p>` : ''}
       <p style="margin:0 0 6px;"><strong>Location:</strong> ${escapeHtml(location)}</p>
