@@ -120,6 +120,12 @@
         </ul>
       </div>
 
+      <div class="included-gallery" *ngIf="retreat?.includedImages?.length">
+        <figure class="included-gallery-card" *ngFor="let imageUrl of retreat?.includedImages">
+          <img [src]="imageUrl" [alt]="retreat?.title + ' retreat amenity'">
+        </figure>
+      </div>
+
       <h3>WHAT'S NOT INCLUDED</h3>
       <ul class="not-included-list">
         <li *ngFor="let item of retreat?.notIncluded">{{item}}</li>

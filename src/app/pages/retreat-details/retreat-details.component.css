@@ -375,6 +375,13 @@ h2 {
   gap: 1rem;
 }
 
+.included-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0 2.5rem;
+}
+
 .venue-image-card {
   margin: 0;
   border-radius: 26px;
@@ -392,6 +399,14 @@ h2 {
   grid-column: span 2;
 }
 
+.included-gallery-card {
+  margin: 0;
+  min-height: 220px;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(38, 20, 13, 0.1);
+}
+
 .venue-images img {
   width: 100%;
   height: 100%;
@@ -399,7 +414,15 @@ h2 {
   transition: transform 0.45s ease;
 }
 
+.included-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
 .venue-image-card:hover img,
+.included-gallery-card:hover img,
 .host-images img:hover {
   transform: scale(1.04);
 }
@@ -629,6 +652,7 @@ h2 {
   }
 
   .venue-images,
+  .included-gallery,
   .price-includes,
   .host-images {
     grid-template-columns: 1fr;

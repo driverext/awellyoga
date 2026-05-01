@@ -1,7 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-const ARIETA_BIO = 'Creator of the RESET Method™ (NeuroYoga-Based)\n\nE-RYT 500 • Founder of A-WELL Yoga\nWith over 7,000 teaching hours and a background in clinical psychology and neuroscience\n\nArieta teaches yoga as a path of honest self-inquiry.\nHer work begins with the breath—allowing the nervous system to settle so movement arises from awareness, not performance.\n\nBlending science, embodied practice, and lived experience, she creates spaces that feel both grounded and deeply transformative.\n\nShe believes yoga begins the moment we are willing to meet ourselves with truth.\nHer mission is simple: to help people understand why they practice—so yoga becomes a way of living.';
+const ARIETA_BIO = `Arieta Berisha Kirk
+
+Creator of the RESET Method™ (NeuroYoga-Based)
+200hr, 300hr Neuro-Based Yoga Teacher Training Developer
+
+Founder of A-WELL Yoga
+With over 7,000 teaching hours, bridging clinical psychology, neuroscience, and embodied practice.
+
+Arieta teaches yoga as a path of honest self-inquiry.
+Her work begins with the breath—allowing the nervous system to settle so movement arises from awareness, not performance.
+
+Blending science, embodied practice, and lived experience, she creates spaces that feel both grounded and deeply transformative.
+
+She believes yoga begins the moment we are willing to meet ourselves with truth.
+Her mission is simple: to help people understand why they practice—so yoga becomes a way of living.`;
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +40,12 @@ export class RetreatsService {
       earlyBird: '2 nights / 3 days, all inclusive excluding alcohol. Limited spots to keep the experience intimate.',
       introTitle: 'This is not a yoga retreat. This is a reset of your nervous system.',
       introLead: 'A return to the part of you that exists underneath the noise, the pressure, and the constant doing.',
-      description: 'Over three days, we move through a carefully designed arc that mirrors how real change happens in the body. You do not just relax. You release, regulate, rebuild, and return differently. Through NeuroYoga™, a method blending neuroscience, breathwork, and embodied practice, you learn how to work with your system instead of against it. No performance. No pressure to be good at yoga. Just real, applicable tools that shift how you feel in your body.',
+      description: 'Over three days, we move through a carefully designed arc that mirrors how real change happens in the body. You do not just relax. You release, regulate, rebuild, and return differently. Through RESET™, a method blending neuroscience, breathwork, and embodied practice, you learn how to work with your system instead of against it. No performance. No pressure to be good at yoga. Just real, applicable tools that shift how you feel in your body.',
       experienceTitle: 'The Experience',
       experienceDescription: 'Set between the majestic Albanian Alps and Dinaric Alps chains, this retreat is designed to hold you physically, mentally, and emotionally. You will move, breathe, reset, reflect, and reconnect. Not to escape your life, but to return to it with clarity, steadiness, and a different internal state.',
       highlights: [
         'Release -> regulate -> rebuild -> return differently',
-        'NeuroYoga™ sessions rooted in breath, neuroscience, and embodied practice',
+        'RESET™ sessions rooted in breath, neuroscience, and embodied practice',
         'Tools for regulation that work in real life, not just on retreat',
         'No performance, no expectation, no pressure to do yoga a certain way',
         'A slower, deeper experience designed for clarity, steadiness, and lasting change'
@@ -54,7 +68,7 @@ export class RetreatsService {
           title: 'Growth. Expansion. Expression.',
           description: 'Once the body feels safe, it opens. This is where we begin to build capacity physically and mentally.',
           practices: [
-            'Structured NeuroYoga™ method',
+            'Structured RESET™ method',
             'Breath-led activation practices',
             'Somatic + intuitive movement',
             'Strength, balance, and resilience work',
@@ -86,7 +100,7 @@ export class RetreatsService {
         'A deeper understanding of your body and nervous system',
         'A calmer, more stable baseline',
         'A different relationship with stress',
-        'The NeuroYoga™ 4-Week Guided Journal to support integration beyond the retreat',
+        'The RESET™ 4-Week Guided Journal to support integration beyond the retreat',
         'A circle of like-minded women rooted in shared experience and genuine connection',
         'Ongoing access to support and continued guidance from Arieta and Melita'
       ],
@@ -96,7 +110,7 @@ export class RetreatsService {
           items: [
             'Arrival and check-in',
             'Opening space + intention setting',
-            'The NeuroYoga™ Method ROOT session with breathwork, slow movement, and sensory awareness',
+            'The RESET™ Method ROOT session with breathwork, slow movement, and sensory awareness',
             'Evening mindful dining ritual',
             'Guided wind-down with breath and stillness',
             'Focus: shifting out of survival mode into safety'
@@ -105,11 +119,11 @@ export class RetreatsService {
         {
           day: 'Saturday - Rise & Radiate',
           items: [
-            'Morning RISE activation session to build strength, resilience, and stability',
+            'The RESET™ Method RISE activation session to build strength, resilience, and stability',
             'Breakfast',
             'Free time, SPA, and integration',
             'Guided nature immersion (Shinrin-yoku) or silent meditation',
-            'Afternoon integration flow balancing effort and ease',
+            'The RESET™ Method integration flow balancing effort and ease',
             'Mindful dining ritual',
             'Radiate Circle with reflection, nervous system education, and connection',
             'Optional salt room meditation for deep rest + reset',
@@ -119,7 +133,7 @@ export class RetreatsService {
         {
           day: 'Sunday - Return',
           items: [
-            'The NeuroYoga™ Method RETURN session with gentle restorative integration',
+            'The RESET™ Method RETURN session with gentle restorative integration',
             'Breakfast',
             'Closing integration + reflection',
             'Departure',
@@ -163,7 +177,7 @@ export class RetreatsService {
         'Accommodation',
         'Breakfast & dinner',
         'Spa access',
-        'Full NeuroYoga™ method'
+        'Full RESET™ method'
       ],
       cardImage: '/assets/shkrel.png',
       image: '/assets/rugova-photos/mountains.jpeg',
@@ -174,10 +188,10 @@ export class RetreatsService {
       venueDescription: 'Grand Hotel Belushi is our home for the weekend, nestled in Shkrel in the heart of Rugova Valley. Surrounded by mountain air, forest stillness, and expansive alpine views, the setting supports exactly what this retreat is designed to do: help the body exhale, soften, and reset.',
       venueImages: [
         '/assets/rugova-photos/hotel_drone_front.JPG',
-        '/assets/rugova-photos/food_on_table.JPG',
-        '/assets/rugova-photos/pool2.JPG',
-        '/assets/rugova-photos/balcony_with_landscape_view.jpeg',
         '/assets/rugova-photos/beautiful_nature_shot.jpg',
+        '/assets/rugova-photos/pool2.JPG',
+        '/assets/rugova-photos/food_on_table.jpeg',
+        '/assets/rugova-photos/yoga_poses.PNG',
         '/assets/rugova-photos/balcony_relaxing_vertical.jpg'
       ],
       atmosphereVideos: [
@@ -188,7 +202,7 @@ export class RetreatsService {
       ],
       included: [
         '2 nights / 3 days accommodation',
-        'The NeuroYoga™ Method daily immersive guided sessions',
+        'The RESET™ Method daily immersive guided sessions',
         'Breathwork and nervous system regulation practices',
         'Guided salt room meditation (halotherapy experience)',
         'Guided nature immersion (Shinrin-yoku) and silent meditation',
@@ -199,6 +213,12 @@ export class RetreatsService {
         'Evening integration through the Radiate Circle',
         'Full retreat experience + closing integration',
         'And so much more'
+      ],
+      includedImages: [
+        '/assets/rugova-photos/salt_room_horizontal.jpeg',
+        '/assets/rugova-photos/steam_room_horizontal.jpeg',
+        '/assets/rugova-photos/sauna_horizontal.jpeg',
+        '/assets/rugova-photos/hot_tub_horizontal.jpeg'
       ],
       notIncluded: [
         'Flights',
@@ -218,7 +238,7 @@ export class RetreatsService {
           },
           {
             name: 'Melita Kabashi',
-            bio: 'MELITA KABASHI – a devoted advocate for human rights and a passionate yoga teacher, Melita has spent years creating positive change in her community. As the founder of DRITH YOGA, a vibrant studio in the heart of Prishtina, Kosovo, she has inspired and empowered hundreds of students to embrace the transformative power of yoga.\n\nBeyond the studio, Melita dedicated years of her life to Save the Children, championing the rights and well-being of children across Kosovo. Her work didn’t stop there—she has played a significant role in bringing yoga into schools, helping students discover mindfulness, balance, and resilience at an early age.\n\nWith a warm and approachable spirit, Melita’s mission is to make yoga and its benefits accessible to all, creating a ripple of growth, healing, and empowerment throughout her community.',
+            bio: 'A devoted advocate for human rights and a passionate yoga teacher, Melita has spent years creating positive change in her community. As the founder of DRITH YOGA, a vibrant studio in the heart of Prishtina, Kosovo, she has inspired and empowered hundreds of students to embrace the transformative power of yoga.\n\nBeyond the studio, Melita dedicated years of her life to Save the Children, championing the rights and well-being of children across Kosovo. Her work didn’t stop there—she has played a significant role in bringing yoga into schools, helping students discover mindfulness, balance, and resilience at an early age.\n\nWith a warm and approachable spirit, Melita’s mission is to make yoga and its benefits accessible to all, creating a ripple of growth, healing, and empowerment throughout her community.',
             images: [
               '/assets/rugova-photos/melita_kabashi.JPG'
             ]
