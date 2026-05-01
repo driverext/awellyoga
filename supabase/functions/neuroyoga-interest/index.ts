@@ -4,7 +4,6 @@ import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
 interface NeuroYogaInterestPayload {
   name?: string;
   email?: string;
-  whatsapp?: string;
   program?: string;
   investment?: string;
   startWindow?: string;
@@ -29,7 +28,6 @@ Deno.serve(async (req) => {
     const payload = (await req.json()) as NeuroYogaInterestPayload;
     const name = (payload.name || '').trim();
     const email = (payload.email || '').trim().toLowerCase();
-    const whatsapp = (payload.whatsapp || '').trim();
     const program = (payload.program || 'NeuroYoga™ Therapeutic Yoga').trim();
     const investment = (payload.investment || '$280').trim();
     const startWindow = (payload.startWindow || 'July 2026').trim();
@@ -71,7 +69,6 @@ Deno.serve(async (req) => {
       '',
       `Name: ${name}`,
       `Email: ${email}`,
-      `WhatsApp: ${whatsapp || 'Not provided'}`,
       `Program: ${program}`,
       `Investment: ${investment}`,
       `Start Window: ${startWindow}`,
@@ -85,7 +82,6 @@ Deno.serve(async (req) => {
         <h2 style="margin:0 0 12px;">New NeuroYoga Program Application</h2>
         <p style="margin:0 0 6px;"><strong>Name:</strong> ${escapeHtml(name)}</p>
         <p style="margin:0 0 6px;"><strong>Email:</strong> ${escapeHtml(email)}</p>
-        <p style="margin:0 0 6px;"><strong>WhatsApp:</strong> ${escapeHtml(whatsapp || 'Not provided')}</p>
         <p style="margin:0 0 6px;"><strong>Program:</strong> ${escapeHtml(program)}</p>
         <p style="margin:0 0 6px;"><strong>Investment:</strong> ${escapeHtml(investment)}</p>
         <p style="margin:0 0 6px;"><strong>Start Window:</strong> ${escapeHtml(startWindow)}</p>

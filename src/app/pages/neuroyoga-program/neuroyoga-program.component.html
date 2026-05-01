@@ -4,17 +4,18 @@
       <p class="eyebrow">4-Week Therapeutic Program</p>
       <h1>NeuroYoga™ Therapeutic Yoga</h1>
       <p class="hero-text">
-        This is a guided 4-week experience for people who want more than a single drop-in class.
-        Through breath, intentional movement, and nervous system awareness, the program is designed
-        to help you build steadiness week by week.
+        This is a therapeutic 4-week experience for people who want more support than a single class can offer.
+        Through breath, intentional movement, and nervous system awareness, each 90-minute session is designed
+        to help the body settle, organize, and build steadiness over time.
       </p>
       <div class="hero-pills">
         <span>$280 total</span>
         <span>Starts in July</span>
+        <span>90 minutes each</span>
         <span>Date TBA with group</span>
       </div>
       <div class="hero-actions">
-        <a href="#apply" class="btn btn-primary">Apply Now</a>
+        <button type="button" class="btn btn-primary" (click)="scrollToApplication()">Apply Now</button>
         <a routerLink="/schedule" fragment="calendar" class="btn btn-secondary">View Drop-In Classes</a>
       </div>
     </div>
@@ -32,11 +33,11 @@
   <div class="container overview-grid">
     <div>
       <p class="eyebrow">Why this format</p>
-      <h2>A better fit than a one-off booking.</h2>
+      <h2>A more therapeutic container than a one-off booking.</h2>
       <p>
         Because this work builds over time, the best flow is not the calendar. This program gives students
-        four weekly sessions in a consistent container, so there is time to learn the work, integrate it,
-        and notice what changes in real life.
+        four 90-minute weekly sessions in a consistent container, so there is time to regulate, learn the work,
+        integrate it, and notice what shifts in real life.
       </p>
     </div>
 
@@ -94,12 +95,7 @@
         <input type="email" name="email" [(ngModel)]="application.email" autocomplete="email" required />
       </label>
 
-      <label>
-        WhatsApp (optional)
-        <input type="text" name="whatsapp" [(ngModel)]="application.whatsapp" autocomplete="tel" />
-      </label>
-
-      <p class="form-note">Investment: $280 for the full 4-week program.</p>
+      <p class="form-note">Investment: $280 for the full 4-week program · 4 sessions · 90 minutes each.</p>
       <p class="form-success" *ngIf="success">{{ success }}</p>
       <p class="form-error" *ngIf="error">{{ error }}</p>
 

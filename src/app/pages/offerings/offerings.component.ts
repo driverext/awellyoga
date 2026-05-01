@@ -41,7 +41,7 @@ export class OfferingsComponent {
       name: 'NeuroYoga™ Therapeutic Yoga',
       level: 'All Levels',
       description:
-        'A guided, nervous system-based session designed to help you regulate your body through breath, intentional movement, and awareness. This offering now runs as a 4-week program with one session each week, giving you time to build consistency and feel the work integrate over time.',
+        'A guided, therapeutic nervous system-based practice designed to help you regulate your body through breath, intentional movement, and awareness. This offering now runs as a 4-week program with one 90-minute session each week, giving the body time to settle, integrate, and build steadiness over time.',
       benefits: [
         'Regulates the nervous system and reduces stress',
         'Decreases anxiety and emotional overwhelm',
@@ -49,7 +49,7 @@ export class OfferingsComponent {
         'Builds resilience and emotional stability'
       ],
       image: 'https://images.unsplash.com/photo-1552286450-4a669f880062?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80',
-      programMeta: '$280 • 4 weeks • 4 sessions',
+      programMeta: '$280 • 4 weeks • 4 sessions • 90 minutes each',
       ctaLabel: 'Apply Now',
       ctaRoute: '/neuroyoga-program'
     },

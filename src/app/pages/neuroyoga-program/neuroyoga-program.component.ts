@@ -15,54 +15,63 @@ import { SeoService } from '../../services/seo.service';
 export class NeuroyogaProgramComponent {
   application = {
     name: '',
-    email: '',
-    whatsapp: ''
+    email: ''
   };
   loading = false;
   success = '';
   error = '';
 
   readonly outcomes = [
-    'A steadier nervous system baseline you can actually feel',
-    'Tools for working with stress, anxiety, and overwhelm in real time',
-    'A more grounded relationship to breath, movement, and recovery',
-    'Weekly support that builds over four sessions instead of one-off drops'
+    'A steadier nervous system baseline you can actually feel in daily life',
+    'Therapeutic tools for working with stress, anxiety, and overwhelm in real time',
+    'A more supported relationship to breath, movement, rest, and recovery',
+    'A 4-week arc that gives the body time to integrate instead of starting over each class'
   ];
 
   readonly details = [
     { label: 'Format', value: '4-week program · 1 session each week' },
+    { label: 'Session Length', value: '90 minutes each' },
     { label: 'Investment', value: '$280 total' },
     { label: 'Start Window', value: 'July 2026' },
     { label: 'Dates', value: 'TBA based on the group' }
   ];
 
   readonly whoItsFor = [
-    'People who feel anxious, overstimulated, or constantly on',
-    'Students who want more support than a single drop-in class can offer',
-    'Anyone curious about a therapeutic, neuroscience-informed approach to yoga',
-    'People who want consistency and accountability without an intimidating pace'
+    'People who feel anxious, overstimulated, depleted, or constantly on',
+    'Students who need more therapeutic support than a single drop-in class can offer',
+    'Anyone curious about a neuroscience-informed approach to healing through yoga',
+    'People who want a steady, supportive pace instead of a performative one'
   ];
 
   readonly whatToExpect = [
-    'One guided session each week for four weeks',
-    'Breath-led movement, awareness work, and nervous system education',
-    'A format designed to build week by week instead of starting over every class',
-    'A small-group feel, with timing finalized around the cohort'
+    'One 90-minute guided session each week for four weeks',
+    'Breath-led movement, therapeutic regulation practices, and nervous system education',
+    'A format designed to build safety, awareness, and resilience week by week',
+    'A small-group feel, with final scheduling shaped around the cohort'
   ];
 
   constructor(private seo: SeoService) {
     this.seo.updatePage({
       title: 'NeuroYoga™ Therapeutic Yoga Program',
       description:
-        'Apply for the 4-week NeuroYoga™ Therapeutic Yoga program at A-WELL Yoga. A July start, $280 investment, and a small-group format built around nervous system support.',
+        'Apply for the 4-week NeuroYoga™ Therapeutic Yoga program at A-WELL Yoga. A therapeutic 90-minute weekly format, July start window, and small-group support built around nervous system regulation.',
       path: '/neuroyoga-program'
     });
+  }
+
+  scrollToApplication(): void {
+    const target = document.getElementById('apply');
+    if (!target) {
+      return;
+    }
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', '#apply');
   }
 
   async submitApplication(): Promise<void> {
     const name = this.application.name.trim();
     const email = this.application.email.trim().toLowerCase();
-    const whatsapp = this.application.whatsapp.trim();
 
     if (!name) {
       this.error = 'Please enter your name.';
@@ -87,7 +96,6 @@ export class NeuroyogaProgramComponent {
         body: JSON.stringify({
           name,
           email,
-          whatsapp,
           program: 'NeuroYoga™ Therapeutic Yoga',
           investment: '$280',
           startWindow: 'July 2026',
@@ -102,7 +110,7 @@ export class NeuroyogaProgramComponent {
       }
 
       this.success = 'Application received. We will reach out with July timing options once the group is taking shape.';
-      this.application = { name: '', email: '', whatsapp: '' };
+      this.application = { name: '', email: '' };
     } catch (error) {
       const message = (error as Error).message || '';
       this.error = message.includes('Failed to fetch')
