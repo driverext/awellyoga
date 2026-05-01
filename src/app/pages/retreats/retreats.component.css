@@ -1,6 +1,6 @@
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/assets/images/retreat-hero.jpg');
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/assets/shared/backgrounds/retreat-hero.jpg');
   background-size: cover;
   background-position: center;
   color: white;
@@ -572,7 +572,7 @@ h2 {
 
 /* Newsletter Section */
 .newsletter-section {
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/images/newsletter-bg.jpg');
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/shared/backgrounds/newsletter-bg.jpg');
   background-size: cover;
   background-position: center;
   color: white;

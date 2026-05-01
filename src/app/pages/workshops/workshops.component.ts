@@ -18,7 +18,7 @@ export class WorkshopsComponent implements OnInit {
     location: 'CityArt Orlando Florida',
     price: '$35',
     description: 'more to come 🤩',
-    image: '/assets/workshop1.jpg',
+    image: '/assets/workshops/the-path-inward.jpg',
     bookingUrl: 'https://buy.stripe.com/fZu6oA3Bx71a8ME7Ay8og05'
   };
 
@@ -30,7 +30,7 @@ export class WorkshopsComponent implements OnInit {
       description:
         'Browse A-WELL Yoga workshops, special events, and deeper-dive experiences designed for community, reflection, and embodied learning.',
       path: '/workshops',
-      image: '/assets/workshop1.jpg'
+      image: '/assets/workshops/the-path-inward.jpg'
     });
   }
 }

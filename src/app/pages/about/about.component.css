@@ -320,7 +320,7 @@
 
 /* CTA Section (re-used from home) */
 .cta-section {
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/images/cta-bg.jpg');
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/shared/backgrounds/cta-bg.jpg');
   background-size: cover;
   background-position: center;
   color: white;

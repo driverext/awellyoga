@@ -48,7 +48,7 @@ export class OfferingsComponent {
         'Enhances mind-body awareness and presence',
         'Builds resilience and emotional stability'
       ],
-      image: '/assets/classes-photos/neuroyoga.jpeg',
+      image: '/assets/classes/neuroyoga-therapeutic-yoga.jpg',
       programMeta: '$280 • 4 weeks • 4 sessions • 90 minutes each',
       ctaLabel: 'Apply Now',
       ctaRoute: '/neuroyoga-program'
@@ -80,7 +80,7 @@ export class OfferingsComponent {
         'Reduces stress and anxiety',
         'Balances the nervous system'
       ],
-      image: '/assets/classes-photos/yin-yoga.jpeg',
+      image: '/assets/classes/yin-yoga.jpg',
       ctaLabel: 'Book a Class',
       ctaRoute: '/schedule',
       ctaFragment: 'calendar'
@@ -112,7 +112,7 @@ export class OfferingsComponent {
         'Improves sleep quality',
         'Enhances emotional wellbeing'
       ],
-      image: '/assets/classes-photos/restorative-yoga.jpeg',
+      image: '/assets/classes/restorative-yoga.jpg',
       ctaLabel: 'Book a Class',
       ctaRoute: '/schedule',
       ctaFragment: 'calendar'
@@ -128,7 +128,7 @@ export class OfferingsComponent {
         'Strengthens the pelvic floor',
         'Creates community with other mothers'
       ],
-      image: '/assets/classes-photos/prenatal-yoga.jpeg',
+      image: '/assets/classes/prenatal-yoga.jpg',
       ctaLabel: 'Book a Class',
       ctaRoute: '/schedule',
       ctaFragment: 'calendar'
@@ -144,7 +144,7 @@ export class OfferingsComponent {
         'Encourages healthy movement habits',
         'Creates a fun introduction to mindfulness'
       ],
-      image: '/assets/classes-photos/kids-yoga.jpg',
+      image: '/assets/classes/kids-yoga.jpg',
       ctaLabel: 'Book a Class',
       ctaRoute: '/schedule',
       ctaFragment: 'calendar'

@@ -13,7 +13,7 @@
   inset: 0;
   background:
     linear-gradient(180deg, rgba(24, 15, 11, 0.72), rgba(24, 15, 11, 0.42)),
-    url('/assets/arieta13.jpg') center 34% / cover no-repeat;
+    url('/assets/teachers/arieta/gallery-8.jpg') center 34% / cover no-repeat;
   opacity: 0.9;
 }
 
@@ -344,7 +344,7 @@
 .home-cta {
   background:
     linear-gradient(180deg, rgba(239, 227, 214, 0.7), rgba(239, 227, 214, 0.92)),
-    url('/assets/space4.jpg') center / cover no-repeat;
+    url('/assets/home/space-4.jpg') center / cover no-repeat;
 }
 
 .cta-panel {
@@ -408,7 +408,7 @@
   .hero-layer {
     background:
       linear-gradient(180deg, rgba(24, 15, 11, 0.78), rgba(24, 15, 11, 0.48)),
-      url('/assets/arieta13.jpg') 58% 28% / cover no-repeat;
+      url('/assets/teachers/arieta/gallery-8.jpg') 58% 28% / cover no-repeat;
   }
 
   .home-hero h1 {

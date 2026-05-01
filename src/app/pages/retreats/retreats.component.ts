@@ -70,7 +70,7 @@ export class RetreatsComponent implements OnInit {
       description:
         'Explore A-WELL Yoga retreats designed around nervous system support, embodied practice, and meaningful restoration in beautiful destinations.',
       path: '/retreats',
-      image: '/assets/shkrel.png'
+      image: '/assets/retreats/rugova/rugova-card.jpg'
     });
   }
 

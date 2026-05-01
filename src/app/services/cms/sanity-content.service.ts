@@ -134,7 +134,7 @@ export class SanityContentService {
             title: item.title || '',
             isFounder: !!item.isFounder,
             bioParagraphs: this.toParagraphs(item.bio),
-            imageUrl: this.imageUrl(item.photo) || '/assets/Arieta_Bio.jpg',
+            imageUrl: this.imageUrl(item.photo) || '/assets/teachers/arieta/arieta-bio.jpg',
             photoAlt: item.photoAlt || item.name || 'Instructor photo',
             specialties: item.specialties || []
           }))

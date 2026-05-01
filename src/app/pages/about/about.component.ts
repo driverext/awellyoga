@@ -52,7 +52,7 @@ export class AboutComponent implements OnInit, OnDestroy {
       description:
         'Meet the teachers behind A-WELL Yoga in Sanford, Florida, and learn more about the studio’s nervous-system-aware, therapeutic approach to yoga.',
       path: '/about',
-      image: '/assets/Arieta_Bio.jpg'
+      image: '/assets/teachers/arieta/arieta-bio.jpg'
     });
 
     this.seo.setJsonLd('about-organization', {
@@ -106,21 +106,21 @@ export class AboutComponent implements OnInit, OnDestroy {
         name: 'Arieta Berisha Kirk',
         title: 'Founder',
         isFounder: true,
-        imageUrl: '/assets/Arieta_Bio.jpg',
+        imageUrl: '/assets/teachers/arieta/arieta-bio.jpg',
         photoAlt: 'Arieta Berisha Kirk - Founder',
         bioParagraphs: ARIETA_ABOUT_BIO
       },
       {
         name: 'Sommer Renee',
         title: 'Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
-        imageUrl: '/assets/Sommer_Bio.jpg',
+        imageUrl: '/assets/teachers/sommer/sommer-bio.jpg',
         photoAlt: 'Sommer Renee - Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
         bioParagraphs: SOMMER_ABOUT_BIO
       },
       {
         name: 'Melita Kabashi',
         title: 'Yoga Teacher',
-        imageUrl: '/assets/rugova-photos/melita_kabashi.JPG',
+        imageUrl: '/assets/teachers/melita/melita-kabashi.jpg',
         photoAlt: 'Melita Kabashi - Yoga Teacher',
         bioParagraphs: MELITA_ABOUT_BIO
       }
@@ -153,7 +153,7 @@ export class AboutComponent implements OnInit, OnDestroy {
         title: instructor.title?.trim() || fallback.title,
         bioParagraphs: instructor.bioParagraphs?.length ? instructor.bioParagraphs : fallback.bioParagraphs,
         imageUrl:
-          instructor.imageUrl && instructor.imageUrl !== '/assets/Arieta_Bio.jpg'
+          instructor.imageUrl && instructor.imageUrl !== '/assets/teachers/arieta/arieta-bio.jpg'
             ? instructor.imageUrl
             : fallback.imageUrl,
         photoAlt: instructor.photoAlt?.trim() || fallback.photoAlt,
@@ -186,9 +186,9 @@ export class AboutComponent implements OnInit, OnDestroy {
           name: 'Sommer Renee',
           title: 'Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
           imageUrl:
-            instructor.imageUrl && instructor.imageUrl !== '/assets/Arieta_Bio.jpg'
+            instructor.imageUrl && instructor.imageUrl !== '/assets/teachers/arieta/arieta-bio.jpg'
               ? instructor.imageUrl
-              : '/assets/Sommer_Bio.jpg',
+              : '/assets/teachers/sommer/sommer-bio.jpg',
           photoAlt: 'Sommer Renee - Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
           bioParagraphs: SOMMER_ABOUT_BIO
         };

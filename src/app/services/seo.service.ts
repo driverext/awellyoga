@@ -21,7 +21,7 @@ export class SeoService {
   updatePage(payload: SeoPayload): void {
     const baseUrl = 'https://awellyoga.com';
     const canonicalUrl = `${baseUrl}${payload.path || this.document.location?.pathname || '/'}`;
-    const imageUrl = payload.image ? (payload.image.startsWith('http') ? payload.image : `${baseUrl}${payload.image}`) : `${baseUrl}/assets/AWELLYOGA-LOGO.jpg`;
+    const imageUrl = payload.image ? (payload.image.startsWith('http') ? payload.image : `${baseUrl}${payload.image}`) : `${baseUrl}/assets/brand/awell-yoga-logo.jpg`;
     const fullTitle = payload.title.includes('A-WELL Yoga') ? payload.title : `${payload.title} | A-WELL Yoga`;
 
     this.title.setTitle(fullTitle);

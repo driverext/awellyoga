@@ -233,7 +233,7 @@ export class RecipesComponent {
         'Alkalizing',
         'Light and refreshing'
       ],
-      image: 'assets/images/recipe-cucumber-soup.jpg',
+      image: 'assets/recipes/recipe-cucumber-soup.jpg',
       category: 'Soups',
       tags: ['cooling', 'summer', 'pitta-balancing']
     }

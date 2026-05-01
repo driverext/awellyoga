@@ -155,7 +155,7 @@ export class RetreatsService {
             'Front-facing with majestic mountain views'
           ],
           videoLabel: 'View single room video',
-          videoUrl: '/assets/standard.mov'
+          videoUrl: '/assets/retreats/rugova/single-occupancy-room.mov'
         },
         {
           label: 'Shared Occupancy',
@@ -170,7 +170,7 @@ export class RetreatsService {
             'Back-facing with peaceful forest and tree views'
           ],
           videoLabel: 'View shared room video',
-          videoUrl: '/assets/twin.mov'
+          videoUrl: '/assets/retreats/rugova/shared-occupancy-room.mov'
         }
       ],
       pricingIncludes: [
@@ -179,25 +179,25 @@ export class RetreatsService {
         'Spa access',
         'Full RESET™ method'
       ],
-      cardImage: '/assets/shkrel.png',
-      image: '/assets/rugova-photos/mountains.jpeg',
+      cardImage: '/assets/retreats/rugova/rugova-card.jpg',
+      image: '/assets/retreats/rugova/hero-mountains.jpeg',
       featured: true,
       status: {
         year2026: 'UPCOMING'
       },
       venueDescription: 'Grand Hotel Belushi is our home for the weekend, nestled in Shkrel in the heart of Rugova Valley. Surrounded by mountain air, forest stillness, and expansive alpine views, the setting supports exactly what this retreat is designed to do: help the body exhale, soften, and reset.',
       venueImages: [
-        '/assets/rugova-photos/hotel_drone_front.JPG',
-        '/assets/rugova-photos/food_vertical.png',
-        '/assets/rugova-photos/beautiful_nature_shot.jpg',
-        '/assets/rugova-photos/balcony_with_landscape_view.jpeg',
-        '/assets/rugova-photos/yoga_poses.PNG',
-        '/assets/rugova-photos/balcony_relaxing_vertical.jpg'
+        '/assets/retreats/rugova/hotel-drone-front.jpg',
+        '/assets/retreats/rugova/food-vertical.png',
+        '/assets/retreats/rugova/beautiful-nature-shot.jpg',
+        '/assets/retreats/rugova/balcony-landscape-view.jpeg',
+        '/assets/retreats/rugova/yoga-poses.png',
+        '/assets/retreats/rugova/balcony-relaxing-vertical.jpg'
       ],
       atmosphereVideos: [
         {
           title: 'Rugova stream',
-          url: '/assets/rugova-photos/stream_through_rocks_vertical.mov'
+          url: '/assets/retreats/rugova/stream-through-rocks.mov'
         }
       ],
       included: [
@@ -215,10 +215,10 @@ export class RetreatsService {
         'And so much more'
       ],
       includedImages: [
-        '/assets/rugova-photos/salt_room_horizontal.jpeg',
-        '/assets/rugova-photos/steam_room_horizontal.jpeg',
-        '/assets/rugova-photos/sauna_horizontal.jpeg',
-        '/assets/rugova-photos/hot_tub_horizontal.jpeg'
+        '/assets/retreats/rugova/salt-room-horizontal.jpg',
+        '/assets/retreats/rugova/steam-room-horizontal.jpg',
+        '/assets/retreats/rugova/sauna-horizontal.jpg',
+        '/assets/retreats/rugova/hot-tub-horizontal.jpg'
       ],
       notIncluded: [
         'Flights',
@@ -233,14 +233,14 @@ export class RetreatsService {
             name: 'Arieta Berisha Kirk',
             bio: ARIETA_BIO,
             images: [
-              '/assets/rugova-photos/arieta.jpeg'
+              '/assets/teachers/arieta/arieta-rugova.jpg'
             ]
           },
           {
             name: 'Melita Kabashi',
             bio: 'A devoted advocate for human rights and a passionate yoga teacher, Melita has spent years creating positive change in her community. As the founder of DRITH YOGA, a vibrant studio in the heart of Prishtina, Kosovo, she has inspired and empowered hundreds of students to embrace the transformative power of yoga.\n\nBeyond the studio, Melita dedicated years of her life to Save the Children, championing the rights and well-being of children across Kosovo. Her work didn’t stop there—she has played a significant role in bringing yoga into schools, helping students discover mindfulness, balance, and resilience at an early age.\n\nWith a warm and approachable spirit, Melita’s mission is to make yoga and its benefits accessible to all, creating a ripple of growth, healing, and empowerment throughout her community.',
             images: [
-              '/assets/rugova-photos/melita_kabashi.JPG'
+              '/assets/teachers/melita/melita-kabashi.jpg'
             ]
           }
         ]
@@ -271,16 +271,16 @@ export class RetreatsService {
         'Day trips to charming local towns',
         'Airport transfers from Brindisi or Bari Airports'
       ],
-      image: '/assets/mainpuglia.png',
+      image: '/assets/retreats/puglia/puglia-card.png',
       featured: false,
       venueDescription: 'We\'ll stay in a charming, historic & eco-friendly farmhouse in Puglia, Italy. Nestled into a gentle hill surrounded by 20 hectares of exclusive private land, the property is walking distance from the Ionian Sea.',
       venueImages: [
-        '/assets/puglia7.jpg',
-        '/assets/puglia8.jpg',
-        '/assets/puglia9.jpg',
-        '/assets/puglia10.jpg',
-        '/assets/puglia11.jpg',
-         '/assets/pugliak.jpg'
+        '/assets/retreats/puglia/gallery-1.jpg',
+        '/assets/retreats/puglia/gallery-2.jpg',
+        '/assets/retreats/puglia/gallery-3.jpg',
+        '/assets/retreats/puglia/gallery-4.jpg',
+        '/assets/retreats/puglia/gallery-5.jpg',
+         '/assets/retreats/puglia/gallery-6.jpg'
       ],
       included: [
         '3 nights at Masseria Specula historical farmhouse',
@@ -308,9 +308,9 @@ export class RetreatsService {
             name: 'Arieta Berisha Kirk',
             bio: ARIETA_BIO,
             images: [
-              '/assets/arieta12.jpg',
-              '/assets/arieta10.jpg',
-              '/assets/arieta11.jpg'
+              '/assets/teachers/arieta/gallery-7.jpg',
+              '/assets/teachers/arieta/gallery-5.jpg',
+              '/assets/teachers/arieta/gallery-6.jpg'
             ]
           }
         ]
@@ -341,16 +341,16 @@ export class RetreatsService {
         'Space to rest deeply—on hammocks, on sun-warmed stones, by the water\'s edge',
         'Content Creation'
       ],
-      image: '/assets/mainalbania.png',
+      image: '/assets/retreats/albania/albania-card.png',
       featured: false,
       venueDescription: 'We\'ll stay in a charming villa nestled along the untouched shores of Koman Lake. Villa Frenceze is more than just a place to sleep—it\'s a sacred pause from the noise of the world.\n\nSurrounded by majestic peaks, emerald waters, and a silence so pure it echoes, this lakeside haven offers the perfect setting for restoration, reflection, and deep soul remembering.\n\nBuilt with traditional Albanian charm and natural, grounding materials, every corner of the villa invites you to slow down, breathe deeper, and soften into presence.',
       venueImages: [
-        '/assets/albania1.jpg',
-        '/assets/albania2.jpg',
-        '/assets/albania3.jpg',
-        '/assets/albania4.jpg',
-        '/assets/albania5.png',
-        '/assets/albania6.jpg'
+        '/assets/retreats/albania/gallery-1.jpg',
+        '/assets/retreats/albania/gallery-2.jpg',
+        '/assets/retreats/albania/gallery-3.jpg',
+        '/assets/retreats/albania/gallery-4.jpg',
+        '/assets/retreats/albania/gallery-5.png',
+        '/assets/retreats/albania/gallery-6.jpg'
       ],
       included: [
         '3 nights at Villa Franceze A Hidden Sanctuary Between Mountains and Mystic Waters',
@@ -373,9 +373,9 @@ export class RetreatsService {
             name: 'Arieta Berisha Kirk',
             bio: ARIETA_BIO,
             images: [
-              '/assets/arieta13.jpg',
-              '/assets/arieta10.jpg',
-              '/assets/arieta14.jpg'
+              '/assets/teachers/arieta/gallery-8.jpg',
+              '/assets/teachers/arieta/gallery-5.jpg',
+              '/assets/teachers/arieta/gallery-9.jpg'
             ]
           }
         ]
@@ -404,7 +404,7 @@ export class RetreatsService {
         'Deep rest and restoration',
         'Connection with nature and self'
       ],
-      image: '/assets/maingreece.png',
+      image: '/assets/retreats/greece/greece-card.png',
       featured: false,
       status: {
         year2025: 'FULLY BOOKED',
@@ -412,11 +412,11 @@ export class RetreatsService {
       },
       venueDescription: 'Experience the magic of Amorgos, a hidden gem in the Greek islands. Our carefully selected venue offers the perfect blend of traditional Cycladic architecture and modern comfort, creating an ideal setting for deep transformation and renewal.',
       venueImages: [
-        '/assets/greece1.png',
-        '/assets/greece2.png',
-        '/assets/greece3.png',
-        '/assets/greece4.png',
-        '/assets/greece6.png'
+        '/assets/retreats/greece/gallery-1.png',
+        '/assets/retreats/greece/gallery-2.png',
+        '/assets/retreats/greece/gallery-3.png',
+        '/assets/retreats/greece/gallery-4.png',
+        '/assets/retreats/greece/gallery-5.png'
       ],
       included: [
         '6 nights luxury accommodation',
@@ -440,10 +440,10 @@ export class RetreatsService {
             name: 'Arieta Berisha Kirk',
             bio: ARIETA_BIO,
             images: [
-              '/assets/arieta4.jpg',
-              '/assets/arieta5.png',
-              '/assets/arieta9.jpg',
-              '/assets/arieta7.jpg'
+              '/assets/teachers/arieta/gallery-1.jpg',
+              '/assets/teachers/arieta/gallery-2.png',
+              '/assets/teachers/arieta/gallery-4.jpg',
+              '/assets/teachers/arieta/gallery-3.jpg'
             ]
           }
         ]
