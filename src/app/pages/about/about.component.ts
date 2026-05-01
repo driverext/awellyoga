@@ -22,6 +22,11 @@ const MELITA_ABOUT_BIO = [
   'With a warm and approachable spirit, Melita’s mission is to make yoga and its benefits accessible to all, creating a ripple of growth, healing, and empowerment throughout her community.'
 ];
 
+const SOMMER_ABOUT_BIO = [
+  'Sommer Reńee is a guide for those ready to come home to themselves. Blending yoga, breathwork, sound baths, and hypnotherapy, her offerings are more than just classes—they’re immersive healing experiences. What began as a personal journey has evolved into a space where regulation meets release, and stillness becomes transformative.',
+  'Expect soulful flows, grounding presence, and deeply restorative practices that weave together movement, sound, and subconscious exploration—inviting you to feel it all, gently, honestly, and without judgment.'
+];
+
 @Component({
   selector: 'app-about',
   standalone: true,
@@ -110,10 +115,7 @@ export class AboutComponent implements OnInit, OnDestroy {
         title: 'Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
         imageUrl: '/assets/Sommer_Bio.jpg',
         photoAlt: 'Sommer Renee - Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
-        bioParagraphs: [
-          'Sommer Reńee is a guide for those ready to come home to themselves. Blending yoga, breathwork, sound baths, and hypnotherapy, her offerings are immersive healing experiences.',
-          'Expect soulful flows, grounding presence, and deeply restorative practices that weave together movement, sound, and subconscious exploration.'
-        ]
+        bioParagraphs: SOMMER_ABOUT_BIO
       },
       {
         name: 'Melita Kabashi',
@@ -175,8 +177,22 @@ export class AboutComponent implements OnInit, OnDestroy {
   private normalizeInstructor(instructor: CmsInstructor): CmsInstructor {
     const normalizedName = instructor.name.trim();
     const isArieta = this.normalizeName(normalizedName) === this.normalizeName('Arieta Berisha Kirk');
+    const isSommer = this.normalizeName(normalizedName) === this.normalizeName('Sommer Renee');
 
     if (!isArieta) {
+      if (isSommer) {
+        return {
+          ...instructor,
+          name: 'Sommer Renee',
+          title: 'Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
+          imageUrl:
+            instructor.imageUrl && instructor.imageUrl !== '/assets/Arieta_Bio.jpg'
+              ? instructor.imageUrl
+              : '/assets/Sommer_Bio.jpg',
+          photoAlt: 'Sommer Renee - Yoga, Breathwork, Sound Baths & Hypnotherapy Teacher',
+          bioParagraphs: SOMMER_ABOUT_BIO
+        };
+      }
       return {
         ...instructor,
         name: normalizedName
