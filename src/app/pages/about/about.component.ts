@@ -17,6 +17,7 @@ export class AboutComponent implements OnInit, OnDestroy {
   teamSectionHeading = 'Meet Our Team';
   teamSectionSubheading = 'Experienced teachers dedicated to guiding your practice';
   instructors: CmsInstructor[] = this.getFallbackInstructors();
+  private readonly fallbackInstructors = this.getFallbackInstructors();
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -69,9 +70,7 @@ export class AboutComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.cmsContent.getInstructors().subscribe((instructors) => {
-        if (instructors.length > 0) {
-          this.instructors = instructors;
-        }
+        this.instructors = this.mergeInstructors(instructors);
       })
     );
   }
@@ -105,5 +104,33 @@ export class AboutComponent implements OnInit, OnDestroy {
         ]
       }
     ];
+  }
+
+  private mergeInstructors(cmsInstructors: CmsInstructor[]): CmsInstructor[] {
+    if (cmsInstructors.length === 0) {
+      return this.fallbackInstructors;
+    }
+
+    const byName = new Map<string, CmsInstructor>();
+
+    for (const instructor of this.fallbackInstructors) {
+      byName.set(instructor.name, instructor);
+    }
+
+    for (const instructor of cmsInstructors) {
+      byName.set(instructor.name, instructor);
+    }
+
+    return Array.from(byName.values()).sort((a, b) => {
+      if (a.isFounder && !b.isFounder) {
+        return -1;
+      }
+
+      if (!a.isFounder && b.isFounder) {
+        return 1;
+      }
+
+      return a.name.localeCompare(b.name);
+    });
   }
 }
