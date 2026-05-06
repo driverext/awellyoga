@@ -663,6 +663,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     await this.loadMembershipStatus();
   }
 
+  scrollToCalendar(): void {
+    document.getElementById('calendar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   formatMemberBookingWhen(booking: MemberBooking): string {
     if (!booking.eventStart) {
       return 'Date TBD';
@@ -730,6 +734,55 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   hasActiveMembership(): boolean {
     return !!this.membershipStatus?.active;
+  }
+
+  upcomingMemberBookingsCount(): number {
+    const now = Date.now();
+    return this.memberBookings.filter((booking) => {
+      const start = booking.eventStart ? new Date(booking.eventStart).getTime() : Number.NaN;
+      return Number.isFinite(start) && start >= now;
+    }).length;
+  }
+
+  nextUpcomingMemberBooking(): MemberBooking | null {
+    const now = Date.now();
+    const upcoming = this.memberBookings
+      .filter((booking) => {
+        const start = booking.eventStart ? new Date(booking.eventStart).getTime() : Number.NaN;
+        return Number.isFinite(start) && start >= now;
+      })
+      .sort((a, b) => {
+        const aTime = a.eventStart ? new Date(a.eventStart).getTime() : Number.MAX_SAFE_INTEGER;
+        const bTime = b.eventStart ? new Date(b.eventStart).getTime() : Number.MAX_SAFE_INTEGER;
+        return aTime - bTime;
+      });
+
+    return upcoming[0] || null;
+  }
+
+  nextUpcomingMemberBookingLabel(): string {
+    const booking = this.nextUpcomingMemberBooking();
+    if (!booking) {
+      return 'No upcoming class yet';
+    }
+
+    return `${booking.eventTitle || 'Booked Class'} · ${this.formatMemberBookingWhen(booking)}`;
+  }
+
+  membershipNextStepLabel(): string {
+    if (!this.isMembershipSignedIn()) {
+      return 'Sign in or create your account to use membership booking.';
+    }
+
+    if (!this.hasActiveMembership()) {
+      return 'Your account is ready. Start a membership below when you are ready.';
+    }
+
+    if (this.upcomingMemberBookingsCount() === 0) {
+      return 'Your membership is active. Choose a class from the calendar and reserve your next spot.';
+    }
+
+    return 'Your membership is active and your upcoming classes are saved here.';
   }
 
   private isPrivateSessionEvent(event: CmsEvent): boolean {

@@ -207,6 +207,42 @@ img {
   flex-wrap: wrap;
 }
 
+.membership-snapshot {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.membership-snapshot-item {
+  background: #fcf8f2;
+  border: 1px solid #eadfcc;
+  border-radius: 14px;
+  padding: 0.85rem 0.9rem;
+  text-align: left;
+}
+
+.membership-snapshot-item strong {
+  display: block;
+  color: var(--primary-green);
+  line-height: 1.35;
+}
+
+.membership-snapshot-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--secondary-green);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.membership-guidance {
+  margin: 0.9rem 0 0;
+  color: var(--secondary-green);
+}
+
 .member-bookings-card {
   margin-top: 1.8rem;
   box-shadow: var(--box-shadow);
@@ -287,4 +323,14 @@ img {
 
 .membership-reset-link {
   padding: 0;
+}
+
+@media (max-width: 720px) {
+  .membership-snapshot {
+    grid-template-columns: 1fr;
+  }
+
+  .membership-snapshot-item {
+    text-align: center;
+  }
 }

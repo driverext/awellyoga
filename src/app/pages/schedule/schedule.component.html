@@ -283,7 +283,23 @@
             <p *ngIf="membershipRenewsLabel()">{{ membershipRenewsLabel() }}</p>
           </ng-container>
           <p class="booking-error" *ngIf="!membershipStatusLoading && membershipStatusError">{{ membershipStatusError }}</p>
+          <div class="membership-snapshot" *ngIf="!membershipStatusLoading && !membershipStatusError">
+            <article class="membership-snapshot-item">
+              <span class="membership-snapshot-label">Status</span>
+              <strong>{{ hasActiveMembership() ? 'Active' : 'Not started' }}</strong>
+            </article>
+            <article class="membership-snapshot-item">
+              <span class="membership-snapshot-label">Upcoming</span>
+              <strong>{{ upcomingMemberBookingsCount() }}</strong>
+            </article>
+            <article class="membership-snapshot-item">
+              <span class="membership-snapshot-label">Next Class</span>
+              <strong>{{ nextUpcomingMemberBookingLabel() }}</strong>
+            </article>
+          </div>
+          <p class="membership-guidance">{{ membershipNextStepLabel() }}</p>
           <div class="membership-account-actions">
+            <button type="button" class="btn btn-primary" (click)="scrollToCalendar()">Find A Class</button>
             <button type="button" class="btn btn-secondary" (click)="refreshMembershipStatus()">Refresh Status</button>
             <button type="button" class="btn btn-secondary" (click)="refreshMemberBookings()">Refresh Bookings</button>
             <button type="button" class="btn btn-secondary" (click)="signOutMembership()">Sign Out</button>
