@@ -1,4 +1,29 @@
 
+[functions.create-checkout-session]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/create-checkout-session/index.ts"
+
+[functions.event-booking-counts]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/event-booking-counts/index.ts"
+
+[functions.private-session-request]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/private-session-request/index.ts"
+
+[functions.ytt-interest]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/ytt-interest/index.ts"
+
+[functions.neuroyoga-interest]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/neuroyoga-interest/index.ts"
+
 [functions.event-reminder-email]
 enabled = true
 verify_jwt = true
