@@ -14,6 +14,15 @@
     "cms:deploy": "npm run deploy --prefix sanity/awell-yoga"
   },
   "private": true,
+  "overrides": {
+    "serialize-javascript": "7.0.5",
+    "tar": "7.5.14",
+    "karma-coverage": {
+      "minimatch": {
+        "brace-expansion": "1.1.13"
+      }
+    }
+  },
   "dependencies": {
     "@angular/common": "^19.2.21",
     "@angular/compiler": "^19.2.21",
