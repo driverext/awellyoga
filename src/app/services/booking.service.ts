@@ -384,6 +384,29 @@ export class BookingService {
     return data;
   }
 
+  async createMembershipPortalSession(): Promise<{ url?: string; error?: string }> {
+    if (!this.edgeFunctionsBaseUrl) {
+      throw new Error('Booking backend is not configured yet.');
+    }
+
+    const authHeaders = await this.buildAuthHeaders();
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/membership-portal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...authHeaders
+      },
+      body: '{}'
+    });
+
+    const data = (await response.json()) as { url?: string; error?: string };
+    if (!response.ok) {
+      throw new Error(data.error || 'Could not open membership management.');
+    }
+
+    return data;
+  }
+
   private async buildAuthHeaders(): Promise<Record<string, string>> {
     const accessToken = await this.authService.getAccessToken();
     if (!accessToken) {

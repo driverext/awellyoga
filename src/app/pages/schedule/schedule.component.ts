@@ -95,6 +95,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   membershipStatusLoading = false;
   membershipStatusError = '';
   membershipStatus: MembershipStatus | null = null;
+  membershipPortalLoading = false;
   authState: AuthState = {
     user: null,
     session: null,
@@ -661,6 +662,29 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   async refreshMembershipStatus(): Promise<void> {
     await this.loadMembershipStatus();
+  }
+
+  async openMembershipPortal(): Promise<void> {
+    if (!this.hasActiveMembership()) {
+      this.pricingFlowMessage = 'Once your membership is active, you can manage it here.';
+      return;
+    }
+
+    this.membershipPortalLoading = true;
+    this.membershipStatusError = '';
+
+    try {
+      const result = await this.bookingService.createMembershipPortalSession();
+      if (result.url && this.trustedNavigation.redirectToTrustedUrl(result.url)) {
+        return;
+      }
+
+      this.membershipStatusError = result.error || 'Could not open membership management right now.';
+    } catch (error) {
+      this.membershipStatusError = (error as Error).message || 'Could not open membership management right now.';
+    } finally {
+      this.membershipPortalLoading = false;
+    }
   }
 
   scrollToCalendar(): void {

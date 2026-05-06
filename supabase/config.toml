@@ -15,3 +15,15 @@ enabled = true
 verify_jwt = false
 import_map = "./functions/booking-reminder-dispatch/deno.json"
 entrypoint = "./functions/booking-reminder-dispatch/index.ts"
+
+[functions.membership-status]
+enabled = true
+verify_jwt = true
+import_map = "./functions/membership-status/deno.json"
+entrypoint = "./functions/membership-status/index.ts"
+
+[functions.membership-portal]
+enabled = true
+verify_jwt = true
+import_map = "./functions/membership-portal/deno.json"
+entrypoint = "./functions/membership-portal/index.ts"

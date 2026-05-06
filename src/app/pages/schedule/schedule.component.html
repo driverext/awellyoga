@@ -299,6 +299,15 @@
           </div>
           <p class="membership-guidance">{{ membershipNextStepLabel() }}</p>
           <div class="membership-account-actions">
+            <button
+              type="button"
+              class="btn btn-primary"
+              *ngIf="hasActiveMembership()"
+              [disabled]="membershipPortalLoading"
+              (click)="openMembershipPortal()"
+            >
+              {{ membershipPortalLoading ? 'Opening Portal...' : 'Manage My Membership' }}
+            </button>
             <button type="button" class="btn btn-primary" (click)="scrollToCalendar()">Find A Class</button>
             <button type="button" class="btn btn-secondary" (click)="refreshMembershipStatus()">Refresh Status</button>
             <button type="button" class="btn btn-secondary" (click)="refreshMemberBookings()">Refresh Bookings</button>
