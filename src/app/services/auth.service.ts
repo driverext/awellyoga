@@ -6,6 +6,7 @@ export interface AuthState {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  lastEvent: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -14,7 +15,8 @@ export class AuthService {
   private readonly stateSubject = new BehaviorSubject<AuthState>({
     user: null,
     session: null,
-    loading: true
+    loading: true,
+    lastEvent: null
   });
 
   readonly state$ = this.stateSubject.asObservable();
@@ -25,7 +27,7 @@ export class AuthService {
 
     if (!url || !publishableKey) {
       this.client = null;
-      this.stateSubject.next({ user: null, session: null, loading: false });
+      this.stateSubject.next({ user: null, session: null, loading: false, lastEvent: null });
       return;
     }
 
@@ -101,6 +103,28 @@ export class AuthService {
     this.updateState(null, null, 'SIGNED_OUT');
   }
 
+  async resetPassword(email: string): Promise<void> {
+    const client = this.requireClient();
+    const { error } = await client.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+      redirectTo: `${window.location.origin}/schedule#membership-options`
+    });
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async updatePassword(password: string): Promise<void> {
+    const client = this.requireClient();
+    const { data, error } = await client.auth.updateUser({ password });
+
+    if (error) {
+      throw error;
+    }
+
+    this.updateState(this.currentState.session, data.user ?? this.currentUser, 'USER_UPDATED');
+  }
+
   async getAccessToken(): Promise<string | null> {
     if (!this.client) {
       return null;
@@ -132,7 +156,8 @@ export class AuthService {
     this.stateSubject.next({
       session,
       user,
-      loading: false
+      loading: false,
+      lastEvent: _event
     });
   }
 

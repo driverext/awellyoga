@@ -72,6 +72,18 @@ export interface DashboardPrivateSessionRequest {
   created_at?: string | null;
 }
 
+export interface MemberBooking {
+  id: string;
+  eventTitle?: string | null;
+  eventStart?: string | null;
+  eventEnd?: string | null;
+  eventLocation?: string | null;
+  paymentStatus?: string | null;
+  amountTotal?: number | null;
+  currency?: string | null;
+  createdAt?: string | null;
+}
+
 export interface BookingDashboardResponse {
   overview: DashboardOverview;
   topEvents: DashboardEventSummary[];
@@ -104,6 +116,10 @@ interface CheckoutSessionSummaryResponse extends CheckoutSessionSummary {
 interface MemberReservationResponse {
   ok?: boolean;
   message?: string;
+  error?: string;
+}
+
+interface MyBookingsResponseItem extends MemberBooking {
   error?: string;
 }
 
@@ -309,6 +325,29 @@ export class BookingService {
     }
 
     return data;
+  }
+
+  async getMyBookings(limit = 20): Promise<MemberBooking[]> {
+    if (!this.edgeFunctionsBaseUrl) {
+      throw new Error('Booking backend is not configured yet.');
+    }
+
+    const authHeaders = await this.buildAuthHeaders();
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/my-bookings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...authHeaders
+      },
+      body: JSON.stringify({ limit })
+    });
+
+    const data = (await response.json()) as MyBookingsResponseItem[] | { error?: string };
+    if (!response.ok) {
+      throw new Error((data as { error?: string }).error || 'Could not load your bookings.');
+    }
+
+    return data as MemberBooking[];
   }
 
   private async buildAuthHeaders(): Promise<Record<string, string>> {

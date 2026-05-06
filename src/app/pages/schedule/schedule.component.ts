@@ -10,7 +10,7 @@ import {
   CmsStudioPage
 } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
-import { BookingService, PrivateSessionRequestPayload } from '../../services/booking.service';
+import { BookingService, MemberBooking, PrivateSessionRequestPayload } from '../../services/booking.service';
 import { AuthService, AuthState } from '../../services/auth.service';
 import { SeoService } from '../../services/seo.service';
 import { TrustedNavigationService } from '../../services/trusted-navigation.service';
@@ -33,6 +33,7 @@ interface PrivateSessionFormModel {
 }
 
 type MembershipAuthMode = 'sign-in' | 'sign-up';
+type MembershipAccountMode = MembershipAuthMode | 'reset-password';
 
 @Component({
   selector: 'app-schedule',
@@ -75,16 +76,22 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   bookingError = '';
   bookingLoading = false;
   membershipAuthOpen = false;
-  membershipAuthMode: MembershipAuthMode = 'sign-in';
+  membershipAuthMode: MembershipAccountMode = 'sign-in';
   membershipAuthEmail = '';
   membershipAuthPassword = '';
+  membershipAuthPasswordConfirm = '';
   membershipAuthLoading = false;
   membershipAuthError = '';
   membershipAuthNotice = '';
+  membershipResetSending = false;
+  memberBookingsLoading = false;
+  memberBookingsError = '';
+  memberBookings: MemberBooking[] = [];
   authState: AuthState = {
     user: null,
     session: null,
-    loading: true
+    loading: true,
+    lastEvent: null
   };
   privateSessionModalOpen = false;
   privateSessionCheckoutEvent: CmsEvent | null = null;
@@ -123,7 +130,19 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.authService.state$.subscribe((state) => {
+        const previousEmail = this.authState.user?.email?.trim().toLowerCase() || '';
         this.authState = state;
+        const nextEmail = state.user?.email?.trim().toLowerCase() || '';
+        if (state.lastEvent === 'PASSWORD_RECOVERY') {
+          this.openMembershipPasswordReset(nextEmail);
+        }
+        if (nextEmail && nextEmail !== previousEmail) {
+          void this.loadMemberBookings();
+        }
+        if (!nextEmail) {
+          this.memberBookings = [];
+          this.memberBookingsError = '';
+        }
       })
     );
 
@@ -517,6 +536,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.membershipAuthNotice = '';
     this.membershipAuthEmail = this.membershipEmail() || this.membershipAuthEmail;
     this.membershipAuthPassword = '';
+    this.membershipAuthPasswordConfirm = '';
   }
 
   closeMembershipAuth(): void {
@@ -532,6 +552,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.membershipAuthMode = mode;
     this.membershipAuthError = '';
     this.membershipAuthNotice = '';
+    this.membershipAuthPassword = '';
+    this.membershipAuthPasswordConfirm = '';
   }
 
   async submitMembershipAuth(): Promise<void> {
@@ -548,6 +570,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.membershipAuthMode === 'reset-password') {
+      if (password !== this.membershipAuthPasswordConfirm) {
+        this.membershipAuthError = 'Your new password and confirmation need to match.';
+        return;
+      }
+    }
+
     this.membershipAuthLoading = true;
     this.membershipAuthError = '';
     this.membershipAuthNotice = '';
@@ -558,6 +587,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         this.membershipAuthNotice = result.requiresEmailConfirmation
           ? 'Account created. Check your email to confirm your account, then sign in to use membership booking.'
           : 'Account created. You are now signed in.';
+      } else if (this.membershipAuthMode === 'reset-password') {
+        await this.authService.updatePassword(password);
+        this.membershipAuthNotice = 'Password updated. You can keep booking with your membership account.';
       } else {
         await this.authService.signInWithPassword(email, password);
         this.membershipAuthNotice = 'You are signed in and ready to use membership booking.';
@@ -565,7 +597,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
       if (this.authService.currentUser) {
         this.membershipAuthOpen = false;
-        this.pricingFlowMessage = `Signed in as ${this.membershipEmail()}. You can now start or use your membership.`;
+        this.pricingFlowMessage =
+          this.membershipAuthMode === 'reset-password'
+            ? `Password updated for ${this.membershipEmail()}. You can now start or use your membership.`
+            : `Signed in as ${this.membershipEmail()}. You can now start or use your membership.`;
       }
     } catch (error) {
       this.membershipAuthError = (error as Error).message || 'Could not sign you in right now.';
@@ -581,6 +616,66 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.pricingFlowMessage = (error as Error).message || 'Could not sign out right now.';
     }
+  }
+
+  async sendMembershipReset(): Promise<void> {
+    const email = this.membershipAuthEmail.trim().toLowerCase();
+    if (!this.isValidEmail(email)) {
+      this.membershipAuthError = 'Enter the email for your membership account first.';
+      return;
+    }
+
+    this.membershipResetSending = true;
+    this.membershipAuthError = '';
+    this.membershipAuthNotice = '';
+
+    try {
+      await this.authService.resetPassword(email);
+      this.membershipAuthNotice = 'Password reset email sent. Check your inbox and follow the link to update your password.';
+    } catch (error) {
+      this.membershipAuthError = (error as Error).message || 'Could not send a reset email right now.';
+    } finally {
+      this.membershipResetSending = false;
+    }
+  }
+
+  async refreshMemberBookings(): Promise<void> {
+    await this.loadMemberBookings();
+  }
+
+  formatMemberBookingWhen(booking: MemberBooking): string {
+    if (!booking.eventStart) {
+      return 'Date TBD';
+    }
+
+    const start = new Date(booking.eventStart);
+    if (Number.isNaN(start.getTime())) {
+      return booking.eventStart;
+    }
+
+    const startLabel = start.toLocaleString(undefined, {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+
+    if (!booking.eventEnd) {
+      return startLabel;
+    }
+
+    const end = new Date(booking.eventEnd);
+    if (Number.isNaN(end.getTime())) {
+      return startLabel;
+    }
+
+    const endLabel = end.toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+
+    return `${startLabel} - ${endLabel}`;
   }
 
   private isPrivateSessionEvent(event: CmsEvent): boolean {
@@ -619,6 +714,33 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   private isValidEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  private async loadMemberBookings(): Promise<void> {
+    if (!this.isMembershipSignedIn()) {
+      return;
+    }
+
+    this.memberBookingsLoading = true;
+    this.memberBookingsError = '';
+
+    try {
+      this.memberBookings = await this.bookingService.getMyBookings(12);
+    } catch (error) {
+      this.memberBookingsError = (error as Error).message || 'Could not load your bookings right now.';
+    } finally {
+      this.memberBookingsLoading = false;
+    }
+  }
+
+  private openMembershipPasswordReset(email: string): void {
+    this.membershipAuthMode = 'reset-password';
+    this.membershipAuthOpen = true;
+    this.membershipAuthEmail = email || this.membershipAuthEmail;
+    this.membershipAuthPassword = '';
+    this.membershipAuthPasswordConfirm = '';
+    this.membershipAuthError = '';
+    this.membershipAuthNotice = 'Choose a new password for your membership account.';
   }
 
   private buildPrivateSessionPayload(): PrivateSessionRequestPayload | null {

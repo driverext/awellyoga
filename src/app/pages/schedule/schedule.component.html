@@ -278,6 +278,7 @@
         <ng-container *ngIf="!authState.loading && isMembershipSignedIn(); else signedOutMembershipState">
           <p><strong>Signed in:</strong> {{ membershipEmail() }}</p>
           <div class="membership-account-actions">
+            <button type="button" class="btn btn-secondary" (click)="refreshMemberBookings()">Refresh Bookings</button>
             <button type="button" class="btn btn-secondary" (click)="signOutMembership()">Sign Out</button>
           </div>
         </ng-container>
@@ -322,6 +323,32 @@
       Already a member? Open any eligible studio class, sign in to your account, and choose
       <strong>Use Membership</strong> instead of paying the drop-in rate.
     </p>
+
+    <div class="member-bookings-card" *ngIf="isMembershipSignedIn()">
+      <div class="member-bookings-header">
+        <div>
+          <p class="membership-kicker">Your Account</p>
+          <h3>My Bookings</h3>
+        </div>
+      </div>
+
+      <p *ngIf="memberBookingsLoading">Loading your bookings…</p>
+      <p class="booking-error" *ngIf="!memberBookingsLoading && memberBookingsError">{{ memberBookingsError }}</p>
+      <p *ngIf="!memberBookingsLoading && !memberBookingsError && memberBookings.length === 0">
+        No membership bookings yet. Once you reserve a class with your account, it will show up here.
+      </p>
+
+      <div class="member-bookings-list" *ngIf="!memberBookingsLoading && memberBookings.length > 0">
+        <article class="member-booking-item" *ngFor="let booking of memberBookings">
+          <h4>{{ booking.eventTitle || 'Booked Class' }}</h4>
+          <p>{{ formatMemberBookingWhen(booking) }}</p>
+          <p *ngIf="booking.eventLocation">{{ booking.eventLocation }}</p>
+          <p class="member-booking-status">
+            {{ booking.amountTotal === 0 ? 'Reserved with membership' : 'Paid booking' }}
+          </p>
+        </article>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -331,6 +358,7 @@
       <button
         type="button"
         class="membership-auth-tab"
+        *ngIf="membershipAuthMode !== 'reset-password'"
         [class.active]="membershipAuthMode === 'sign-in'"
         (click)="switchMembershipAuthMode('sign-in')"
       >
@@ -339,6 +367,7 @@
       <button
         type="button"
         class="membership-auth-tab"
+        *ngIf="membershipAuthMode !== 'reset-password'"
         [class.active]="membershipAuthMode === 'sign-up'"
         (click)="switchMembershipAuthMode('sign-up')"
       >
@@ -348,11 +377,15 @@
 
     <h3 *ngIf="membershipAuthMode === 'sign-in'">Sign In To Your Membership Account</h3>
     <h3 *ngIf="membershipAuthMode === 'sign-up'">Create Your Membership Account</h3>
+    <h3 *ngIf="membershipAuthMode === 'reset-password'">Set A New Password</h3>
     <p *ngIf="membershipAuthMode === 'sign-in'">
       Sign in first, then you can start a membership or reserve member classes without typing your email each time.
     </p>
     <p *ngIf="membershipAuthMode === 'sign-up'">
       Create the account you’ll use for membership checkout and ongoing member bookings.
+    </p>
+    <p *ngIf="membershipAuthMode === 'reset-password'">
+      You’re back from the reset link. Set your new password here and we’ll keep you in your membership account.
     </p>
 
     <form (ngSubmit)="submitMembershipAuth()">
@@ -372,20 +405,49 @@
         name="membershipAuthPassword"
         type="password"
         [(ngModel)]="membershipAuthPassword"
-        placeholder="At least 8 characters"
+        [placeholder]="membershipAuthMode === 'reset-password' ? 'Your new password' : 'At least 8 characters'"
         required
       >
 
+      <ng-container *ngIf="membershipAuthMode === 'reset-password'">
+        <label for="membership-auth-password-confirm">Confirm Password</label>
+        <input
+          id="membership-auth-password-confirm"
+          name="membershipAuthPasswordConfirm"
+          type="password"
+          [(ngModel)]="membershipAuthPasswordConfirm"
+          placeholder="Enter it again"
+          required
+        >
+      </ng-container>
+
       <p class="booking-error" *ngIf="membershipAuthError">{{ membershipAuthError }}</p>
       <p class="membership-auth-notice" *ngIf="membershipAuthNotice">{{ membershipAuthNotice }}</p>
+      <button
+        type="button"
+        class="btn btn-text membership-reset-link"
+        *ngIf="membershipAuthMode === 'sign-in'"
+        [disabled]="membershipResetSending"
+        (click)="sendMembershipReset()"
+      >
+        {{ membershipResetSending ? 'Sending reset…' : 'Forgot password?' }}
+      </button>
 
       <div class="booking-modal-actions">
         <button type="button" class="btn btn-secondary" [disabled]="membershipAuthLoading" (click)="closeMembershipAuth()">Cancel</button>
         <button type="submit" class="btn btn-primary" [disabled]="membershipAuthLoading">
           {{
             membershipAuthLoading
-              ? (membershipAuthMode === 'sign-up' ? 'Creating Account...' : 'Signing In...')
-              : (membershipAuthMode === 'sign-up' ? 'Create Account' : 'Sign In')
+              ? (
+                  membershipAuthMode === 'sign-up'
+                    ? 'Creating Account...'
+                    : (membershipAuthMode === 'reset-password' ? 'Updating Password...' : 'Signing In...')
+                )
+              : (
+                  membershipAuthMode === 'sign-up'
+                    ? 'Create Account'
+                    : (membershipAuthMode === 'reset-password' ? 'Update Password' : 'Sign In')
+                )
           }}
         </button>
       </div>
