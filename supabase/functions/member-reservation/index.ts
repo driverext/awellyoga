@@ -17,7 +17,6 @@ interface MemberReservationPayload {
   startDate?: string;
   endDate?: string;
   location?: string;
-  email?: string;
   maxSpots?: number;
 }
 
@@ -58,27 +57,38 @@ Deno.serve(async (req) => {
     const title = (payload.title || '').trim();
     const eventType = (payload.eventType || 'Yoga Class').trim();
     const instructorName = (payload.instructorName || '').trim();
-    const email = (payload.email || '').trim().toLowerCase();
     const maxSpots = Number(payload.maxSpots || 0);
 
     if (!eventId || !title) {
       return json(req, { error: 'Missing event id or title.' }, 400);
     }
 
-    if (!isValidEmail(email)) {
-      return json(req, { error: 'A valid email address is required.' }, 400);
-    }
-
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
     const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY') || '';
     const membershipPriceId = Deno.env.get('MEMBERSHIP_MONTHLY_PRICE_ID') || '';
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || '';
 
-    if (!supabaseUrl || !supabaseServiceRoleKey || !stripeSecretKey || !membershipPriceId) {
+    if (!supabaseUrl || !supabaseServiceRoleKey || !stripeSecretKey || !membershipPriceId || !supabaseAnonKey) {
       return json(req, { error: 'Membership booking is not configured yet.' }, 500);
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+    const authHeader = req.headers.get('Authorization') || '';
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const {
+      data: { user },
+      error: userError
+    } = await authClient.auth.getUser();
+
+    if (userError || !user?.email) {
+      return json(req, { error: 'Please sign in before using membership booking.' }, 401);
+    }
+
+    const email = user.email.trim().toLowerCase();
 
     const { data: existingBookings, error: existingError } = await supabase
       .from('bookings')
@@ -144,6 +154,7 @@ Deno.serve(async (req) => {
     }
 
     const { error: insertError } = await supabase.from('bookings').insert({
+      user_id: user.id,
       sanity_event_id: eventId,
       event_title: title,
       event_type: eventType,
@@ -241,10 +252,6 @@ async function stripeGet<T>(url: string, stripeSecretKey: string): Promise<T> {
   }
 
   return json as T;
-}
-
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 type InternalAlertPayload = {

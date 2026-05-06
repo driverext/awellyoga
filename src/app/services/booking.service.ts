@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { CmsEvent } from './cms/cms.models';
+import { AuthService } from './auth.service';
 
 interface CreateCheckoutResponse {
   url?: string;
@@ -110,6 +111,8 @@ interface MemberReservationResponse {
 export class BookingService {
   private readonly edgeFunctionsBaseUrl = environment.booking?.edgeFunctionsBaseUrl || '';
 
+  constructor(private authService: AuthService) {}
+
   async createCheckoutSession(event: CmsEvent, email: string, maxSpots: number | null): Promise<CreateCheckoutResponse> {
     if (!this.edgeFunctionsBaseUrl) {
       return {
@@ -196,21 +199,23 @@ export class BookingService {
     return data;
   }
 
-  async createMembershipCheckout(plan: 'intro' | 'standard', email?: string): Promise<CreateCheckoutResponse> {
+  async createMembershipCheckout(plan: 'intro' | 'standard'): Promise<CreateCheckoutResponse> {
     if (!this.edgeFunctionsBaseUrl) {
       return {
         error: 'Booking backend is not configured yet.'
       };
     }
 
+    const authHeaders = await this.buildAuthHeaders();
+
     const response = await fetch(`${this.edgeFunctionsBaseUrl}/membership-checkout`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...authHeaders
       },
       body: JSON.stringify({
-        plan,
-        email: email?.trim().toLowerCase() || ''
+        plan
       })
     });
 
@@ -222,17 +227,20 @@ export class BookingService {
     return data;
   }
 
-  async createMemberReservation(event: CmsEvent, email: string, maxSpots: number | null): Promise<MemberReservationResponse> {
+  async createMemberReservation(event: CmsEvent, maxSpots: number | null): Promise<MemberReservationResponse> {
     if (!this.edgeFunctionsBaseUrl) {
       return {
         error: 'Booking backend is not configured yet.'
       };
     }
 
+    const authHeaders = await this.buildAuthHeaders();
+
     const response = await fetch(`${this.edgeFunctionsBaseUrl}/member-reservation`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...authHeaders
       },
       body: JSON.stringify({
         eventId: event.id,
@@ -242,7 +250,6 @@ export class BookingService {
         startDate: event.startDate,
         endDate: event.endDate,
         location: event.location,
-        email: email.trim().toLowerCase(),
         maxSpots: maxSpots || undefined
       })
     });
@@ -302,5 +309,16 @@ export class BookingService {
     }
 
     return data;
+  }
+
+  private async buildAuthHeaders(): Promise<Record<string, string>> {
+    const accessToken = await this.authService.getAccessToken();
+    if (!accessToken) {
+      throw new Error('Please sign in to use membership booking.');
+    }
+
+    return {
+      Authorization: `Bearer ${accessToken}`
+    };
   }
 }

@@ -11,6 +11,7 @@ import {
 } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
 import { BookingService, PrivateSessionRequestPayload } from '../../services/booking.service';
+import { AuthService, AuthState } from '../../services/auth.service';
 import { SeoService } from '../../services/seo.service';
 import { TrustedNavigationService } from '../../services/trusted-navigation.service';
 
@@ -30,6 +31,8 @@ interface PrivateSessionFormModel {
   availability: string;
   notes: string;
 }
+
+type MembershipAuthMode = 'sign-in' | 'sign-up';
 
 @Component({
   selector: 'app-schedule',
@@ -71,6 +74,18 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   bookingEmail = '';
   bookingError = '';
   bookingLoading = false;
+  membershipAuthOpen = false;
+  membershipAuthMode: MembershipAuthMode = 'sign-in';
+  membershipAuthEmail = '';
+  membershipAuthPassword = '';
+  membershipAuthLoading = false;
+  membershipAuthError = '';
+  membershipAuthNotice = '';
+  authState: AuthState = {
+    user: null,
+    session: null,
+    loading: true
+  };
   privateSessionModalOpen = false;
   privateSessionCheckoutEvent: CmsEvent | null = null;
   privateSessionLoading = false;
@@ -90,6 +105,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cmsContent: SanityContentService,
     private bookingService: BookingService,
+    private authService: AuthService,
     private seo: SeoService,
     private trustedNavigation: TrustedNavigationService
   ) {}
@@ -100,8 +116,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       this.route.queryParamMap.subscribe((params) => {
         if (params.get('membership') === 'success') {
           this.pricingFlowMessage =
-            'Your membership checkout was successful. Use the same email at booking and choose Use Membership to reserve your spot.';
+            'Your membership checkout was successful. Sign in to your membership account and choose Use Membership to reserve your spot.';
         }
+      })
+    );
+
+    this.subscriptions.add(
+      this.authService.state$.subscribe((state) => {
+        this.authState = state;
       })
     );
 
@@ -190,7 +212,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
 
     this.bookingEvent = event;
-    this.bookingEmail = '';
+    this.bookingEmail = this.canUseMembership(event) ? '' : this.bookingEmail;
     this.bookingError = '';
   }
 
@@ -324,6 +346,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   async startMembershipCheckout(plan: 'intro' | 'standard'): Promise<void> {
+    if (!this.isMembershipSignedIn()) {
+      this.openMembershipAuth('sign-in');
+      this.pricingFlowMessage = 'Please sign in or create an account before starting a membership.';
+      return;
+    }
+
     try {
       const result = await this.bookingService.createMembershipCheckout(plan);
       if (result.url && this.trustedNavigation.redirectToTrustedUrl(result.url)) {
@@ -447,9 +475,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const email = this.bookingEmail.trim();
-    if (!this.isValidEmail(email)) {
-      this.bookingError = 'Please enter a valid email address.';
+    if (!this.isMembershipSignedIn()) {
+      this.bookingError = 'Please sign in to the membership account you used for checkout.';
+      this.openMembershipAuth('sign-in');
       return;
     }
 
@@ -459,7 +487,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     try {
       const result = await this.bookingService.createMemberReservation(
         this.bookingEvent,
-        email,
         this.eventCapacity(this.bookingEvent)
       );
 
@@ -469,9 +496,90 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.bookingError =
         (error as Error).message ||
-        'Could not reserve this class with membership. Please verify your membership email or try again.';
+        'Could not reserve this class with membership. Please confirm you are signed into the correct membership account.';
     } finally {
       this.bookingLoading = false;
+    }
+  }
+
+  isMembershipSignedIn(): boolean {
+    return !!this.authState.user;
+  }
+
+  membershipEmail(): string {
+    return this.authState.user?.email?.trim().toLowerCase() || '';
+  }
+
+  openMembershipAuth(mode: MembershipAuthMode = 'sign-in'): void {
+    this.membershipAuthMode = mode;
+    this.membershipAuthOpen = true;
+    this.membershipAuthError = '';
+    this.membershipAuthNotice = '';
+    this.membershipAuthEmail = this.membershipEmail() || this.membershipAuthEmail;
+    this.membershipAuthPassword = '';
+  }
+
+  closeMembershipAuth(): void {
+    if (this.membershipAuthLoading) {
+      return;
+    }
+
+    this.membershipAuthOpen = false;
+    this.membershipAuthError = '';
+  }
+
+  switchMembershipAuthMode(mode: MembershipAuthMode): void {
+    this.membershipAuthMode = mode;
+    this.membershipAuthError = '';
+    this.membershipAuthNotice = '';
+  }
+
+  async submitMembershipAuth(): Promise<void> {
+    const email = this.membershipAuthEmail.trim().toLowerCase();
+    const password = this.membershipAuthPassword;
+
+    if (!this.isValidEmail(email)) {
+      this.membershipAuthError = 'Please enter a valid email address.';
+      return;
+    }
+
+    if (password.length < 8) {
+      this.membershipAuthError = 'Please use a password with at least 8 characters.';
+      return;
+    }
+
+    this.membershipAuthLoading = true;
+    this.membershipAuthError = '';
+    this.membershipAuthNotice = '';
+
+    try {
+      if (this.membershipAuthMode === 'sign-up') {
+        const result = await this.authService.signUp(email, password);
+        this.membershipAuthNotice = result.requiresEmailConfirmation
+          ? 'Account created. Check your email to confirm your account, then sign in to use membership booking.'
+          : 'Account created. You are now signed in.';
+      } else {
+        await this.authService.signInWithPassword(email, password);
+        this.membershipAuthNotice = 'You are signed in and ready to use membership booking.';
+      }
+
+      if (this.authService.currentUser) {
+        this.membershipAuthOpen = false;
+        this.pricingFlowMessage = `Signed in as ${this.membershipEmail()}. You can now start or use your membership.`;
+      }
+    } catch (error) {
+      this.membershipAuthError = (error as Error).message || 'Could not sign you in right now.';
+    } finally {
+      this.membershipAuthLoading = false;
+    }
+  }
+
+  async signOutMembership(): Promise<void> {
+    try {
+      await this.authService.signOut();
+      this.pricingFlowMessage = 'You have been signed out of your membership account.';
+    } catch (error) {
+      this.pricingFlowMessage = (error as Error).message || 'Could not sign out right now.';
     }
   }
 

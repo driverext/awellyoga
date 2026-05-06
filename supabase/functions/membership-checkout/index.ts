@@ -1,8 +1,8 @@
 import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 
 interface MembershipCheckoutPayload {
   plan?: 'intro' | 'standard';
-  email?: string;
 }
 
 Deno.serve(async (req) => {
@@ -22,13 +22,29 @@ Deno.serve(async (req) => {
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY') || '';
     const monthlyPriceId = Deno.env.get('MEMBERSHIP_MONTHLY_PRICE_ID') || '';
     const introCouponId = Deno.env.get('MEMBERSHIP_INTRO_COUPON_ID') || '';
-    if (!stripeSecretKey || !monthlyPriceId) {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || '';
+    if (!stripeSecretKey || !monthlyPriceId || !supabaseUrl || !supabaseAnonKey) {
       return json(req, { error: 'Membership checkout is not configured yet.' }, 500);
+    }
+
+    const authHeader = req.headers.get('Authorization') || '';
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError || !user?.email) {
+      return json(req, { error: 'Please sign in before starting a membership.' }, 401);
     }
 
     const payload = (await req.json()) as MembershipCheckoutPayload;
     const plan = payload.plan === 'intro' ? 'intro' : 'standard';
-    const email = (payload.email || '').trim().toLowerCase();
+    const email = user.email.trim().toLowerCase();
 
     const origin = resolveRedirectOrigin(req);
     const successUrl = `${origin}/schedule?membership=success#membership-options`;
@@ -42,9 +58,8 @@ Deno.serve(async (req) => {
     body.set('line_items[0][quantity]', '1');
     body.set('metadata[membership_plan]', plan);
     body.set('metadata[source]', 'schedule-membership');
-    if (isValidEmail(email)) {
-      body.set('customer_email', email);
-    }
+    body.set('metadata[user_id]', user.id);
+    body.set('customer_email', email);
 
     if (plan === 'intro') {
       if (!introCouponId) {
@@ -89,10 +104,6 @@ function resolveRedirectOrigin(req: Request): string {
   }
 
   return 'https://awellyoga.com';
-}
-
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function json(req: Request, body: unknown, status = 200): Response {

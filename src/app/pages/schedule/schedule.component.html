@@ -133,7 +133,7 @@
   <section class="booking-modal" (click)="$event.stopPropagation()">
     <h3>Book {{ bookingEvent.title }}</h3>
     <p *ngIf="canUseMembership(bookingEvent)">
-      Enter your email to either pay the drop-in rate or reserve this spot using an active membership.
+      Use the drop-in checkout below, or reserve this spot with your signed-in membership account.
     </p>
     <p *ngIf="!canUseMembership(bookingEvent)">
       Enter your email to continue to Stripe checkout. Stripe will also ask for your full name before payment.
@@ -149,6 +149,12 @@
         required
       >
       <p class="booking-error" *ngIf="bookingError">{{ bookingError }}</p>
+      <p class="booking-auth-note" *ngIf="canUseMembership(bookingEvent) && isMembershipSignedIn()">
+        Membership account: <strong>{{ membershipEmail() }}</strong>
+      </p>
+      <p class="booking-auth-note" *ngIf="canUseMembership(bookingEvent) && !isMembershipSignedIn()">
+        You’ll need to sign in before using membership booking.
+      </p>
       <div class="booking-modal-actions">
         <button type="button" class="btn btn-secondary" [disabled]="bookingLoading" (click)="closeBookingModal()">Cancel</button>
         <button
@@ -265,8 +271,24 @@
       <h2>Memberships and Drop-Ins</h2>
       <p>
         Keep studio class booking simple: use a $25 drop-in when you want flexibility, or start a membership and
-        reserve eligible classes with the same email you used at checkout.
+        reserve eligible classes through your membership account.
       </p>
+      <div class="membership-account-card">
+        <p *ngIf="authState.loading">Loading membership account…</p>
+        <ng-container *ngIf="!authState.loading && isMembershipSignedIn(); else signedOutMembershipState">
+          <p><strong>Signed in:</strong> {{ membershipEmail() }}</p>
+          <div class="membership-account-actions">
+            <button type="button" class="btn btn-secondary" (click)="signOutMembership()">Sign Out</button>
+          </div>
+        </ng-container>
+        <ng-template #signedOutMembershipState>
+          <p>Membership booking now uses account login instead of re-entering your email every time.</p>
+          <div class="membership-account-actions">
+            <button type="button" class="btn btn-secondary" (click)="openMembershipAuth('sign-in')">Sign In</button>
+            <button type="button" class="btn btn-secondary" (click)="openMembershipAuth('sign-up')">Create Account</button>
+          </div>
+        </ng-template>
+      </div>
     </div>
 
     <div class="membership-grid">
@@ -281,23 +303,95 @@
         <p class="membership-kicker">Monthly Membership</p>
         <h3>$140<span>/month</span></h3>
         <p>Built for regular students who want a consistent studio rhythm without repurchasing each class.</p>
-        <button type="button" class="btn btn-primary" (click)="startMembershipCheckout('standard')">Start Membership</button>
+        <button type="button" class="btn btn-primary" (click)="startMembershipCheckout('standard')">
+          {{ isMembershipSignedIn() ? 'Start Membership' : 'Sign In To Start' }}
+        </button>
       </article>
 
       <article class="membership-card">
         <p class="membership-kicker">First Month Offer</p>
         <h3>$49<span> first month</span></h3>
         <p>For first-time monthly members who want an easier on-ramp into the studio schedule.</p>
-        <button type="button" class="btn btn-secondary" (click)="startMembershipCheckout('intro')">Claim Intro Offer</button>
+        <button type="button" class="btn btn-secondary" (click)="startMembershipCheckout('intro')">
+          {{ isMembershipSignedIn() ? 'Claim Intro Offer' : 'Sign In For Intro Offer' }}
+        </button>
       </article>
     </div>
 
     <p class="membership-footnote text-center">
-      Already a member? Open any eligible studio class, enter your membership email, and choose
+      Already a member? Open any eligible studio class, sign in to your account, and choose
       <strong>Use Membership</strong> instead of paying the drop-in rate.
     </p>
   </div>
 </section>
+
+<div class="booking-modal-overlay" *ngIf="membershipAuthOpen" (click)="closeMembershipAuth()">
+  <section class="booking-modal membership-auth-modal" (click)="$event.stopPropagation()">
+    <div class="membership-auth-tabs">
+      <button
+        type="button"
+        class="membership-auth-tab"
+        [class.active]="membershipAuthMode === 'sign-in'"
+        (click)="switchMembershipAuthMode('sign-in')"
+      >
+        Sign In
+      </button>
+      <button
+        type="button"
+        class="membership-auth-tab"
+        [class.active]="membershipAuthMode === 'sign-up'"
+        (click)="switchMembershipAuthMode('sign-up')"
+      >
+        Create Account
+      </button>
+    </div>
+
+    <h3 *ngIf="membershipAuthMode === 'sign-in'">Sign In To Your Membership Account</h3>
+    <h3 *ngIf="membershipAuthMode === 'sign-up'">Create Your Membership Account</h3>
+    <p *ngIf="membershipAuthMode === 'sign-in'">
+      Sign in first, then you can start a membership or reserve member classes without typing your email each time.
+    </p>
+    <p *ngIf="membershipAuthMode === 'sign-up'">
+      Create the account you’ll use for membership checkout and ongoing member bookings.
+    </p>
+
+    <form (ngSubmit)="submitMembershipAuth()">
+      <label for="membership-auth-email">Email</label>
+      <input
+        id="membership-auth-email"
+        name="membershipAuthEmail"
+        type="email"
+        [(ngModel)]="membershipAuthEmail"
+        placeholder="you@example.com"
+        required
+      >
+
+      <label for="membership-auth-password">Password</label>
+      <input
+        id="membership-auth-password"
+        name="membershipAuthPassword"
+        type="password"
+        [(ngModel)]="membershipAuthPassword"
+        placeholder="At least 8 characters"
+        required
+      >
+
+      <p class="booking-error" *ngIf="membershipAuthError">{{ membershipAuthError }}</p>
+      <p class="membership-auth-notice" *ngIf="membershipAuthNotice">{{ membershipAuthNotice }}</p>
+
+      <div class="booking-modal-actions">
+        <button type="button" class="btn btn-secondary" [disabled]="membershipAuthLoading" (click)="closeMembershipAuth()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="membershipAuthLoading">
+          {{
+            membershipAuthLoading
+              ? (membershipAuthMode === 'sign-up' ? 'Creating Account...' : 'Signing In...')
+              : (membershipAuthMode === 'sign-up' ? 'Create Account' : 'Sign In')
+          }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
 
 <!-- Registration Process -->
 <section class="section registration-section">
