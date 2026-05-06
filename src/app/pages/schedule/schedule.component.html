@@ -100,6 +100,7 @@
                 {{ event.startDate | date: 'h:mm a' }}
                 <span *ngIf="event.endDate"> - {{ event.endDate | date: 'h:mm a' }}</span>
               </p>
+              <p class="event-teacher" *ngIf="event.instructorName">With {{ event.instructorName }}</p>
               <p class="event-location" *ngIf="event.location">{{ event.location }}</p>
               <p class="event-price" *ngIf="event.priceLabel">{{ event.priceLabel }}</p>
               <p class="event-spots" *ngIf="isEventFull(event)">
