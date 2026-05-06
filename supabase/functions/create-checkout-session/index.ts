@@ -180,7 +180,7 @@ Deno.serve(async (req) => {
     if (isRetreatCheckout) {
       body.set('custom_fields[0][key]', 'whatsapp');
       body.set('custom_fields[0][label][type]', 'custom');
-      body.set('custom_fields[0][label][custom]', 'WhatsApp (optional, helpful for international retreat coordination)');
+      body.set('custom_fields[0][label][custom]', 'WhatsApp (optional for retreat coordination)');
       body.set('custom_fields[0][type]', 'text');
       body.set('custom_fields[0][optional]', 'true');
     }
