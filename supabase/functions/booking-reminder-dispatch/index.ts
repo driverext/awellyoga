@@ -35,6 +35,16 @@ type EventGroup = {
   attendees: Array<{ name: string; email: string }>;
 };
 
+type SanityClassRow = {
+  id: string;
+  title: string;
+  eventType: string | null;
+  instructorName: string | null;
+  start: string;
+  end: string | null;
+  location: string | null;
+};
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return json({ error: 'Method not allowed.' }, 405);
@@ -96,11 +106,19 @@ Deno.serve(async (req) => {
         html: hourBefore.html
       });
 
+      const noBookings = buildNoBookingsEmail(sampleEvent, timezone);
+      await sendEmailViaConfiguredProvider({
+        toEmail: testRecipient,
+        subject: `[TEST] ${buildNoBookingsSubject(sampleEvent, timezone)}`,
+        text: noBookings.text,
+        html: noBookings.html
+      });
+
       return json({
         ok: true,
         mode: 'send-test',
         sentTo: testRecipient,
-        templates: ['booking_alert', 'night_before', 'hour_before']
+        templates: ['booking_alert', 'night_before', 'hour_before', 'no_bookings_night_before']
       });
     }
 
@@ -128,6 +146,8 @@ Deno.serve(async (req) => {
     }
 
     const groupedEvents = groupBookings(bookings);
+    const upcomingClasses = await fetchUpcomingClasses();
+    const bookedKeys = new Set(groupedEvents.map((event) => eventKey(event.eventId, event.start)));
     let sent = 0;
 
     for (const event of groupedEvents) {
@@ -144,6 +164,20 @@ Deno.serve(async (req) => {
 
       if (shouldSendHourBefore && hoursUntilStart > 0) {
         sent += await sendReminderIfNeeded(admin, event, 'hour_before', timezone);
+      }
+    }
+
+    if (isNightBeforeWindow(now, timezone)) {
+      for (const event of upcomingClasses) {
+        if (!isTomorrowInTimezone(event.start, timezone)) {
+          continue;
+        }
+
+        if (bookedKeys.has(eventKey(event.id, event.start))) {
+          continue;
+        }
+
+        sent += await sendNoBookingsAlertIfNeeded(admin, event, timezone);
       }
     }
 
@@ -215,6 +249,11 @@ function buildSubject(event: EventGroup, notificationType: NotificationType, tim
   const startsAt = formatDateTime(event.start, timezone);
   const prefix = notificationType === 'night_before' ? 'Tomorrow' : 'Starts Soon';
   return `${prefix}: ${event.title}${event.instructorName ? ` with ${event.instructorName}` : ''} (${startsAt})`;
+}
+
+function buildNoBookingsSubject(event: Pick<EventGroup, 'title' | 'instructorName' | 'start'>, timezone: string): string {
+  const startsAt = formatDateTime(event.start, timezone);
+  return `No bookings yet: ${event.title}${event.instructorName ? ` with ${event.instructorName}` : ''} (${startsAt})`;
 }
 
 async function sendSampleBookingAlert(toEmail: string, timezone: string): Promise<void> {
@@ -317,6 +356,37 @@ function buildRosterEmail(event: EventGroup, notificationType: NotificationType,
   };
 }
 
+function buildNoBookingsEmail(event: Pick<EventGroup, 'title' | 'instructorName' | 'start' | 'end' | 'location'>, timezone: string) {
+  const startsAt = formatDateTime(event.start, timezone);
+  const endsAt = formatDateTime(event.end, timezone);
+  const whenLabel = buildWhenLabel('', startsAt, endsAt);
+  const location = event.location?.trim() || 'A-WELL Yoga';
+
+  return {
+    text: [
+      'No bookings yet for tomorrow.',
+      '',
+      `Class: ${event.title}`,
+      event.instructorName ? `Teacher: ${event.instructorName}` : null,
+      whenLabel ? `When: ${whenLabel}` : null,
+      `Where: ${location}`
+    ]
+      .filter(Boolean)
+      .join('\n'),
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2937;">
+        <h2 style="margin:0 0 12px;">No bookings yet for tomorrow</h2>
+        <div style="background:#fcf9f4;border:1px solid #eee3d8;border-radius:12px;padding:14px 16px;">
+          <p style="margin:0 0 6px;"><strong>Class:</strong> ${escapeHtml(event.title)}</p>
+          ${event.instructorName ? `<p style="margin:0 0 6px;"><strong>Teacher:</strong> ${escapeHtml(event.instructorName)}</p>` : ''}
+          ${whenLabel ? `<p style="margin:0 0 6px;"><strong>When:</strong> ${escapeHtml(whenLabel)}</p>` : ''}
+          <p style="margin:0;"><strong>Where:</strong> ${escapeHtml(location)}</p>
+        </div>
+      </div>
+    `
+  };
+}
+
 function groupBookings(bookings: BookingRow[]): EventGroup[] {
   const byEvent = new Map<string, EventGroup>();
 
@@ -351,8 +421,99 @@ function groupBookings(bookings: BookingRow[]): EventGroup[] {
   return [...byEvent.values()];
 }
 
+async function fetchUpcomingClasses(): Promise<SanityClassRow[]> {
+  const projectId = 'el2cwhs4';
+  const dataset = 'production';
+  const apiVersion = '2025-01-01';
+  const query = `*[_type == "retreatEvent" && isActive == true && eventType == "Yoga Class" && defined(startDate) && coalesce(endDate, startDate) >= now()] | order(startDate asc)[0...200]{
+    "id": _id,
+    title,
+    eventType,
+    "instructorName": instructor->name,
+    "start": startDate,
+    "end": endDate,
+    location
+  }`;
+
+  const url = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(query)}`;
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/json'
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Sanity class fetch failed with ${response.status}.`);
+  }
+
+  const json = await response.json();
+  return ((json?.result || []) as SanityClassRow[]).filter((row) => !!row.id && !!row.start);
+}
+
+async function sendNoBookingsAlertIfNeeded(
+  admin: ReturnType<typeof createClient>,
+  event: SanityClassRow,
+  timezone: string
+): Promise<number> {
+  const recipients = getInternalRecipients(event.instructorName, event.eventType);
+  if (!recipients.length) {
+    return 0;
+  }
+
+  const notificationType = 'no_bookings_night_before';
+  const subject = buildNoBookingsSubject(event, timezone);
+  const { text, html } = buildNoBookingsEmail(event, timezone);
+  let sent = 0;
+
+  for (const toEmail of recipients) {
+    const { data: existingLog, error: logError } = await admin
+      .schema('internal')
+      .from('booking_notification_logs')
+      .select('id')
+      .eq('sanity_event_id', event.id)
+      .eq('event_start', event.start)
+      .eq('notification_type', notificationType)
+      .eq('recipient_email', toEmail)
+      .limit(1);
+
+    if (logError) {
+      throw new Error(logError.message);
+    }
+
+    if (existingLog && existingLog.length > 0) {
+      continue;
+    }
+
+    await sendEmailViaConfiguredProvider({
+      toEmail,
+      subject,
+      text,
+      html
+    });
+
+    const { error: insertError } = await admin.schema('internal').from('booking_notification_logs').insert({
+      sanity_event_id: event.id,
+      event_start: event.start,
+      notification_type: notificationType,
+      recipient_email: toEmail
+    });
+
+    if (insertError) {
+      throw new Error(insertError.message);
+    }
+
+    sent += 1;
+  }
+
+  return sent;
+}
+
 function normalizeAsClass(value: string | null): boolean {
   return (value || '').trim().toLowerCase().includes('class');
+}
+
+function eventKey(eventId: string, start: string): string {
+  return `${eventId}::${start}`;
 }
 
 function isNightBeforeWindow(now: Date, timezone: string): boolean {
