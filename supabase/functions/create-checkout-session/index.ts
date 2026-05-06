@@ -114,6 +114,8 @@ Deno.serve(async (req) => {
       .insert({
         sanity_event_id: payload.eventId,
         event_title: payload.title,
+        event_type: payload.eventType || null,
+        instructor_name: payload.instructorName || null,
         event_start: payload.startDate || null,
         event_end: payload.endDate || null,
         event_location: payload.location || null,

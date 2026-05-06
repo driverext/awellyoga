@@ -237,6 +237,8 @@ export class BookingService {
       body: JSON.stringify({
         eventId: event.id,
         title: event.title,
+        eventType: event.eventType,
+        instructorName: event.instructorName,
         startDate: event.startDate,
         endDate: event.endDate,
         location: event.location,
