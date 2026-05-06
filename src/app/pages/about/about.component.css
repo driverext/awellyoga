@@ -41,6 +41,15 @@
   margin-bottom: 1.5rem;
 }
 
+.section-kicker {
+  margin-bottom: 0.75rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #87614b;
+  font-weight: 700;
+}
+
 .content-text p {
   margin-bottom: 1.5rem;
   line-height: 1.8;
@@ -64,6 +73,41 @@
 
 .team-section {
   background-color: white;
+}
+
+.method-section {
+  background: linear-gradient(180deg, #fffaf6 0%, #f2e8db 100%);
+}
+
+.method-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.2rem;
+}
+
+.method-card {
+  background: #fffdf9;
+  border: 1px solid #e7dac8;
+  border-radius: 28px;
+  padding: 2rem;
+  box-shadow: var(--box-shadow);
+}
+
+.method-card.accent {
+  background: linear-gradient(160deg, #4c3427, #2a1d17);
+  color: #fff4ea;
+}
+
+.method-card.accent h2,
+.method-card.accent p,
+.method-card.accent .section-kicker {
+  color: inherit;
+}
+
+.method-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  line-height: 1.9;
 }
 
 .studio-section {

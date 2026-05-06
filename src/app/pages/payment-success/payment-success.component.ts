@@ -54,12 +54,12 @@ export class PaymentSuccessComponent implements OnInit {
 
   get supportLine(): string {
     if (this.isRetreat) {
-      return 'We will follow up with any retreat-specific preparation details by email.';
+      return 'Your spot is held. We will follow up with retreat preparation details, timing notes, and anything else you need before arrival.';
     }
     if (this.isWorkshop) {
-      return 'Your spot is held. Keep an eye on your inbox for any workshop-specific notes.';
+      return 'Your spot is held. Keep an eye on your inbox for workshop-specific notes and any arrival details.';
     }
-    return 'Your spot is confirmed. If you need to make a change, just reply to the confirmation email.';
+    return 'Your spot is confirmed. Keep the confirmation email handy in case you need the location, time, or any follow-up details.';
   }
 
   money(cents: number | null | undefined): number {

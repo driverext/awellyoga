@@ -52,7 +52,7 @@ export class AboutComponent implements OnInit, OnDestroy {
     this.seo.updatePage({
       title: 'About A-WELL Yoga',
       description:
-        'Meet the teachers behind A-WELL Yoga in Sanford, Florida, and learn more about the studio’s nervous-system-aware, therapeutic approach to yoga.',
+        'Meet the teachers behind A-WELL Yoga in Sanford, Florida, and learn more about the studio’s grounded, therapeutic, nervous-system-aware approach to yoga.',
       path: '/about',
       image: '/assets/teachers/arieta/arieta-bio.jpg'
     });

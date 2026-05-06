@@ -88,6 +88,12 @@
   font-size: 0.92rem;
 }
 
+.hero-cta-note {
+  margin: 0.8rem 0 0;
+  color: rgba(255, 244, 235, 0.88);
+  font-size: 0.95rem;
+}
+
 .sticky-retreat-cta {
   position: fixed;
   left: 0;
@@ -253,6 +259,21 @@ h2 {
   margin: 3rem auto 0;
   padding-top: 2rem;
   border-top: 1px solid rgba(133, 96, 71, 0.12);
+}
+
+.booking-confidence-card {
+  max-width: 860px;
+  margin: 2rem auto 0;
+  padding: 1.6rem 1.8rem;
+  border: 1px solid rgba(133, 96, 71, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 252, 249, 0.92);
+  box-shadow: 0 18px 44px rgba(51, 31, 22, 0.06);
+}
+
+.booking-confidence-card h3 {
+  color: var(--primary-green);
+  margin-bottom: 1rem;
 }
 
 .experience-copy h3 {
@@ -512,6 +533,18 @@ h2 {
   border: 1px solid rgba(133, 96, 71, 0.12);
   border-radius: 28px;
   text-align: left;
+}
+
+.pricing-note-panel {
+  margin-top: 1.4rem;
+  padding: 1.2rem 1.35rem;
+  border-radius: 22px;
+  background: #fffaf5;
+  border: 1px solid rgba(133, 96, 71, 0.12);
+}
+
+.pricing-note-panel p {
+  margin: 0.45rem 0 0;
 }
 
 .price-special h3 {

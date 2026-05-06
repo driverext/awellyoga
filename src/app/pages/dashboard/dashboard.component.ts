@@ -16,6 +16,7 @@ interface DashboardClassEvent {
   id: string;
   title: string;
   eventType: string;
+  instructorName?: string;
   startDate: string;
   endDate?: string;
   location?: string;
@@ -45,6 +46,7 @@ export class DashboardComponent implements OnInit {
   attendanceModalOpen = false;
   selectedAttendanceEvent: DashboardClassEvent | null = null;
   eventFilter = '';
+  teacherFilter = '';
   dateFilter = '';
   statusFilter = 'all';
 
@@ -101,6 +103,24 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  get uniqueTeachers(): string[] {
+    return [...new Set(this.classEvents.map((event) => event.instructorName || '').filter(Boolean))].sort((a, b) =>
+      a.localeCompare(b)
+    );
+  }
+
+  get todayClasses(): DashboardClassEvent[] {
+    const todayKey = this.dateKey(new Date());
+    return this.classEvents.filter((event) => this.dateKey(new Date(event.startDate)) === todayKey).sort((a, b) => a.startDate.localeCompare(b.startDate));
+  }
+
+  get tomorrowClasses(): DashboardClassEvent[] {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowKey = this.dateKey(tomorrow);
+    return this.classEvents.filter((event) => this.dateKey(new Date(event.startDate)) === tomorrowKey).sort((a, b) => a.startDate.localeCompare(b.startDate));
+  }
+
   money(cents: number | null | undefined): number {
     const value = typeof cents === 'number' ? cents : 0;
     return value / 100;
@@ -145,6 +165,7 @@ export class DashboardComponent implements OnInit {
 
   clearFilters(): void {
     this.eventFilter = '';
+    this.teacherFilter = '';
     this.dateFilter = '';
     this.statusFilter = 'all';
     this.syncCalendarSelection();
@@ -278,6 +299,7 @@ export class DashboardComponent implements OnInit {
         id: event.id || key,
         title: event.title,
         eventType: event.eventType,
+        instructorName: event.instructorName,
         startDate: event.startDate,
         endDate: event.endDate,
         location: event.location,
@@ -300,6 +322,7 @@ export class DashboardComponent implements OnInit {
         id: key,
         title: booking.eventTitle,
         eventType: 'Class',
+        instructorName: undefined,
         startDate: booking.eventStart,
         attendees: [booking]
       });
@@ -354,6 +377,9 @@ export class DashboardComponent implements OnInit {
   private visibleClassEvents(): DashboardClassEvent[] {
     return this.classEvents.filter((event) => {
       if (this.eventFilter && event.title !== this.eventFilter) {
+        return false;
+      }
+      if (this.teacherFilter && event.instructorName !== this.teacherFilter) {
         return false;
       }
       if (this.dateFilter && this.dateKey(new Date(event.startDate)) !== this.dateFilter) {

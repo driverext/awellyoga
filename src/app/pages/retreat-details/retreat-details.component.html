@@ -24,6 +24,7 @@
       <button type="button" class="btn btn-primary" (click)="openPaymentModal()">
         Reserve Your Spot
       </button>
+      <p class="hero-cta-note">Secure checkout today. Follow-up details and preparation notes come by email after booking.</p>
     </div>
   </div>
 </section>
@@ -58,6 +59,14 @@
       <div class="experience-copy" *ngIf="retreat?.experienceTitle || retreat?.experienceDescription">
         <h3 *ngIf="retreat?.experienceTitle">{{retreat?.experienceTitle}}</h3>
         <p *ngIf="retreat?.experienceDescription">{{retreat?.experienceDescription}}</p>
+      </div>
+      <div class="booking-confidence-card">
+        <h3>Booking confidence</h3>
+        <ul class="experience-list">
+          <li>Your payment secures your spot instantly.</li>
+          <li>You will receive a confirmation email right after checkout.</li>
+          <li>Retreat-specific planning details follow up by email as the retreat approaches.</li>
+        </ul>
       </div>
       <div class="tagline">
         <h3>No performance. No expectation. Just real tools that help you return differently.</h3>
@@ -177,6 +186,12 @@
         <ul class="price-includes" *ngIf="retreat?.pricingIncludes?.length">
           <li *ngFor="let item of retreat?.pricingIncludes">✔ {{item}}</li>
         </ul>
+      </div>
+      <div class="pricing-note-panel">
+        <div>
+          <strong>Need time before booking?</strong>
+          <p>Review the room options, choose the occupancy that fits best, and book when you are ready. Your confirmation email will handle the next steps from there.</p>
+        </div>
       </div>
       <div class="booking-cta">
         <button type="button" class="btn btn-primary" (click)="openPaymentModal()">

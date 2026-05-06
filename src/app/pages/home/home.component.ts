@@ -16,9 +16,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.seo.updatePage({
-      title: 'Sanford Yoga Classes, Workshops, Retreats, and Therapeutic Movement',
+      title: 'Sanford Yoga Classes, Private Sessions, Workshops, and Retreats',
       description:
-        'A-WELL Yoga offers studio classes, workshops, private sessions, retreats, and NeuroYoga-based therapeutic support in Sanford, Florida.',
+        'A-WELL Yoga offers Sanford yoga classes, private sessions, workshops, retreats, and therapeutic nervous-system-aware support for students seeking grounded, approachable practice.',
       path: '/',
       image: '/assets/home/studio.jpg'
     });

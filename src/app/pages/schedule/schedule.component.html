@@ -53,8 +53,9 @@
     <div class="booking-steps-card">
       <h3>How To Book</h3>
       <p>1. Click a date on the calendar.</p>
-      <p>2. Choose your class from that day.</p>
-      <p>3. Click <strong>Book</strong> and complete checkout.</p>
+      <p>2. Open the class or event you want.</p>
+      <p>3. Choose drop-in checkout or membership booking.</p>
+      <p>4. Stripe confirms your payment and your confirmation email follows right after.</p>
     </div>
 
     <h2 class="text-center">Find a Class</h2>
@@ -133,10 +134,10 @@
   <section class="booking-modal" (click)="$event.stopPropagation()">
     <h3>Book {{ bookingEvent.title }}</h3>
     <p *ngIf="canUseMembership(bookingEvent)">
-      Use the drop-in checkout below, or reserve this spot with your signed-in membership account.
+      You can continue with the drop-in checkout below, or reserve this spot with your signed-in membership account.
     </p>
     <p *ngIf="!canUseMembership(bookingEvent)">
-      Enter your email to continue to Stripe checkout. Stripe will also ask for your full name before payment.
+      Enter your email to continue to Stripe checkout. Stripe will collect your name and phone number there so your booking details stay complete.
     </p>
     <form (ngSubmit)="submitBooking()">
       <label for="booking-email">Email</label>
@@ -150,7 +151,7 @@
       >
       <p class="booking-error" *ngIf="bookingError">{{ bookingError }}</p>
       <p class="booking-auth-note" *ngIf="canUseMembership(bookingEvent) && isMembershipSignedIn()">
-        Membership account: <strong>{{ membershipEmail() }}</strong>
+        Signed in as: <strong>{{ membershipEmail() }}</strong>
       </p>
       <p class="booking-auth-note" *ngIf="canUseMembership(bookingEvent) && !isMembershipSignedIn()">
         You’ll need to sign in before using membership booking.
@@ -167,7 +168,7 @@
           {{ bookingLoading ? 'Checking Membership...' : 'Use Membership' }}
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="bookingLoading">
-          {{ bookingLoading ? 'Starting Checkout...' : 'Drop-In $25' }}
+          {{ bookingLoading ? 'Starting Secure Checkout...' : 'Continue To Secure Checkout' }}
         </button>
       </div>
     </form>

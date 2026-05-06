@@ -31,7 +31,7 @@ export class OfferingsComponent {
     this.seo.updatePage({
       title: 'Yoga Classes and Offerings',
       description:
-        'Explore A-WELL Yoga class styles, therapeutic formats, and movement practices designed for real-life nervous system support.',
+        'Explore yoga classes, private sessions, and therapeutic movement offerings from A-WELL Yoga in Sanford, Florida.',
       path: '/offerings'
     });
 

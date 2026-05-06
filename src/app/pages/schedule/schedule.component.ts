@@ -53,10 +53,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   private readonly defaultClassCapacity = 6;
 
   pageTitle = 'Schedule';
-  pageSubtitle = 'Flexible options to support your yoga journey';
+  pageSubtitle = 'Sanford studio classes, workshops, private sessions, and therapeutic offerings';
   scheduleHeading = 'Class Schedule';
   scheduleBody =
-    "We offer a variety of classes throughout the week to accommodate your busy lifestyle. From early morning sessions to evening wind-downs, you'll find the perfect time to practice.";
+    "Browse the live Sanford class schedule, studio events, and private-session options. Weekly classes, specialty offerings, and therapeutic formats all live here in one place.";
   scheduleButtonLabel = 'View Full Schedule';
   scheduleButtonUrl = '/schedule#calendar';
   scheduleNote = 'Schedule updated monthly. Classes subject to change.';

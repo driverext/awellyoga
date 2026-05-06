@@ -1,7 +1,7 @@
 <section class="page-header">
   <div class="container">
     <h1>Booking Dashboard</h1>
-    <p>Internal operations view for bookings, revenue, attendance, and private session requests.</p>
+    <p>Internal operations view for bookings, teaching schedules, attendance, revenue, and private session requests.</p>
   </div>
 </section>
 
@@ -14,6 +14,14 @@
           <select [(ngModel)]="eventFilter" (ngModelChange)="buildCalendarDays()">
             <option value="">All classes</option>
             <option *ngFor="let title of uniqueEventTitles" [value]="title">{{ title }}</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Teacher</span>
+          <select [(ngModel)]="teacherFilter" (ngModelChange)="buildCalendarDays()">
+            <option value="">All teachers</option>
+            <option *ngFor="let teacher of uniqueTeachers" [value]="teacher">{{ teacher }}</option>
           </select>
         </label>
 
@@ -63,6 +71,34 @@
       </article>
     </div>
 
+    <div class="operations-grid" *ngIf="!loading && !error">
+      <article class="ops-card">
+        <h2>Today’s Classes</h2>
+        <div *ngFor="let event of todayClasses" class="ops-row">
+          <div>
+            <strong>{{ event.title }}</strong>
+            <p>{{ event.startDate | date:'h:mm a' }}<span *ngIf="event.endDate"> - {{ event.endDate | date:'h:mm a' }}</span></p>
+            <p *ngIf="event.instructorName">With {{ event.instructorName }}</p>
+          </div>
+          <span class="ops-count">{{ event.attendees.length }} booked</span>
+        </div>
+        <p *ngIf="todayClasses.length === 0" class="empty-note">No classes scheduled today.</p>
+      </article>
+
+      <article class="ops-card">
+        <h2>Tomorrow’s Classes</h2>
+        <div *ngFor="let event of tomorrowClasses" class="ops-row">
+          <div>
+            <strong>{{ event.title }}</strong>
+            <p>{{ event.startDate | date:'h:mm a' }}<span *ngIf="event.endDate"> - {{ event.endDate | date:'h:mm a' }}</span></p>
+            <p *ngIf="event.instructorName">With {{ event.instructorName }}</p>
+          </div>
+          <span class="ops-count">{{ event.attendees.length }} booked</span>
+        </div>
+        <p *ngIf="tomorrowClasses.length === 0" class="empty-note">No classes scheduled tomorrow.</p>
+      </article>
+    </div>
+
     <div class="table-card" *ngIf="!loading && !error">
       <h2>Class Calendar</h2>
       <div class="calendar-toolbar">
@@ -103,6 +139,7 @@
               {{ event.startDate | date:'h:mm a' }}<span *ngIf="event.endDate"> - {{ event.endDate | date:'h:mm a' }}</span>
               <span *ngIf="event.location"> · {{ event.location }}</span>
             </p>
+            <p class="event-meta" *ngIf="event.instructorName">With {{ event.instructorName }}</p>
           </div>
           <button type="button" class="btn btn-primary" (click)="openAttendance(event)">View Attendance</button>
         </div>
