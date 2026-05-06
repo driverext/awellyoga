@@ -47,6 +47,7 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const payload = await safeJson(req);
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
     if (!supabaseUrl || !serviceRoleKey) {
@@ -55,6 +56,53 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, serviceRoleKey);
     const timezone = (Deno.env.get('BOOKING_EMAIL_TIMEZONE') || DEFAULT_STUDIO_TIMEZONE).trim();
+
+    if (payload?.mode === 'send-test') {
+      const testRecipient = (payload?.recipientEmail || 'info@awellyoga.com').trim().toLowerCase();
+      if (!testRecipient) {
+        return json({ error: 'recipientEmail is required for send-test mode.' }, 400);
+      }
+
+      const sampleEvent: EventGroup = {
+        eventId: 'test-class-123',
+        title: 'Gentle Vinyasa Flow',
+        eventType: 'Yoga Class',
+        instructorName: 'Arieta Berisha Kirk',
+        start: '2026-05-12T10:00:00-04:00',
+        end: '2026-05-12T11:15:00-04:00',
+        location: 'A-WELL Yoga Studio',
+        attendees: [
+          { name: 'Jane Student', email: 'jane@example.com' },
+          { name: 'Maria Client', email: 'maria@example.com' },
+          { name: 'Nicole Practice', email: 'nicole@example.com' }
+        ]
+      };
+
+      await sendSampleBookingAlert(testRecipient, timezone);
+      const nightBefore = buildRosterEmail(sampleEvent, 'night_before', timezone);
+      const hourBefore = buildRosterEmail(sampleEvent, 'hour_before', timezone);
+
+      await sendEmailViaConfiguredProvider({
+        toEmail: testRecipient,
+        subject: `[TEST] ${buildSubject(sampleEvent, 'night_before', timezone)}`,
+        text: nightBefore.text,
+        html: nightBefore.html
+      });
+
+      await sendEmailViaConfiguredProvider({
+        toEmail: testRecipient,
+        subject: `[TEST] ${buildSubject(sampleEvent, 'hour_before', timezone)}`,
+        text: hourBefore.text,
+        html: hourBefore.html
+      });
+
+      return json({
+        ok: true,
+        mode: 'send-test',
+        sentTo: testRecipient,
+        templates: ['booking_alert', 'night_before', 'hour_before']
+      });
+    }
 
     const now = new Date();
     const lookAheadEnd = new Date(now.getTime() + 26 * 60 * 60 * 1000);
@@ -167,6 +215,49 @@ function buildSubject(event: EventGroup, notificationType: NotificationType, tim
   const startsAt = formatDateTime(event.start, timezone);
   const prefix = notificationType === 'night_before' ? 'Tomorrow' : 'Starts Soon';
   return `${prefix}: ${event.title}${event.instructorName ? ` with ${event.instructorName}` : ''} (${startsAt})`;
+}
+
+async function sendSampleBookingAlert(toEmail: string, timezone: string): Promise<void> {
+  const eventTitle = 'Gentle Vinyasa Flow';
+  const startsAt = formatDateTime('2026-05-12T10:00:00-04:00', timezone);
+  const endsAt = formatDateTime('2026-05-12T11:15:00-04:00', timezone);
+  const whenLabel = buildWhenLabel('', startsAt, endsAt);
+  const subject = '[TEST] Class Booking: Gentle Vinyasa Flow (Jane Student)';
+  const text = [
+    'Class Booking paid.',
+    '',
+    'Booking ID: test-booking-123',
+    'Customer: Jane Student',
+    'Customer Email: jane@example.com',
+    'Customer Phone: (321) 555-0134',
+    `Event: ${eventTitle}`,
+    `When: ${whenLabel}`,
+    'Location: A-WELL Yoga Studio',
+    'Amount: $25.00',
+    `Received: ${new Date().toISOString()}`
+  ].join('\n');
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2937;">
+      <h2 style="margin:0 0 12px;">Class Booking Paid</h2>
+      <p style="margin:0 0 6px;"><strong>Booking ID:</strong> test-booking-123</p>
+      <p style="margin:0 0 6px;"><strong>Customer:</strong> Jane Student</p>
+      <p style="margin:0 0 6px;"><strong>Customer Email:</strong> jane@example.com</p>
+      <p style="margin:0 0 6px;"><strong>Customer Phone:</strong> (321) 555-0134</p>
+      <p style="margin:0 0 6px;"><strong>Event:</strong> ${escapeHtml(eventTitle)}</p>
+      <p style="margin:0 0 6px;"><strong>When:</strong> ${escapeHtml(whenLabel)}</p>
+      <p style="margin:0 0 6px;"><strong>Location:</strong> A-WELL Yoga Studio</p>
+      <p style="margin:0;"><strong>Amount:</strong> $25.00</p>
+    </div>
+  `;
+
+  await sendEmailViaConfiguredProvider({
+    toEmail,
+    subject,
+    text,
+    html,
+    replyTo: 'jane@example.com'
+  });
 }
 
 function buildRosterEmail(event: EventGroup, notificationType: NotificationType, timezone: string) {
@@ -301,4 +392,12 @@ function json(body: unknown, status = 200): Response {
       'Content-Type': 'application/json'
     }
   });
+}
+
+async function safeJson(req: Request): Promise<Record<string, string> | null> {
+  try {
+    return (await req.json()) as Record<string, string>;
+  } catch {
+    return null;
+  }
 }
