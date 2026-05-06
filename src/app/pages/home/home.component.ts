@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
       title: 'Sanford Yoga Classes, Workshops, Retreats, and Therapeutic Movement',
       description:
         'A-WELL Yoga offers studio classes, workshops, private sessions, retreats, and NeuroYoga-based therapeutic support in Sanford, Florida.',
-      path: '/home',
+      path: '/',
       image: '/assets/home/studio.jpg'
     });
 

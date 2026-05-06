@@ -5,8 +5,8 @@ import { RetreatDetailsComponent } from './pages/retreat-details/retreat-details
 import { dashboardAuthGuard } from './guards/dashboard-auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'home', loadComponent: () => import('../app/pages/home/home.component').then(m => m.HomeComponent) },
+  { path: '', loadComponent: () => import('../app/pages/home/home.component').then(m => m.HomeComponent) },
+  { path: 'home', redirectTo: '', pathMatch: 'full' },
   { path: 'about', loadComponent: () => import('../app/pages/about/about.component').then(m => m.AboutComponent) },
   { path: 'offerings', loadComponent: () => import('../app/pages/offerings/offerings.component').then(m => m.OfferingsComponent) },
   { path: 'neuroyoga-program', loadComponent: () => import('../app/pages/neuroyoga-program/neuroyoga-program.component').then(m => m.NeuroyogaProgramComponent) },
@@ -26,7 +26,7 @@ export const routes: Routes = [
         (m) => m.DashboardComponent
       )
   },
-  { path: 'shop', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'shop', redirectTo: '', pathMatch: 'full' },
   { path: 'payment-success', loadComponent: () => import('../app/pages/payment-success/payment-success.component').then(m => m.PaymentSuccessComponent) },
-  { path: '**', redirectTo: '/home' }
+  { path: '**', redirectTo: '' }
 ];
