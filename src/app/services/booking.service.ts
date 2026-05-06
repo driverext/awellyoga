@@ -84,6 +84,13 @@ export interface MemberBooking {
   createdAt?: string | null;
 }
 
+export interface MembershipStatus {
+  active: boolean;
+  status?: string | null;
+  renewsAt?: string | null;
+  cancelAtPeriodEnd?: boolean;
+}
+
 export interface BookingDashboardResponse {
   overview: DashboardOverview;
   topEvents: DashboardEventSummary[];
@@ -120,6 +127,10 @@ interface MemberReservationResponse {
 }
 
 interface MyBookingsResponseItem extends MemberBooking {
+  error?: string;
+}
+
+interface MembershipStatusResponse extends MembershipStatus {
   error?: string;
 }
 
@@ -348,6 +359,29 @@ export class BookingService {
     }
 
     return data as MemberBooking[];
+  }
+
+  async getMembershipStatus(): Promise<MembershipStatus> {
+    if (!this.edgeFunctionsBaseUrl) {
+      throw new Error('Booking backend is not configured yet.');
+    }
+
+    const authHeaders = await this.buildAuthHeaders();
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/membership-status`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...authHeaders
+      },
+      body: '{}'
+    });
+
+    const data = (await response.json()) as MembershipStatusResponse;
+    if (!response.ok) {
+      throw new Error(data.error || 'Could not load your membership status.');
+    }
+
+    return data;
   }
 
   private async buildAuthHeaders(): Promise<Record<string, string>> {

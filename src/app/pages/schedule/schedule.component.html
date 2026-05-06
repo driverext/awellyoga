@@ -277,7 +277,14 @@
         <p *ngIf="authState.loading">Loading membership account…</p>
         <ng-container *ngIf="!authState.loading && isMembershipSignedIn(); else signedOutMembershipState">
           <p><strong>Signed in:</strong> {{ membershipEmail() }}</p>
+          <p *ngIf="membershipStatusLoading">Checking membership status…</p>
+          <ng-container *ngIf="!membershipStatusLoading && !membershipStatusError">
+            <p><strong>{{ membershipStatusLabel() }}</strong></p>
+            <p *ngIf="membershipRenewsLabel()">{{ membershipRenewsLabel() }}</p>
+          </ng-container>
+          <p class="booking-error" *ngIf="!membershipStatusLoading && membershipStatusError">{{ membershipStatusError }}</p>
           <div class="membership-account-actions">
+            <button type="button" class="btn btn-secondary" (click)="refreshMembershipStatus()">Refresh Status</button>
             <button type="button" class="btn btn-secondary" (click)="refreshMemberBookings()">Refresh Bookings</button>
             <button type="button" class="btn btn-secondary" (click)="signOutMembership()">Sign Out</button>
           </div>
@@ -304,8 +311,17 @@
         <p class="membership-kicker">Monthly Membership</p>
         <h3>$140<span>/month</span></h3>
         <p>Built for regular students who want a consistent studio rhythm without repurchasing each class.</p>
-        <button type="button" class="btn btn-primary" (click)="startMembershipCheckout('standard')">
-          {{ isMembershipSignedIn() ? 'Start Membership' : 'Sign In To Start' }}
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="hasActiveMembership()"
+          (click)="startMembershipCheckout('standard')"
+        >
+          {{
+            hasActiveMembership()
+              ? 'Membership Active'
+              : (isMembershipSignedIn() ? 'Start Membership' : 'Sign In To Start')
+          }}
         </button>
       </article>
 
@@ -313,8 +329,17 @@
         <p class="membership-kicker">First Month Offer</p>
         <h3>$49<span> first month</span></h3>
         <p>For first-time monthly members who want an easier on-ramp into the studio schedule.</p>
-        <button type="button" class="btn btn-secondary" (click)="startMembershipCheckout('intro')">
-          {{ isMembershipSignedIn() ? 'Claim Intro Offer' : 'Sign In For Intro Offer' }}
+        <button
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="hasActiveMembership()"
+          (click)="startMembershipCheckout('intro')"
+        >
+          {{
+            hasActiveMembership()
+              ? 'Membership Active'
+              : (isMembershipSignedIn() ? 'Claim Intro Offer' : 'Sign In For Intro Offer')
+          }}
         </button>
       </article>
     </div>

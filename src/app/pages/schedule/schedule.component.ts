@@ -10,7 +10,12 @@ import {
   CmsStudioPage
 } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
-import { BookingService, MemberBooking, PrivateSessionRequestPayload } from '../../services/booking.service';
+import {
+  BookingService,
+  MemberBooking,
+  MembershipStatus,
+  PrivateSessionRequestPayload
+} from '../../services/booking.service';
 import { AuthService, AuthState } from '../../services/auth.service';
 import { SeoService } from '../../services/seo.service';
 import { TrustedNavigationService } from '../../services/trusted-navigation.service';
@@ -87,6 +92,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   memberBookingsLoading = false;
   memberBookingsError = '';
   memberBookings: MemberBooking[] = [];
+  membershipStatusLoading = false;
+  membershipStatusError = '';
+  membershipStatus: MembershipStatus | null = null;
   authState: AuthState = {
     user: null,
     session: null,
@@ -138,10 +146,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         }
         if (nextEmail && nextEmail !== previousEmail) {
           void this.loadMemberBookings();
+          void this.loadMembershipStatus();
         }
         if (!nextEmail) {
           this.memberBookings = [];
           this.memberBookingsError = '';
+          this.membershipStatus = null;
+          this.membershipStatusError = '';
         }
       })
     );
@@ -368,6 +379,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     if (!this.isMembershipSignedIn()) {
       this.openMembershipAuth('sign-in');
       this.pricingFlowMessage = 'Please sign in or create an account before starting a membership.';
+      return;
+    }
+
+    if (this.hasActiveMembership()) {
+      this.pricingFlowMessage = 'Your account already has an active membership. You can use it when booking eligible classes.';
       return;
     }
 
@@ -643,6 +659,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     await this.loadMemberBookings();
   }
 
+  async refreshMembershipStatus(): Promise<void> {
+    await this.loadMembershipStatus();
+  }
+
   formatMemberBookingWhen(booking: MemberBooking): string {
     if (!booking.eventStart) {
       return 'Date TBD';
@@ -676,6 +696,40 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     });
 
     return `${startLabel} - ${endLabel}`;
+  }
+
+  membershipStatusLabel(): string {
+    if (!this.membershipStatus?.active) {
+      return 'No active membership yet';
+    }
+
+    return this.membershipStatus.cancelAtPeriodEnd
+      ? 'Active membership ending after current cycle'
+      : 'Active membership';
+  }
+
+  membershipRenewsLabel(): string {
+    const renewsAt = this.membershipStatus?.renewsAt;
+    if (!renewsAt) {
+      return '';
+    }
+
+    const renewsDate = new Date(renewsAt);
+    if (Number.isNaN(renewsDate.getTime())) {
+      return '';
+    }
+
+    const formatted = renewsDate.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+
+    return this.membershipStatus?.cancelAtPeriodEnd ? `Access ends ${formatted}` : `Renews ${formatted}`;
+  }
+
+  hasActiveMembership(): boolean {
+    return !!this.membershipStatus?.active;
   }
 
   private isPrivateSessionEvent(event: CmsEvent): boolean {
@@ -730,6 +784,23 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       this.memberBookingsError = (error as Error).message || 'Could not load your bookings right now.';
     } finally {
       this.memberBookingsLoading = false;
+    }
+  }
+
+  private async loadMembershipStatus(): Promise<void> {
+    if (!this.isMembershipSignedIn()) {
+      return;
+    }
+
+    this.membershipStatusLoading = true;
+    this.membershipStatusError = '';
+
+    try {
+      this.membershipStatus = await this.bookingService.getMembershipStatus();
+    } catch (error) {
+      this.membershipStatusError = (error as Error).message || 'Could not load your membership status right now.';
+    } finally {
+      this.membershipStatusLoading = false;
     }
   }
 
