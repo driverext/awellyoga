@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 export class TrustedNavigationService {
   private readonly trustedCheckoutHosts = new Set([
     'buy.stripe.com',
-    'checkout.stripe.com'
+    'checkout.stripe.com',
+    'billing.stripe.com'
   ]);
 
   getTrustedRedirectUrl(rawUrl: string | null | undefined): string | null {
