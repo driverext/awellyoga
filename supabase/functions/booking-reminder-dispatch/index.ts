@@ -22,7 +22,7 @@ type BookingRow = {
   booking_status: string | null;
 };
 
-type NotificationType = 'night_before' | 'hour_before';
+type NotificationType = 'night_before' | 'hour_before' | 'review_follow_up';
 
 type EventGroup = {
   eventId: string;
@@ -114,11 +114,29 @@ Deno.serve(async (req) => {
         html: noBookings.html
       });
 
+      const reviewFollowUp = buildReviewFollowUpEmail(
+        {
+          eventTitle: sampleEvent.title,
+          instructorName: sampleEvent.instructorName,
+          eventStart: sampleEvent.start,
+          eventEnd: sampleEvent.end,
+          eventLocation: sampleEvent.location,
+          customerName: 'Jane Student'
+        },
+        timezone
+      );
+      await sendEmailViaConfiguredProvider({
+        toEmail: testRecipient,
+        subject: '[TEST] How was your class at A-WELL Yoga?',
+        text: reviewFollowUp.text,
+        html: reviewFollowUp.html
+      });
+
       return json({
         ok: true,
         mode: 'send-test',
         sentTo: testRecipient,
-        templates: ['booking_alert', 'night_before', 'hour_before', 'no_bookings_night_before']
+        templates: ['booking_alert', 'night_before', 'hour_before', 'no_bookings_night_before', 'review_follow_up']
       });
     }
 
@@ -179,6 +197,33 @@ Deno.serve(async (req) => {
 
         sent += await sendNoBookingsAlertIfNeeded(admin, event, timezone);
       }
+    }
+
+    const reviewLookbackStart = new Date(now.getTime() - 30 * 60 * 60 * 1000);
+    const reviewSendBefore = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+    const { data: reviewData, error: reviewError } = await admin
+      .from('bookings')
+      .select('id, sanity_event_id, event_title, event_type, instructor_name, event_start, event_end, event_location, stripe_customer_name, stripe_customer_email, booking_status')
+      .eq('booking_status', 'paid')
+      .gte('event_end', reviewLookbackStart.toISOString())
+      .lte('event_end', reviewSendBefore.toISOString())
+      .order('event_end', { ascending: false });
+
+    if (reviewError) {
+      return json({ error: reviewError.message }, 400);
+    }
+
+    const reviewBookings = ((reviewData || []) as BookingRow[]).filter(
+      (row) =>
+        !!row.sanity_event_id &&
+        !!row.event_start &&
+        !!row.event_end &&
+        !!row.stripe_customer_email &&
+        normalizeAsClass(row.event_type)
+    );
+
+    for (const booking of reviewBookings) {
+      sent += await sendReviewFollowUpIfNeeded(admin, booking, timezone);
     }
 
     return json({ ok: true, sent, scanned: groupedEvents.length });
@@ -243,6 +288,73 @@ async function sendReminderIfNeeded(
   }
 
   return sent;
+}
+
+async function sendReviewFollowUpIfNeeded(
+  admin: ReturnType<typeof createClient>,
+  booking: BookingRow,
+  timezone: string
+): Promise<number> {
+  const toEmail = booking.stripe_customer_email?.trim().toLowerCase() || '';
+  if (!toEmail) {
+    return 0;
+  }
+
+  const notificationType = 'review_follow_up';
+  const eventId = booking.sanity_event_id || '';
+  const eventStart = booking.event_start || '';
+
+  const { data: existingLog, error: logError } = await admin
+    .schema('internal')
+    .from('booking_notification_logs')
+    .select('id')
+    .eq('sanity_event_id', eventId)
+    .eq('event_start', eventStart)
+    .eq('notification_type', notificationType)
+    .eq('recipient_email', toEmail)
+    .limit(1);
+
+  if (logError) {
+    throw new Error(logError.message);
+  }
+
+  if (existingLog && existingLog.length > 0) {
+    return 0;
+  }
+
+  const subject = 'How was your class at A-WELL Yoga?';
+  const { text, html } = buildReviewFollowUpEmail(
+    {
+      eventTitle: booking.event_title || 'your class',
+      instructorName: booking.instructor_name,
+      eventStart: booking.event_start,
+      eventEnd: booking.event_end,
+      eventLocation: booking.event_location,
+      customerName: booking.stripe_customer_name || ''
+    },
+    timezone
+  );
+
+  await sendEmailViaConfiguredProvider({
+    toEmail,
+    subject,
+    text,
+    html,
+    replyTo: 'info@awellyoga.com'
+  });
+
+  const { error: insertError } = await admin.schema('internal').from('booking_notification_logs').insert({
+    sanity_event_id: eventId,
+    event_start: eventStart,
+    notification_type: notificationType,
+    recipient_email: toEmail
+  });
+
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+
+  return 1;
 }
 
 function buildSubject(event: EventGroup, notificationType: NotificationType, timezone: string): string {
@@ -382,6 +494,56 @@ function buildNoBookingsEmail(event: Pick<EventGroup, 'title' | 'instructorName'
           ${whenLabel ? `<p style="margin:0 0 6px;"><strong>When:</strong> ${escapeHtml(whenLabel)}</p>` : ''}
           <p style="margin:0;"><strong>Where:</strong> ${escapeHtml(location)}</p>
         </div>
+      </div>
+    `
+  };
+}
+
+function buildReviewFollowUpEmail(
+  payload: {
+    eventTitle: string;
+    instructorName?: string | null;
+    eventStart: string | null;
+    eventEnd?: string | null;
+    eventLocation?: string | null;
+    customerName?: string | null;
+  },
+  timezone: string
+) {
+  const startsAt = formatDateTime(payload.eventStart, timezone);
+  const endsAt = formatDateTime(payload.eventEnd || null, timezone);
+  const whenLabel = buildWhenLabel('', startsAt, endsAt);
+  const reviewUrl = (Deno.env.get('GOOGLE_REVIEW_URL') || 'https://www.google.com/search?q=A-WELL+Yoga+Sanford+FL').trim();
+  const customerName = payload.customerName?.trim();
+  const greeting = customerName ? `Hi ${customerName},` : 'Hi,';
+  const classLabel = payload.eventTitle || 'your class';
+
+  return {
+    text: [
+      greeting,
+      '',
+      `Thank you for practicing with us at A-WELL Yoga${payload.instructorName ? ` with ${payload.instructorName}` : ''}.`,
+      whenLabel ? `We hope you left ${classLabel} on ${whenLabel} feeling a little more grounded and supported.` : `We hope you left ${classLabel} feeling a little more grounded and supported.`,
+      '',
+      'If you have a moment, we would be so grateful if you left a quick Google review. It really helps more people find the studio and know what to expect.',
+      '',
+      `Leave a review: ${reviewUrl}`,
+      '',
+      'We’d love to practice with you again soon.',
+      '',
+      'A-WELL Yoga',
+      'info@awellyoga.com'
+    ].join('\n'),
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.7;color:#1f2937;">
+        <p style="margin:0 0 12px;">${escapeHtml(greeting)}</p>
+        <p style="margin:0 0 12px;">Thank you for practicing with us at A-WELL Yoga${payload.instructorName ? ` with <strong>${escapeHtml(payload.instructorName)}</strong>` : ''}.</p>
+        <p style="margin:0 0 16px;">${whenLabel ? `We hope you left <strong>${escapeHtml(classLabel)}</strong> on ${escapeHtml(whenLabel)} feeling a little more grounded and supported.` : `We hope you left <strong>${escapeHtml(classLabel)}</strong> feeling a little more grounded and supported.`}</p>
+        <div style="background:#fcf9f4;border:1px solid #eee3d8;border-radius:14px;padding:18px 20px;margin:0 0 18px;">
+          <p style="margin:0 0 12px;">If you have a moment, we would be so grateful if you left a quick Google review. It really helps more people find the studio and know what to expect.</p>
+          <a href="${escapeHtml(reviewUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#1f2937;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:999px;font-weight:600;">Leave a Google Review</a>
+        </div>
+        <p style="margin:0;">We’d love to practice with you again soon.<br><strong>A-WELL Yoga</strong></p>
       </div>
     `
   };

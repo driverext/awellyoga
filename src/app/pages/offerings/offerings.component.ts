@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
+import { SITE_URL } from '../../config/site-constants';
 
 interface OfferingClass {
   id: string;
@@ -33,6 +34,34 @@ export class OfferingsComponent {
         'Explore A-WELL Yoga class styles, therapeutic formats, and movement practices designed for real-life nervous system support.',
       path: '/offerings'
     });
+
+    this.seo.updateJsonLd([
+      {
+        id: 'offerings-breadcrumbs',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Classes', item: `${SITE_URL}/offerings` }
+          ]
+        }
+      },
+      {
+        id: 'offerings-item-list',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          itemListElement: this.classes.map((classItem, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            url: `${SITE_URL}/offerings#${classItem.id}`,
+            name: classItem.name,
+            description: classItem.description
+          }))
+        }
+      }
+    ]);
   }
 
   classes: OfferingClass[] = [

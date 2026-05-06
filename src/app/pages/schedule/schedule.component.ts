@@ -19,6 +19,7 @@ import {
 import { AuthService, AuthState } from '../../services/auth.service';
 import { SeoService } from '../../services/seo.service';
 import { TrustedNavigationService } from '../../services/trusted-navigation.service';
+import { SITE_URL, STUDIO_CONTACT } from '../../config/site-constants';
 
 interface CalendarDay {
   date: Date;
@@ -996,5 +997,38 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       path: '/schedule',
       image: this.scheduleImageUrl
     });
+
+    this.seo.updateJsonLd([
+      {
+        id: 'schedule-breadcrumbs',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Schedule', item: `${SITE_URL}/schedule` }
+          ]
+        }
+      },
+      {
+        id: 'schedule-local-business',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'SportsActivityLocation',
+          name: STUDIO_CONTACT.name,
+          url: `${SITE_URL}/schedule`,
+          telephone: STUDIO_CONTACT.phoneSchema,
+          email: STUDIO_CONTACT.email,
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: STUDIO_CONTACT.addressLine,
+            addressLocality: STUDIO_CONTACT.city,
+            addressRegion: STUDIO_CONTACT.region,
+            postalCode: STUDIO_CONTACT.postalCode,
+            addressCountry: STUDIO_CONTACT.country
+          }
+        }
+      }
+    ]);
   }
 }

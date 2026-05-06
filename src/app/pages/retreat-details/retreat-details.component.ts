@@ -6,6 +6,7 @@ import { NewlinePipe } from '../../pipes/newline.pipe';
 import { PaymentModalComponent } from '../../components/payment-modal/payment-modal.component';
 import { CurrencyPreferenceService } from '../../services/currency-preference.service';
 import { SeoService } from '../../services/seo.service';
+import { SITE_URL } from '../../config/site-constants';
 
 @Component({
   selector: 'app-retreat-details',
@@ -38,27 +39,44 @@ export class RetreatDetailsComponent implements OnInit {
           type: 'article'
         });
 
-        this.seo.setJsonLd('retreat-details', {
-          '@context': 'https://schema.org',
-          '@type': 'Event',
-          name: this.retreat.title,
-          description: this.retreat.description,
-          startDate: this.retreat.startDateIso,
-          endDate: this.retreat.endDateIso,
-          eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-          eventStatus: 'https://schema.org/EventScheduled',
-          location: {
-            '@type': 'Place',
-            name: this.retreat.venue || this.retreat.location,
-            address: this.retreat.location
+        this.seo.updateJsonLd([
+          {
+            id: 'retreat-details',
+            data: {
+              '@context': 'https://schema.org',
+              '@type': 'Event',
+              name: this.retreat.title,
+              description: this.retreat.description,
+              startDate: this.retreat.startDateIso,
+              endDate: this.retreat.endDateIso,
+              eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+              eventStatus: 'https://schema.org/EventScheduled',
+              location: {
+                '@type': 'Place',
+                name: this.retreat.venue || this.retreat.location,
+                address: this.retreat.location
+              },
+              image: [this.retreat.cardImage || this.retreat.image].filter(Boolean),
+              organizer: {
+                '@type': 'Organization',
+                name: 'A-WELL Yoga',
+                url: SITE_URL
+              }
+            }
           },
-          image: [this.retreat.cardImage || this.retreat.image].filter(Boolean),
-          organizer: {
-            '@type': 'Organization',
-            name: 'A-WELL Yoga',
-            url: 'https://awellyoga.com'
+          {
+            id: 'retreat-details-breadcrumbs',
+            data: {
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+                { '@type': 'ListItem', position: 2, name: 'Retreats', item: `${SITE_URL}/retreats` },
+                { '@type': 'ListItem', position: 3, name: this.retreat.title, item: `${SITE_URL}/retreats/${retreatId}` }
+              ]
+            }
           }
-        });
+        ]);
       }
     }
   }

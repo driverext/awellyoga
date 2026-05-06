@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { CmsInstructor } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
 import { SeoService } from '../../services/seo.service';
+import { SITE_URL, STUDIO_CONTACT } from '../../config/site-constants';
 
 const ARIETA_ABOUT_BIO = [
   'Creator of the RESET Method™ (NeuroYoga-Based)',
@@ -35,6 +36,7 @@ const SOMMER_ABOUT_BIO = [
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit, OnDestroy {
+  readonly contact = STUDIO_CONTACT;
   teamSectionHeading = 'Meet Our Team';
   teamSectionSubheading = 'Experienced teachers dedicated to guiding your practice';
   instructors: CmsInstructor[] = this.getFallbackInstructors();
@@ -55,23 +57,40 @@ export class AboutComponent implements OnInit, OnDestroy {
       image: '/assets/teachers/arieta/arieta-bio.jpg'
     });
 
-    this.seo.setJsonLd('about-organization', {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'A-WELL Yoga',
-      url: 'https://awellyoga.com',
-      email: 'info@awellyoga.com',
-      telephone: '+1-321-230-8833',
-      founder: 'Arieta Berisha Kirk',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: '214 Hickman Dr',
-        addressLocality: 'Sanford',
-        addressRegion: 'FL',
-        postalCode: '32771',
-        addressCountry: 'US'
+    this.seo.updateJsonLd([
+      {
+        id: 'about-organization',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          '@id': `${SITE_URL}/#organization`,
+          name: STUDIO_CONTACT.name,
+          url: SITE_URL,
+          email: STUDIO_CONTACT.email,
+          telephone: STUDIO_CONTACT.phoneSchema,
+          founder: 'Arieta Berisha Kirk',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: STUDIO_CONTACT.addressLine,
+            addressLocality: STUDIO_CONTACT.city,
+            addressRegion: STUDIO_CONTACT.region,
+            postalCode: STUDIO_CONTACT.postalCode,
+            addressCountry: STUDIO_CONTACT.country
+          }
+        }
+      },
+      {
+        id: 'about-breadcrumbs',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'About', item: `${SITE_URL}/about` }
+          ]
+        }
       }
-    });
+    ]);
 
     this.subscriptions.add(
       this.cmsContent.getAboutPageMeta().subscribe((meta) => {

@@ -146,9 +146,9 @@ Thank you for holding space with such kindness and for sharing your knowledge wi
       <div class="contact-info">
         <h2>Visit Us</h2>
         <address>
-          <p><span class="material-icons">location_on</span> 214 Hickman Dr, Sanford, FL 32771</p>
-          <p><span class="material-icons">phone</span> (321) 230-8833</p>
-          <p><span class="material-icons">email</span> info&#64;awellyoga.com</p>
+          <p><span class="material-icons">location_on</span> {{ contact.addressLine }}, {{ contact.cityStateZip }}</p>
+          <p><span class="material-icons">phone</span> {{ contact.phoneDisplay }}</p>
+          <p><span class="material-icons">email</span> {{ contact.email }}</p>
         </address>
         <div class="social-links">
           <a href="#" aria-label="Facebook"><span class="material-icons">facebook</span></a>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
+import { SITE_URL, STUDIO_CONTACT } from '../../config/site-constants';
 
 @Component({
   selector: 'app-home',
@@ -22,24 +23,45 @@ export class HomeComponent implements OnInit {
       image: '/assets/home/studio.jpg'
     });
 
-    this.seo.setJsonLd('home-local-business', {
-      '@context': 'https://schema.org',
-      '@type': 'SportsActivityLocation',
-      name: 'A-WELL Yoga',
-      description:
-        'Yoga studio and therapeutic movement space offering classes, workshops, private sessions, and retreats.',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: '214 Hickman Dr',
-        addressLocality: 'Sanford',
-        addressRegion: 'FL',
-        postalCode: '32771',
-        addressCountry: 'US'
+    this.seo.updateJsonLd([
+      {
+        id: 'home-website',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          '@id': `${SITE_URL}/#website`,
+          url: SITE_URL,
+          name: STUDIO_CONTACT.name
+        }
       },
-      telephone: '+1-321-230-8833',
-      email: 'info@awellyoga.com',
-      url: 'https://awellyoga.com',
-      sameAs: ['https://awellyoga.com/about', 'https://awellyoga.com/schedule']
-    });
+      {
+        id: 'home-local-business',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'SportsActivityLocation',
+          '@id': `${SITE_URL}/#localbusiness`,
+          name: STUDIO_CONTACT.name,
+          description:
+            'Yoga studio and therapeutic movement space offering classes, workshops, private sessions, and retreats.',
+          url: SITE_URL,
+          image: `${SITE_URL}/assets/home/studio.jpg`,
+          telephone: STUDIO_CONTACT.phoneSchema,
+          email: STUDIO_CONTACT.email,
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: STUDIO_CONTACT.addressLine,
+            addressLocality: STUDIO_CONTACT.city,
+            addressRegion: STUDIO_CONTACT.region,
+            postalCode: STUDIO_CONTACT.postalCode,
+            addressCountry: STUDIO_CONTACT.country
+          },
+          areaServed: {
+            '@type': 'City',
+            name: STUDIO_CONTACT.city
+          },
+          sameAs: [`${SITE_URL}/about`, `${SITE_URL}/schedule`]
+        }
+      }
+    ]);
   }
 }

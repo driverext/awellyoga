@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { STUDIO_CONTACT } from './config/site-constants';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'A - WELL YOGA';
+  readonly contact = STUDIO_CONTACT;
   menuOpen = false;
   private routerSubscription?: Subscription;
 

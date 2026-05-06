@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { RetreatsService } from '../../services/retreats.service';
 import { PaymentModalComponent } from '../../components/payment-modal/payment-modal.component';
 import { SeoService } from '../../services/seo.service';
+import { SITE_URL } from '../../config/site-constants';
 
 @Component({
   selector: 'app-retreats',
@@ -72,6 +73,38 @@ export class RetreatsComponent implements OnInit {
       path: '/retreats',
       image: '/assets/retreats/rugova/rugova-card.jpg'
     });
+
+    this.seo.updateJsonLd([
+      {
+        id: 'retreats-breadcrumbs',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Retreats', item: `${SITE_URL}/retreats` }
+          ]
+        }
+      },
+      {
+        id: 'retreats-collection',
+        data: {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'A-WELL Yoga Retreats',
+          url: `${SITE_URL}/retreats`,
+          hasPart: this.upcomingRetreats.map((retreat, index) => ({
+            '@type': 'Event',
+            position: index + 1,
+            name: retreat.title,
+            url: `${SITE_URL}/retreats/${retreat.id}`,
+            startDate: retreat.startDateIso || undefined,
+            endDate: retreat.endDateIso || undefined,
+            location: retreat.location
+          }))
+        }
+      }
+    ]);
   }
 
   get featuredRetreats() {

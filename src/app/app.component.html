@@ -2,7 +2,7 @@
   <div class="container">
     <nav>
       <div class="logo">
-        <a routerLink="/home" (click)="closeMenu()">
+        <a routerLink="/" (click)="closeMenu()">
           <h1>A - WELL YOGA</h1>
         </a>
       </div>
@@ -54,9 +54,9 @@
       <div class="footer-section">
         <h3>Contact Us</h3>
         <address>
-          <p><span class="material-icons">location_on</span> 214 Hickman Dr, Sanford, FL 32771</p>
-          <p><span class="material-icons">phone</span> (321) 230-8833</p>
-          <p><span class="material-icons">email</span> info&#64;awellyoga.com</p>
+          <p><span class="material-icons">location_on</span> {{ contact.addressLine }}, {{ contact.cityStateZip }}</p>
+          <p><span class="material-icons">phone</span> {{ contact.phoneDisplay }}</p>
+          <p><span class="material-icons">email</span> {{ contact.email }}</p>
         </address>
       </div>
     </div>

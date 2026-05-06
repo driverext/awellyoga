@@ -10,6 +10,11 @@ interface SeoPayload {
   type?: string;
 }
 
+interface JsonLdEntry {
+  id: string;
+  data: unknown;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SeoService {
   constructor(
@@ -40,13 +45,18 @@ export class SeoService {
   }
 
   setJsonLd(id: string, data: unknown): void {
+    this.updateJsonLd([{ id, data }]);
+  }
+
+  updateJsonLd(entries: JsonLdEntry[]): void {
     this.document.querySelectorAll('script[id^="jsonld-"]').forEach((script) => script.remove());
-    const scriptId = `jsonld-${id}`;
-    const script = this.document.createElement('script');
-    script.type = 'application/ld+json';
-    script.id = scriptId;
-    script.text = JSON.stringify(data);
-    this.document.head.appendChild(script);
+    for (const entry of entries) {
+      const script = this.document.createElement('script');
+      script.type = 'application/ld+json';
+      script.id = `jsonld-${entry.id}`;
+      script.text = JSON.stringify(entry.data);
+      this.document.head.appendChild(script);
+    }
   }
 
   removeJsonLd(id: string): void {
