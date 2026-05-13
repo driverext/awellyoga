@@ -4,6 +4,8 @@ import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 import { SITE_URL } from '../../config/site-constants';
 
+const BEACH_EVENT_ID = 'special-event-immersive-beach-yoga-2026-05-16';
+
 @Component({
   selector: 'app-workshops',
   standalone: true,
@@ -23,8 +25,8 @@ export class WorkshopsComponent implements OnInit {
       description:
         'Start your morning with movement, ocean air, and an immersive beach yoga experience using wireless headsets. Stay after class for brunch with the community overlooking the ocean. Your ticket includes a $10 brunch voucher.',
       image: '/assets/retreats/rugova/rugova-card.jpg',
-      bookingUrl: '',
-      scheduleOnly: true
+      bookingUrl: `/schedule?event=${BEACH_EVENT_ID}#calendar`,
+      scheduleOnly: false
     },
     {
       title: 'The Path INWARD',

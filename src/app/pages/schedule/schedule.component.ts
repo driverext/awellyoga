@@ -76,6 +76,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   calendarDays: CalendarDay[] = [];
   selectedDate = this.startOfDay(new Date());
   pricingFlowMessage = '';
+  private requestedEventId = '';
 
   bookingEvent: CmsEvent | null = null;
   bookingEmail = '';
@@ -135,6 +136,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           this.pricingFlowMessage =
             'Your membership checkout was successful. Sign in to your membership account and choose Use Membership to reserve your spot.';
         }
+
+        const requestedEventId = (params.get('event') || '').trim();
+        if (requestedEventId) {
+          this.requestedEventId = requestedEventId;
+          this.tryOpenRequestedEvent();
+        }
       })
     );
 
@@ -179,6 +186,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         void this.refreshLiveSpots();
         this.syncCalendarSelection();
         this.buildCalendarDays();
+        this.tryOpenRequestedEvent();
       })
     );
 
@@ -497,6 +505,31 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   private canBookEvent(event: CmsEvent): boolean {
     return !!event.stripePriceId || !!event.unitAmountCents || !!this.buildBookingUrl(event, 'placeholder@example.com');
+  }
+
+  private tryOpenRequestedEvent(): void {
+    if (!this.requestedEventId || !this.events.length) {
+      return;
+    }
+
+    const requestedEvent = this.events.find((event) => (event.id || '').trim() === this.requestedEventId);
+    if (!requestedEvent) {
+      return;
+    }
+
+    const startDate = new Date(requestedEvent.startDate);
+    if (!Number.isNaN(startDate.getTime())) {
+      this.selectedDate = this.startOfDay(startDate);
+      this.calendarMonth = this.startOfMonth(startDate);
+      this.buildCalendarDays();
+    }
+
+    setTimeout(() => {
+      document.getElementById('calendar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      this.openBooking(requestedEvent);
+    }, 0);
+
+    this.requestedEventId = '';
   }
 
   canUseMembership(event: CmsEvent): boolean {
