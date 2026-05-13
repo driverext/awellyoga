@@ -69,6 +69,23 @@ export default defineType({
       group: 'booking'
     }),
     defineField({
+      name: 'unitAmountCents',
+      title: 'Dynamic Checkout Amount (cents)',
+      description:
+        'Optional direct amount for Stripe Checkout when you do not want to create a saved Stripe Price yet. Example: 3500 for $35.00.',
+      type: 'number',
+      group: 'booking',
+      validation: (rule) => rule.min(1)
+    }),
+    defineField({
+      name: 'currency',
+      title: 'Checkout Currency',
+      description: 'Used with Dynamic Checkout Amount. Example: usd or eur.',
+      type: 'string',
+      initialValue: 'usd',
+      group: 'booking'
+    }),
+    defineField({
       name: 'bookingUrl',
       title: 'Stripe Checkout URL',
       type: 'url',

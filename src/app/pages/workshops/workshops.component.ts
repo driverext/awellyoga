@@ -12,16 +12,33 @@ import { SITE_URL } from '../../config/site-constants';
   styleUrls: ['./workshops.component.css']
 })
 export class WorkshopsComponent implements OnInit {
-  pathInwardWorkshop = {
-    title: 'The Path INWARD',
-    date: 'May 30th, 2026',
-    time: '6:00 PM - 8:00 PM',
-    location: 'CityArt Orlando Florida',
-    price: '$35',
-    description: 'more to come 🤩',
-    image: '/assets/workshops/the-path-inward.jpg',
-    bookingUrl: 'https://buy.stripe.com/fZu6oA3Bx71a8ME7Ay8og05'
-  };
+  workshops = [
+    {
+      title: 'Immersive Beach Yoga + Brunch',
+      label: 'Special Event',
+      date: 'May 16th, 2026',
+      time: '9:00 AM',
+      location: 'Chases on the Beach · New Smyrna Beach',
+      price: '$35',
+      description:
+        'Start your morning with movement, ocean air, and an immersive beach yoga experience using wireless headsets. Stay after class for brunch with the community overlooking the ocean. Your ticket includes a $10 brunch voucher.',
+      image: '/assets/retreats/rugova/rugova-card.jpg',
+      bookingUrl: '',
+      scheduleOnly: true
+    },
+    {
+      title: 'The Path INWARD',
+      label: 'Workshop',
+      date: 'May 30th, 2026',
+      time: '6:00 PM - 8:00 PM',
+      location: 'CityArt Orlando Florida',
+      price: '$35',
+      description: 'more to come 🤩',
+      image: '/assets/workshops/the-path-inward.jpg',
+      bookingUrl: 'https://buy.stripe.com/fZu6oA3Bx71a8ME7Ay8og05',
+      scheduleOnly: false
+    }
+  ];
 
   constructor(private seo: SeoService) {}
 
@@ -51,21 +68,21 @@ export class WorkshopsComponent implements OnInit {
         data: {
           '@context': 'https://schema.org',
           '@type': 'Event',
-          name: this.pathInwardWorkshop.title,
+          name: this.workshops[1].title,
           startDate: '2026-05-30T18:00:00-04:00',
           endDate: '2026-05-30T20:00:00-04:00',
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
           eventStatus: 'https://schema.org/EventScheduled',
           location: {
             '@type': 'Place',
-            name: this.pathInwardWorkshop.location,
-            address: this.pathInwardWorkshop.location
+            name: this.workshops[1].location,
+            address: this.workshops[1].location
           },
           offers: {
             '@type': 'Offer',
             price: '35',
             priceCurrency: 'USD',
-            url: this.pathInwardWorkshop.bookingUrl,
+            url: this.workshops[1].bookingUrl,
             availability: 'https://schema.org/InStock'
           },
           url: `${SITE_URL}/workshops`

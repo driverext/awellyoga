@@ -64,6 +64,8 @@ interface RawEvent {
   bookingUrl?: string;
   stripePriceId?: string;
   stripeCouponId?: string;
+  unitAmountCents?: number;
+  currency?: string;
   priceLabel?: string;
   platformFeePercent?: number;
   maxSpots?: number;
@@ -247,6 +249,8 @@ export class SanityContentService {
       bookingUrl,
       stripePriceId,
       stripeCouponId,
+      unitAmountCents,
+      currency,
       priceLabel,
       platformFeePercent,
       maxSpots,
@@ -274,6 +278,8 @@ export class SanityContentService {
             bookingUrl: item.bookingUrl,
             stripePriceId: item.stripePriceId,
             stripeCouponId: item.stripeCouponId,
+            unitAmountCents: this.toNumberOrUndefined(item.unitAmountCents),
+            currency: item.currency,
             priceLabel: item.priceLabel,
             platformFeePercent: this.toNumberOrUndefined(item.platformFeePercent),
             maxSpots: this.toNumberOrUndefined(item.maxSpots),

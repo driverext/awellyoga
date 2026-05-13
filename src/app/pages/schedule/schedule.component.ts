@@ -496,7 +496,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   private canBookEvent(event: CmsEvent): boolean {
-    return !!event.stripePriceId || !!this.buildBookingUrl(event, 'placeholder@example.com');
+    return !!event.stripePriceId || !!event.unitAmountCents || !!this.buildBookingUrl(event, 'placeholder@example.com');
   }
 
   canUseMembership(event: CmsEvent): boolean {
