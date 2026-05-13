@@ -24,6 +24,11 @@ enabled = true
 verify_jwt = false
 entrypoint = "./functions/neuroyoga-interest/index.ts"
 
+[functions.reset-interest]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/reset-interest/index.ts"
+
 [functions.event-reminder-email]
 enabled = true
 verify_jwt = true

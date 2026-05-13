@@ -1,0 +1,42 @@
+<section class="reset-hero">
+  <div class="container reset-grid">
+    <div class="reset-copy">
+      <p class="eyebrow">RESET</p>
+      <h1>Get the free one-week RESET PDF.</h1>
+      <p class="lead">
+        Leave your email and we’ll send the one-week RESET guide straight to your inbox as soon as it’s ready.
+      </p>
+
+      <ul class="highlight-list">
+        <li *ngFor="let item of highlights">{{ item }}</li>
+      </ul>
+    </div>
+
+    <form class="reset-form" (ngSubmit)="submit()">
+      <p class="form-label">Send it to:</p>
+
+      <label class="sr-only" for="reset-email">Email</label>
+      <input
+        id="reset-email"
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        autocomplete="email"
+        inputmode="email"
+        placeholder="you@example.com"
+        required
+      />
+
+      <p class="form-success" *ngIf="success">{{ success }}</p>
+      <p class="form-error" *ngIf="error">{{ error }}</p>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Saving...' : 'Join The List' }}
+      </button>
+
+      <p class="form-note">
+        No extra steps right now. We’ll email the PDF to you when it’s ready.
+      </p>
+    </form>
+  </div>
+</section>

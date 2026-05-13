@@ -10,6 +10,7 @@ export const routes: Routes = [
   { path: 'about', loadComponent: () => import('../app/pages/about/about.component').then(m => m.AboutComponent) },
   { path: 'offerings', loadComponent: () => import('../app/pages/offerings/offerings.component').then(m => m.OfferingsComponent) },
   { path: 'neuroyoga-program', loadComponent: () => import('../app/pages/neuroyoga-program/neuroyoga-program.component').then(m => m.NeuroyogaProgramComponent) },
+  { path: 'reset', loadComponent: () => import('../app/pages/reset/reset.component').then(m => m.ResetComponent) },
   { path: 'schedule', loadComponent: () => import('../app/pages/schedule/schedule.component').then(m => m.ScheduleComponent) },
   { path: 'studio', redirectTo: '/schedule', pathMatch: 'full' },
   { path: 'ytt', loadComponent: () => import('../app/pages/ytt/ytt.component').then(m => m.YttComponent) },
