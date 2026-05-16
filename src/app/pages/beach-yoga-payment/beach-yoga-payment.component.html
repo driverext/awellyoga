@@ -1,0 +1,42 @@
+<section class="beach-payment-page">
+  <div class="container payment-grid">
+    <div class="payment-copy">
+      <p class="eyebrow">Complete Payment</p>
+      <h1>Immersive Beach Yoga + Brunch</h1>
+      <p class="lead">
+        Use this page to complete payment for the May 16 beach yoga and brunch experience at Chases on the Beach.
+      </p>
+
+      <div class="event-details">
+        <p><strong>Date:</strong> May 16th, 2026</p>
+        <p><strong>Time:</strong> 9:00 AM</p>
+        <p><strong>Location:</strong> Chases on the Beach, New Smyrna Beach</p>
+        <p><strong>Amount:</strong> $35</p>
+      </div>
+    </div>
+
+    <form class="payment-form" (ngSubmit)="submit()">
+      <label for="beach-payment-email">Email</label>
+      <input
+        id="beach-payment-email"
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        autocomplete="email"
+        inputmode="email"
+        placeholder="you@example.com"
+        required
+      />
+
+      <p class="form-error" *ngIf="error">{{ error }}</p>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Opening Checkout...' : 'Pay $35' }}
+      </button>
+
+      <p class="form-note">
+        After you enter your email, Stripe will open so you can finish payment securely.
+      </p>
+    </form>
+  </div>
+</section>

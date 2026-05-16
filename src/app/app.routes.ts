@@ -8,6 +8,7 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('../app/pages/home/home.component').then(m => m.HomeComponent) },
   { path: 'home', redirectTo: '', pathMatch: 'full' },
   { path: 'about', loadComponent: () => import('../app/pages/about/about.component').then(m => m.AboutComponent) },
+  { path: 'beach-yoga-payment', loadComponent: () => import('../app/pages/beach-yoga-payment/beach-yoga-payment.component').then(m => m.BeachYogaPaymentComponent) },
   { path: 'offerings', loadComponent: () => import('../app/pages/offerings/offerings.component').then(m => m.OfferingsComponent) },
   { path: 'neuroyoga-program', loadComponent: () => import('../app/pages/neuroyoga-program/neuroyoga-program.component').then(m => m.NeuroyogaProgramComponent) },
   { path: 'reset', loadComponent: () => import('../app/pages/reset/reset.component').then(m => m.ResetComponent) },
