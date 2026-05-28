@@ -11,6 +11,12 @@ interface CreateCheckoutResponse {
   code?: string;
 }
 
+export type BookingSource =
+  | 'schedule'
+  | 'private-session-request'
+  | 'retreat-page'
+  | 'beach-payment-page';
+
 export interface CheckoutSessionSummary {
   sessionId: string;
   bookingId?: string | null;
@@ -140,7 +146,12 @@ export class BookingService {
 
   constructor(private authService: AuthService) {}
 
-  async createCheckoutSession(event: CmsEvent, email: string, maxSpots: number | null): Promise<CreateCheckoutResponse> {
+  async createCheckoutSession(
+    event: CmsEvent,
+    email: string,
+    maxSpots: number | null,
+    bookingSource: BookingSource = 'schedule'
+  ): Promise<CreateCheckoutResponse> {
     if (!this.edgeFunctionsBaseUrl) {
       return {
         error: 'Booking backend is not configured yet.',
@@ -165,7 +176,8 @@ export class BookingService {
       bookingUrl: event.bookingUrl || event.ctaUrl,
       platformFeePercent: event.platformFeePercent,
       maxSpots: maxSpots || undefined,
-      email
+      email,
+      bookingSource
     };
 
     const response = await fetch(`${this.edgeFunctionsBaseUrl}/create-checkout-session`, {

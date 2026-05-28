@@ -60,7 +60,8 @@ export class BeachYogaPaymentComponent {
       const result = await this.bookingService.createCheckoutSession(
         BEACH_YOGA_PAYMENT_EVENT,
         email,
-        BEACH_YOGA_PAYMENT_EVENT.maxSpots ?? null
+        BEACH_YOGA_PAYMENT_EVENT.maxSpots ?? null,
+        'beach-payment-page'
       );
 
       if (result.url && this.trustedNavigation.redirectToTrustedUrl(result.url)) {

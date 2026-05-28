@@ -75,7 +75,8 @@ export class StripeService {
       unitAmountCents: amountCents,
       currency,
       successPath: '/payment-success',
-      cancelPath
+      cancelPath,
+      bookingSource: 'retreat-page'
     };
 
     const response = await fetch(`${this.edgeFunctionsBaseUrl}/create-checkout-session`, {

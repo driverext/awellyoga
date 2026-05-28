@@ -286,7 +286,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
     try {
       const capacity = this.eventCapacity(this.bookingEvent);
-      const result = await this.bookingService.createCheckoutSession(this.bookingEvent, email, capacity);
+      const result = await this.bookingService.createCheckoutSession(this.bookingEvent, email, capacity, 'schedule');
 
       if (result.url && this.trustedNavigation.redirectToTrustedUrl(result.url)) {
         return;
@@ -344,7 +344,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         const checkoutResult = await this.bookingService.createCheckoutSession(
           this.privateSessionCheckoutEvent,
           payload.email,
-          this.eventCapacity(this.privateSessionCheckoutEvent)
+          this.eventCapacity(this.privateSessionCheckoutEvent),
+          'private-session-request'
         );
 
         if (checkoutResult.url && this.trustedNavigation.redirectToTrustedUrl(checkoutResult.url)) {

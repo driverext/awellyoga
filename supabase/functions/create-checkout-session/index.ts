@@ -20,6 +20,7 @@ interface CreateCheckoutPayload {
   currency?: string;
   successPath?: string;
   cancelPath?: string;
+  bookingSource?: string;
   email: string;
 }
 
@@ -49,6 +50,12 @@ Deno.serve(async (req) => {
 
     const hasDynamicAmount = typeof payload.unitAmountCents === 'number' && payload.unitAmountCents > 0;
     const normalizedCurrency = (payload.currency || 'usd').trim().toLowerCase();
+    const normalizedCategory = normalizeCategory(payload.eventType, payload.title);
+    const eventSlug = buildEventSlug(payload.eventId, payload.title);
+    const bookingSource = normalizeToken(payload.bookingSource || inferBookingSource(payload.cancelPath, normalizedCategory)) || 'schedule';
+    const pricingType = payload.stripePriceId ? 'stripe_price' : 'dynamic_amount';
+    const pricingTier = inferPricingTier(payload.title, payload.priceLabel, normalizedCategory);
+    const retreatPartnerScope = normalizedCategory === 'retreat' ? 'arieta_melita' : '';
 
     if (!payload.stripePriceId && !hasDynamicAmount) {
       if (payload.bookingUrl) {
@@ -155,6 +162,16 @@ Deno.serve(async (req) => {
     body.set('metadata[event_location]', payload.location || '');
     body.set('metadata[price_label]', payload.priceLabel || '');
     body.set('metadata[max_spots]', maxSpots > 0 ? String(maxSpots) : '');
+    body.set('metadata[category]', normalizedCategory);
+    body.set('metadata[event_slug]', eventSlug);
+    body.set('metadata[booking_source]', bookingSource);
+    body.set('metadata[pricing_type]', pricingType);
+    if (pricingTier) {
+      body.set('metadata[pricing_tier]', pricingTier);
+    }
+    if (retreatPartnerScope) {
+      body.set('metadata[retreat_partner_scope]', retreatPartnerScope);
+    }
 
     if (payload.stripePriceId) {
       body.set('line_items[0][price]', payload.stripePriceId);
@@ -162,9 +179,10 @@ Deno.serve(async (req) => {
     } else if (hasDynamicAmount) {
       body.set('line_items[0][price_data][currency]', normalizedCurrency);
       body.set('line_items[0][price_data][unit_amount]', String(payload.unitAmountCents));
-      body.set('line_items[0][price_data][product_data][name]', payload.title);
-      if (payload.priceLabel) {
-        body.set('line_items[0][price_data][product_data][description]', payload.priceLabel);
+      body.set('line_items[0][price_data][product_data][name]', buildStripeLineItemName(payload.title, normalizedCategory));
+      const lineItemDescription = buildStripeLineItemDescription(payload, pricingTier, bookingSource);
+      if (lineItemDescription) {
+        body.set('line_items[0][price_data][product_data][description]', lineItemDescription);
       }
       body.set('line_items[0][quantity]', '1');
     }
@@ -239,6 +257,98 @@ Deno.serve(async (req) => {
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function normalizeCategory(eventType: string | undefined, title: string | undefined): 'retreat' | 'workshop' | 'class' | 'special_event' {
+  const normalizedType = normalizeToken(eventType || '');
+  const normalizedTitle = normalizeToken(title || '');
+
+  if (normalizedType.includes('retreat') || normalizedTitle.includes('retreat')) {
+    return 'retreat';
+  }
+  if (normalizedType.includes('workshop') || normalizedTitle.includes('workshop')) {
+    return 'workshop';
+  }
+  if (normalizedType.includes('special_event') || normalizedTitle.includes('special_event')) {
+    return 'special_event';
+  }
+  return 'class';
+}
+
+function buildEventSlug(eventId: string | undefined, title: string | undefined): string {
+  return normalizeToken(eventId || '') || normalizeToken(title || '') || 'awell_event';
+}
+
+function normalizeToken(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .replace(/_{2,}/g, '_');
+}
+
+function inferBookingSource(cancelPath: string | undefined, category: string): string {
+  const normalizedPath = (cancelPath || '').toLowerCase();
+  if (normalizedPath.includes('/retreat')) {
+    return 'retreat_page';
+  }
+  if (normalizedPath.includes('beach-yoga-payment')) {
+    return 'beach_payment_page';
+  }
+  if (category === 'retreat') {
+    return 'retreat_page';
+  }
+  return 'schedule';
+}
+
+function inferPricingTier(title: string | undefined, priceLabel: string | undefined, category: string): string {
+  const normalized = `${title || ''} ${priceLabel || ''}`.toLowerCase();
+
+  if (normalized.includes('single occupancy') || normalized.includes('single room')) {
+    return 'single_occupancy';
+  }
+  if (normalized.includes('shared occupancy') || normalized.includes('shared room') || normalized.includes('twin room')) {
+    return 'shared_occupancy';
+  }
+  if (normalized.includes('private session')) {
+    return 'private_session';
+  }
+  if (normalized.includes('drop in') || normalized.includes('$25')) {
+    return 'drop_in';
+  }
+  if (category === 'retreat') {
+    return 'retreat_booking';
+  }
+
+  return '';
+}
+
+function buildStripeLineItemName(title: string, category: string): string {
+  if (category === 'retreat') {
+    return title;
+  }
+  if (category === 'special_event') {
+    return title;
+  }
+  return title;
+}
+
+function buildStripeLineItemDescription(
+  payload: CreateCheckoutPayload,
+  pricingTier: string,
+  bookingSource: string
+): string {
+  const details = [
+    payload.priceLabel?.trim() || '',
+    payload.dateLabel?.trim() || '',
+    payload.location?.trim() || '',
+    pricingTier ? `tier:${pricingTier}` : '',
+    bookingSource ? `source:${bookingSource}` : ''
+  ].filter(Boolean);
+
+  const description = details.join(' • ');
+  return description.slice(0, 500);
 }
 
 function clampPercent(value: unknown): number {
