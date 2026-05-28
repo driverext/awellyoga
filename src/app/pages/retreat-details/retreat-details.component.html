@@ -113,7 +113,7 @@
           <video controls playsinline preload="metadata" class="atmosphere-video-player" [src]="clip.url">
             Your browser does not support the video tag.
           </video>
-          <p class="atmosphere-caption">{{clip.title}}</p>
+          <p class="atmosphere-caption" *ngIf="clip.title">{{clip.title}}</p>
         </div>
       </div>
     </div>

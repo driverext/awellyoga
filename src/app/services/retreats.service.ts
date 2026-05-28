@@ -196,7 +196,7 @@ export class RetreatsService {
       ],
       atmosphereVideos: [
         {
-          title: 'Rugova stream',
+          title: '',
           url: '/assets/retreats/rugova/stream-through-rocks.mov'
         }
       ],
