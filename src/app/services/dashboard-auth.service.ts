@@ -27,12 +27,25 @@ export class DashboardAuthService {
     window.sessionStorage.setItem(this.authHeaderKey(scope), authHeader);
   }
 
+  setAuthHeader(scope: DashboardScope, authHeader: string): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.sessionStorage.setItem(this.authHeaderKey(scope), authHeader);
+  }
+
   clear(scope: DashboardScope): void {
     if (typeof window === 'undefined') {
       return;
     }
 
     window.sessionStorage.removeItem(this.authHeaderKey(scope));
+  }
+
+  clearAll(): void {
+    this.clear('admin');
+    this.clear('retreat');
   }
 
   resolveScopeForPath(path: string | null | undefined): DashboardScope {

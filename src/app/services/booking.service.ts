@@ -335,6 +335,35 @@ export class BookingService {
     }
   }
 
+  async resolveDashboardLogin(
+    username: string,
+    password: string,
+    preferredScope?: DashboardScope
+  ): Promise<{ scope: DashboardScope; authHeader: string }> {
+    const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
+    const orderedScopes: DashboardScope[] = preferredScope === 'retreat' ? ['retreat', 'admin'] : ['admin', 'retreat'];
+
+    let lastError = 'Invalid dashboard credentials.';
+    for (const scope of orderedScopes) {
+      const endpoint = scope === 'retreat' ? 'retreat-dashboard' : 'booking-dashboard';
+      const response = await fetch(`${this.edgeFunctionsBaseUrl}/${endpoint}`, {
+        method: 'GET',
+        headers: {
+          Authorization: authHeader
+        }
+      });
+
+      const data = (await response.json()) as BookingDashboardResponse;
+      if (response.ok) {
+        return { scope, authHeader };
+      }
+
+      lastError = data.error || lastError;
+    }
+
+    throw new Error(lastError);
+  }
+
   private async getProtectedDashboard(
     scope: DashboardScope,
     endpoint: 'booking-dashboard' | 'retreat-dashboard'

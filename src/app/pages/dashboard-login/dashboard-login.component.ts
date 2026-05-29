@@ -42,13 +42,11 @@ export class DashboardLoginComponent implements OnInit {
   }
 
   heading(): string {
-    return this.scope === 'retreat' ? 'Retreat Partner Login' : 'Dashboard Login';
+    return 'Dashboard Login';
   }
 
   description(): string {
-    return this.scope === 'retreat'
-      ? 'Use your retreat dashboard credentials to view retreat transactions and attendee activity.'
-      : 'Use your admin dashboard credentials to view bookings, attendance, revenue, and operations.';
+    return 'Use your credentials to sign in. We’ll route you to the right dashboard automatically.';
   }
 
   async submit(): Promise<void> {
@@ -64,9 +62,18 @@ export class DashboardLoginComponent implements OnInit {
     this.error = '';
 
     try {
-      await this.bookingService.validateDashboardLogin(this.scope, username, password);
-      this.dashboardAuth.setCredentials(this.scope, username, password);
-      await this.router.navigateByUrl(this.nextUrl);
+      this.dashboardAuth.clearAll();
+      const result = await this.bookingService.resolveDashboardLogin(username, password, this.scope);
+      this.dashboardAuth.setAuthHeader(result.scope, result.authHeader);
+
+      const target =
+        result.scope === 'retreat'
+          ? '/dashboard/retreats'
+          : this.nextUrl === '/dashboard/retreats'
+            ? '/dashboard'
+            : this.nextUrl;
+
+      await this.router.navigateByUrl(target);
     } catch (error) {
       this.error = (error as Error).message || 'Could not sign in.';
     } finally {
