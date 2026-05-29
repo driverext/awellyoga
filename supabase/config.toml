@@ -62,3 +62,8 @@ entrypoint = "./functions/membership-portal/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/retreat-dashboard/index.ts"
+
+[functions.send-dashboard-access-email]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/send-dashboard-access-email/index.ts"
