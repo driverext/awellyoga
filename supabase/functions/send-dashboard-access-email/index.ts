@@ -43,6 +43,8 @@ Deno.serve(async (req) => {
     const text = [
       `Hi ${greetingName},`,
       '',
+      "Since I couldn't get the Stripe setup to work for you because your phone number is in Kosovo and it would not let me add you to the team there, I went ahead and created a dashboard so you can still see everything.",
+      '',
       `Here is your login for the A-WELL Yoga ${dashboardLabel}.`,
       '',
       `Login page: ${loginUrl}`,
@@ -64,6 +66,9 @@ Deno.serve(async (req) => {
 
           <div style="padding:28px;">
             <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">Hi ${escapeHtml(greetingName)},</p>
+            <p style="margin:0 0 18px;font-size:16px;line-height:1.7;">
+              Since I couldn't get the Stripe setup to work for you because your phone number is in Kosovo and it would not let me add you to the team there, I went ahead and created a dashboard so you can still see everything.
+            </p>
             <p style="margin:0 0 18px;font-size:16px;line-height:1.7;">
               Here is your login for the A-WELL Yoga ${escapeHtml(dashboardLabel)}.
             </p>
