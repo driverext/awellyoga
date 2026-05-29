@@ -1,0 +1,28 @@
+<section class="page-header">
+  <div class="container">
+    <h1>{{ heading() }}</h1>
+    <p>{{ description() }}</p>
+  </div>
+</section>
+
+<section class="section login-section">
+  <div class="container">
+    <form class="login-card" (ngSubmit)="submit()">
+      <label>
+        <span>Username</span>
+        <input type="text" name="username" [(ngModel)]="username" autocomplete="username" required>
+      </label>
+
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" [(ngModel)]="password" autocomplete="current-password" required>
+      </label>
+
+      <p class="error" *ngIf="error">{{ error }}</p>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+  </div>
+</section>

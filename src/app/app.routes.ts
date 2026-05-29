@@ -3,6 +3,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { RetreatsComponent } from './pages/retreats/retreats.component';
 import { RetreatDetailsComponent } from './pages/retreat-details/retreat-details.component';
 import { dashboardAuthGuard } from './guards/dashboard-auth.guard';
+import { retreatDashboardAuthGuard } from './guards/retreat-dashboard-auth.guard';
 
 export const routes: Routes = [
   { path: '', loadComponent: () => import('../app/pages/home/home.component').then(m => m.HomeComponent) },
@@ -20,6 +21,18 @@ export const routes: Routes = [
   { path: 'retreats/:id', component: RetreatDetailsComponent },
   { path: 'recipes', loadComponent: () => import('../app/pages/recipes/recipes.component').then(m => m.RecipesComponent) },
   { path: 'blog', loadComponent: () => import('../app/pages/blog/blog.component').then(m => m.BlogComponent) },
+  {
+    path: 'dashboard/login',
+    loadComponent: () => import('../app/pages/dashboard-login/dashboard-login.component').then(m => m.DashboardLoginComponent)
+  },
+  {
+    path: 'dashboard/retreats',
+    canActivate: [retreatDashboardAuthGuard],
+    loadComponent: () =>
+      import('../app/pages/retreat-dashboard/retreat-dashboard.component').then(
+        (m) => m.RetreatDashboardComponent
+      )
+  },
   {
     path: 'dashboard',
     canActivate: [dashboardAuthGuard],

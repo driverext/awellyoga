@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
 import {
   BookingService,
   DashboardBooking,
@@ -11,6 +12,7 @@ import {
 } from '../../services/booking.service';
 import { CmsEvent } from '../../services/cms/cms.models';
 import { SanityContentService } from '../../services/cms/sanity-content.service';
+import { DashboardAuthService } from '../../services/dashboard-auth.service';
 
 interface DashboardClassEvent {
   id: string;
@@ -64,7 +66,9 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private bookingService: BookingService,
-    private cmsContent: SanityContentService
+    private cmsContent: SanityContentService,
+    private dashboardAuth: DashboardAuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +77,11 @@ export class DashboardComponent implements OnInit {
 
   async refresh(): Promise<void> {
     await this.load();
+  }
+
+  async signOut(): Promise<void> {
+    this.dashboardAuth.clear('admin');
+    await this.router.navigate(['/dashboard/login'], { queryParams: { next: '/dashboard' } });
   }
 
   get filteredRecentBookings(): DashboardBooking[] {

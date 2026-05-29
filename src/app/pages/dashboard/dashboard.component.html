@@ -42,6 +42,7 @@
       </div>
 
       <div class="toolbar-actions">
+        <button type="button" class="btn btn-secondary" *ngIf="!loading && !error" (click)="signOut()">Sign Out</button>
         <button type="button" class="btn btn-secondary" *ngIf="!loading && !error" (click)="clearFilters()">Clear Filters</button>
         <button type="button" class="btn btn-secondary" *ngIf="!loading && !error" (click)="exportFilteredBookings()">Export CSV</button>
         <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="loading">

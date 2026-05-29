@@ -57,3 +57,8 @@ enabled = true
 verify_jwt = true
 import_map = "./functions/membership-portal/deno.json"
 entrypoint = "./functions/membership-portal/index.ts"
+
+[functions.retreat-dashboard]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/retreat-dashboard/index.ts"

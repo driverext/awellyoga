@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { CmsEvent } from './cms/cms.models';
 import { AuthService } from './auth.service';
+import { DashboardAuthService, DashboardScope } from './dashboard-auth.service';
 
 interface CreateCheckoutResponse {
   url?: string;
@@ -144,7 +145,10 @@ interface MembershipStatusResponse extends MembershipStatus {
 export class BookingService {
   private readonly edgeFunctionsBaseUrl = environment.booking?.edgeFunctionsBaseUrl || '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private dashboardAuthService: DashboardAuthService
+  ) {}
 
   async createCheckoutSession(
     event: CmsEvent,
@@ -304,20 +308,21 @@ export class BookingService {
   }
 
   async getBookingDashboard(): Promise<BookingDashboardResponse> {
+    return this.getProtectedDashboard('admin', 'booking-dashboard');
+  }
+
+  async getRetreatDashboard(): Promise<BookingDashboardResponse> {
+    return this.getProtectedDashboard('retreat', 'retreat-dashboard');
+  }
+
+  async validateDashboardLogin(scope: DashboardScope, username: string, password: string): Promise<void> {
     if (!this.edgeFunctionsBaseUrl) {
       throw new Error('Booking backend is not configured yet.');
     }
 
-    const authHeader =
-      typeof window !== 'undefined'
-        ? window.sessionStorage.getItem('awell_dashboard_auth_header')
-        : null;
-
-    if (!authHeader) {
-      throw new Error('Dashboard authorization is missing. Please re-open the dashboard.');
-    }
-
-    const response = await fetch(`${this.edgeFunctionsBaseUrl}/booking-dashboard`, {
+    const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
+    const endpoint = scope === 'retreat' ? 'retreat-dashboard' : 'booking-dashboard';
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/${endpoint}`, {
       method: 'GET',
       headers: {
         Authorization: authHeader
@@ -326,7 +331,33 @@ export class BookingService {
 
     const data = (await response.json()) as BookingDashboardResponse;
     if (!response.ok) {
-      throw new Error(data.error || 'Could not load booking dashboard.');
+      throw new Error(data.error || 'Invalid dashboard credentials.');
+    }
+  }
+
+  private async getProtectedDashboard(
+    scope: DashboardScope,
+    endpoint: 'booking-dashboard' | 'retreat-dashboard'
+  ): Promise<BookingDashboardResponse> {
+    if (!this.edgeFunctionsBaseUrl) {
+      throw new Error('Booking backend is not configured yet.');
+    }
+
+    const authHeader = this.dashboardAuthService.getAuthHeader(scope);
+    if (!authHeader) {
+      throw new Error('Dashboard authorization is missing. Please sign in again.');
+    }
+
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/${endpoint}`, {
+      method: 'GET',
+      headers: {
+        Authorization: authHeader
+      }
+    });
+
+    const data = (await response.json()) as BookingDashboardResponse;
+    if (!response.ok) {
+      throw new Error(data.error || 'Could not load dashboard.');
     }
 
     return data;
