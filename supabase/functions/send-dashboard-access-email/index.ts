@@ -43,8 +43,6 @@ Deno.serve(async (req) => {
     const text = [
       `Hi ${greetingName},`,
       '',
-      "Since I couldn't get the Stripe setup to work for you because your phone number is in Kosovo and it would not let me add you to the team there, I went ahead and created a dashboard so you can still see everything.",
-      '',
       `Here is your login for the A-WELL Yoga ${dashboardLabel}.`,
       '',
       `Login page: ${loginUrl}`,
@@ -52,6 +50,10 @@ Deno.serve(async (req) => {
       `Password: ${password}`,
       '',
       'Once you sign in, the system will route you to the correct dashboard automatically.',
+      '',
+      'Quick note:',
+      '- Completed means the payment went through successfully.',
+      '- Pending usually means someone started checkout but did not finish payment yet.',
       '',
       'A-WELL Yoga'
     ].join('\n');
@@ -66,9 +68,6 @@ Deno.serve(async (req) => {
 
           <div style="padding:28px;">
             <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">Hi ${escapeHtml(greetingName)},</p>
-            <p style="margin:0 0 18px;font-size:16px;line-height:1.7;">
-              Since I couldn't get the Stripe setup to work for you because your phone number is in Kosovo and it would not let me add you to the team there, I went ahead and created a dashboard so you can still see everything.
-            </p>
             <p style="margin:0 0 18px;font-size:16px;line-height:1.7;">
               Here is your login for the A-WELL Yoga ${escapeHtml(dashboardLabel)}.
             </p>
@@ -88,6 +87,11 @@ Deno.serve(async (req) => {
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#58473a;">
               Once you sign in, the system will route you to the correct dashboard automatically.
             </p>
+            <div style="margin:0 0 14px;padding:16px 18px;border-radius:16px;background:#fcf5ec;border:1px solid #ead9ca;">
+              <p style="margin:0 0 8px;font-size:14px;color:#6f5b4a;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;">Quick note</p>
+              <p style="margin:0 0 6px;font-size:15px;line-height:1.7;color:#58473a;"><strong>Completed</strong> means the payment went through successfully.</p>
+              <p style="margin:0;font-size:15px;line-height:1.7;color:#58473a;"><strong>Pending</strong> usually means someone started checkout but did not finish payment yet.</p>
+            </div>
             <p style="margin:0;font-size:14px;line-height:1.7;color:#7a6758;">
               Login page: <a href="${escapeHtml(loginUrl)}" style="color:#6f4c39;">${escapeHtml(loginUrl)}</a>
             </p>
