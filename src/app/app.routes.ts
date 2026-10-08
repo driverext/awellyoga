@@ -16,6 +16,7 @@ export const routes: Routes = [
   { path: 'schedule', loadComponent: () => import('../app/pages/schedule/schedule.component').then(m => m.ScheduleComponent) },
   { path: 'studio', redirectTo: '/schedule', pathMatch: 'full' },
   { path: 'ytt', loadComponent: () => import('../app/pages/ytt/ytt.component').then(m => m.YttComponent) },
+  { path: 'neuronidra', loadComponent: () => import('../app/pages/neuronidra/neuronidra.component').then(m => m.NeuroNidraComponent) },
   { path: 'workshops', loadComponent: () => import('../app/pages/workshops/workshops.component').then(m => m.WorkshopsComponent) },
   { path: 'retreats', component: RetreatsComponent },
   { path: 'retreats/:id', component: RetreatDetailsComponent },

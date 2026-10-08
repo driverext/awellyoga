@@ -1,0 +1,11 @@
+.event-content { max-width: 900px; }
+.event-artwork { width: 100%; height: auto; border-radius: var(--border-radius); margin-bottom: 2rem; }
+.event-content h2 { color: var(--primary-green); margin: 2rem 0 1rem; }
+.event-content p, .event-content li { line-height: 1.8; }
+.event-content ol, .event-content ul { padding-left: 1.5rem; }
+.event-content li { margin-bottom: .6rem; }
+.payment-options { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .75rem; }
+.payment-options .btn { white-space: normal; min-width: 0; padding: .8rem; }
+.wellbeing-note { margin-top: 2rem; font-size: .85rem; color: var(--text-medium); }
+.booking-confidence { padding: 1.5rem; background: var(--light-green); border-radius: var(--border-radius); overflow-wrap: anywhere; }
+@media (max-width: 576px) { .payment-form { padding: 1rem; } .page-header h1 { font-size: 2rem; } .payment-options .btn { font-size: .85rem; } }

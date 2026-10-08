@@ -36,6 +36,7 @@
             <option value="all">All statuses</option>
             <option value="paid">Paid</option>
             <option value="pending">Pending</option>
+            <option value="reserved">Unpaid — cash on arrival</option>
             <option value="expired">Expired</option>
           </select>
         </label>
@@ -192,8 +193,8 @@
             <td>{{ booking.customerName || '-' }}</td>
             <td>{{ booking.customerEmail || '-' }}</td>
             <td>{{ booking.customerWhatsApp || '-' }}</td>
-            <td>{{ money(booking.amountTotal) | currency:(booking.currency || overview.currency || 'USD'): 'symbol':'1.2-2' }}</td>
-            <td>{{ booking.bookingStatus || booking.paymentStatus || '-' }}</td>
+            <td>{{ money(booking.amountTotal) | currency:bookingCurrency(booking): 'symbol':'1.2-2' }}</td>
+            <td>{{ bookingStatusLabel(booking) }}</td>
           </tr>
           <tr *ngIf="filteredRecentBookings.length === 0">
             <td colspan="7">No bookings match these filters yet.</td>
@@ -257,6 +258,14 @@
       <p *ngIf="paidAttendees(selectedAttendanceEvent).length === 0" class="empty-note">No paid attendees yet.</p>
     </div>
 
+    <div class="attendance-section" *ngIf="cashAttendees(selectedAttendanceEvent).length">
+      <h4>Unpaid — cash on arrival</h4>
+      <div class="attendance-row" *ngFor="let attendee of cashAttendees(selectedAttendanceEvent)">
+        <p>{{ attendee.customerName }}</p><p>{{ attendee.customerEmail }}</p>
+        <p>Phone: {{ attendee.customerWhatsApp }}</p>
+        <p>{{ money(attendee.amountTotal) | currency:bookingCurrency(attendee): 'symbol':'1.2-2' }} due on arrival</p>
+      </div>
+    </div>
     <div class="attendance-section">
       <h4>Pending</h4>
       <div class="attendance-row" *ngFor="let attendee of pendingAttendees(selectedAttendanceEvent)">

@@ -67,3 +67,8 @@ entrypoint = "./functions/retreat-dashboard/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/send-dashboard-access-email/index.ts"
+
+[functions.cash-reservation]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/cash-reservation/index.ts"

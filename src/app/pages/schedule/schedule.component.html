@@ -98,8 +98,11 @@
               <div class="event-badge">{{ event.eventType }}</div>
               <h4>{{ event.title }}</h4>
               <p class="event-time">
-                {{ event.startDate | date: 'h:mm a' }}
-                <span *ngIf="event.endDate"> - {{ event.endDate | date: 'h:mm a' }}</span>
+                <ng-container *ngIf="isNeuroNidra(event); else standardEventTime">18:00–20:00 (Europe/Belgrade)</ng-container>
+                <ng-template #standardEventTime>
+                  {{ event.startDate | date: 'h:mm a' }}
+                  <span *ngIf="event.endDate"> - {{ event.endDate | date: 'h:mm a' }}</span>
+                </ng-template>
               </p>
               <p class="event-teacher" *ngIf="event.instructorName">With {{ event.instructorName }}</p>
               <p class="event-location" *ngIf="event.location">{{ event.location }}</p>

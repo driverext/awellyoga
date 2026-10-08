@@ -16,7 +16,8 @@ export type BookingSource =
   | 'schedule'
   | 'private-session-request'
   | 'retreat-page'
-  | 'beach-payment-page';
+  | 'beach-payment-page'
+  | 'neuronidra-page';
 
 export interface CheckoutSessionSummary {
   sessionId: string;
@@ -200,8 +201,9 @@ export class BookingService {
     return data;
   }
 
-  async getEventBookingCounts(eventIds: string[]): Promise<Record<string, number>> {
+  async getEventBookingCounts(eventIds: string[], strict = false): Promise<Record<string, number>> {
     if (!this.edgeFunctionsBaseUrl || !eventIds.length) {
+      if (strict) throw new Error('Booking availability is not configured.');
       return {};
     }
 
@@ -214,11 +216,23 @@ export class BookingService {
     });
 
     if (!response.ok) {
+      if (strict) throw new Error('Could not check booking availability.');
       return {};
     }
 
     const data = (await response.json()) as BookingCountResponse;
     return data.counts || {};
+  }
+
+  async createCashReservation(eventId: string, name: string, email: string, phone: string): Promise<{ bookingId: string; notificationWarning?: boolean }> {
+    if (!this.edgeFunctionsBaseUrl) throw new Error('Booking backend is not configured.');
+    const response = await fetch(`${this.edgeFunctionsBaseUrl}/cash-reservation`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ eventId, name, email, phone })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.bookingId) throw new Error(result.error || 'Could not reserve your spot.');
+    return result;
   }
 
   async createPrivateSessionRequest(payload: PrivateSessionRequestPayload): Promise<PrivateSessionRequestResponse> {

@@ -49,7 +49,7 @@
               >
                 Book {{ workshop.label }}
               </a>
-              <a routerLink="/schedule" fragment="calendar" class="btn-text">View In Schedule</a>
+              <a [href]="workshop.scheduleUrl || '/schedule#calendar'" class="btn-text">View In Schedule</a>
             </div>
           </div>
         </div>

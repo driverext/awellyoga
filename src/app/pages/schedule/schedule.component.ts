@@ -1,3 +1,5 @@
+import { NEURONIDRA_EVENT } from '../../../../shared/neuronidra-event';
+import { Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -121,6 +123,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private cmsContent: SanityContentService,
     private bookingService: BookingService,
     private authService: AuthService,
@@ -233,6 +236,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   openBooking(event: CmsEvent): void {
+    if (event.id === NEURONIDRA_EVENT.id) {
+      void this.router.navigate(['/neuronidra'], { fragment: 'booking' });
+      return;
+    }
     if (this.isPrivateSessionEvent(event)) {
       this.privateSessionCheckoutEvent = event;
       this.privateSessionSuccess = '';
@@ -423,6 +430,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.studioHours = content.studioHours?.length ? content.studioHours : this.studioHours;
     this.updateSeo();
   }
+
+  isNeuroNidra(event: CmsEvent): boolean { return event.id === NEURONIDRA_EVENT.id; }
 
   eventCapacity(event: CmsEvent): number | null {
     if (typeof event.maxSpots === 'number' && event.maxSpots > 0) {

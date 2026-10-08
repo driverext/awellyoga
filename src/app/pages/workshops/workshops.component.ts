@@ -1,3 +1,4 @@
+import { NEURONIDRA_EVENT, NEURONIDRA_IMAGE } from '../../../../shared/neuronidra-event';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -15,6 +16,13 @@ const BEACH_EVENT_ID = 'special-event-immersive-beach-yoga-2026-05-16';
 })
 export class WorkshopsComponent implements OnInit {
   workshops = [
+    {
+      title: NEURONIDRA_EVENT.title, label: 'Special Event',
+      date: 'Thursday, 15 October 2026', time: '18:00–20:00 (Europe/Belgrade)',
+      location: NEURONIDRA_EVENT.location, price: NEURONIDRA_EVENT.priceLabel,
+      description: NEURONIDRA_EVENT.summary, image: NEURONIDRA_IMAGE,
+      bookingUrl: '/neuronidra', scheduleUrl: `/schedule?event=${NEURONIDRA_EVENT.id}#calendar`, scheduleOnly: false
+    },
     {
       title: 'Immersive Beach Yoga + Brunch',
       label: 'Special Event',
@@ -70,21 +78,21 @@ export class WorkshopsComponent implements OnInit {
         data: {
           '@context': 'https://schema.org',
           '@type': 'Event',
-          name: this.workshops[1].title,
+          name: this.workshops[2].title,
           startDate: '2026-05-30T18:00:00-04:00',
           endDate: '2026-05-30T20:00:00-04:00',
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
           eventStatus: 'https://schema.org/EventScheduled',
           location: {
             '@type': 'Place',
-            name: this.workshops[1].location,
-            address: this.workshops[1].location
+            name: this.workshops[2].location,
+            address: this.workshops[2].location
           },
           offers: {
             '@type': 'Offer',
             price: '35',
             priceCurrency: 'USD',
-            url: this.workshops[1].bookingUrl,
+            url: this.workshops[2].bookingUrl,
             availability: 'https://schema.org/InStock'
           },
           url: `${SITE_URL}/workshops`

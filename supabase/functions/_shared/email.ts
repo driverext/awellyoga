@@ -8,6 +8,7 @@ type SendEmailPayload = {
   text: string;
   html: string;
   replyTo?: string;
+  throwOnFailure?: boolean;
 };
 
 export function normalizeEventType(value: string | null | undefined): 'retreat' | 'workshop' | 'class' {
@@ -135,6 +136,7 @@ export async function sendEmailViaConfiguredProvider(payload: SendEmailPayload):
   const smtpSecureRaw = (Deno.env.get('SMTP_SECURE') || '').trim().toLowerCase();
 
   if (!fromEmail || !payload.toEmail || !isValidEmail(payload.toEmail)) {
+    if (payload.throwOnFailure) throw new Error('Booking email sender or recipient is not configured.');
     return;
   }
 
@@ -171,6 +173,7 @@ export async function sendEmailViaConfiguredProvider(payload: SendEmailPayload):
   }
 
   if (!resendApiKey) {
+    if (payload.throwOnFailure) throw new Error('No usable booking email provider is configured.');
     return;
   }
 
@@ -193,6 +196,7 @@ export async function sendEmailViaConfiguredProvider(payload: SendEmailPayload):
   if (!response.ok) {
     const errorBody = await response.text();
     console.error('Failed to send booking email:', errorBody);
+    if (payload.throwOnFailure) throw new Error('Booking email provider rejected the message.');
   }
 }
 

@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
       .from('bookings')
       .select('sanity_event_id, booking_status, reservation_expires_at')
       .in('sanity_event_id', eventIds)
-      .in('booking_status', ['pending', 'paid']);
+      .in('booking_status', ['pending', 'paid', 'reserved']);
 
     if (error) {
       return json(req, { error: error.message }, 400);
@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      const isPaid = row.booking_status === 'paid';
+      const isPaid = row.booking_status === 'paid' || row.booking_status === 'reserved';
       const isPendingActive =
         row.booking_status === 'pending' &&
         !!row.reservation_expires_at &&

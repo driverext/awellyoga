@@ -1,3 +1,4 @@
+import { NEURONIDRA_EVENT, NEURONIDRA_DATE_LABEL } from '../../../shared/neuronidra-event.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
 
@@ -41,6 +42,19 @@ Deno.serve(async (req) => {
     const payload = (await req.json()) as CreateCheckoutPayload;
     if (!payload?.eventId || !payload?.title) {
       return json(req, { error: 'Missing event id or title.' }, 400);
+    }
+
+    const isNeuroNidra = payload.eventId === NEURONIDRA_EVENT.id;
+    if (isNeuroNidra) {
+      // Do not trust client-supplied prices, capacity, dates, or payment links for this event.
+      Object.assign(payload, NEURONIDRA_EVENT, {
+        eventId: NEURONIDRA_EVENT.id, dateLabel: NEURONIDRA_DATE_LABEL,
+        stripePriceId: undefined, bookingUrl: undefined, instructorStripeAccountId: undefined,
+        successPath: undefined, cancelPath: '/neuronidra#booking'
+      });
+      if (Date.now() >= Date.parse(NEURONIDRA_EVENT.startDate)) {
+        return json(req, { error: 'Booking for this event has closed.', code: 'BOOKING_CLOSED' }, 409);
+      }
     }
 
     const email = (payload.email || '').trim().toLowerCase();
@@ -92,7 +106,7 @@ Deno.serve(async (req) => {
 
       const now = new Date();
       const activeCount = (existingBookings || []).filter((booking) => {
-        if (booking.booking_status === 'paid') {
+        if (booking.booking_status === 'paid' || booking.booking_status === 'reserved') {
           return true;
         }
 
@@ -115,7 +129,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    const reservationExpiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+    const reservationExpiresAt = new Date(Date.now() + (isNeuroNidra ? 32 : 15) * 60 * 1000).toISOString();
     const { data: insertedBooking, error: insertError } = await supabase
       .from('bookings')
       .insert({
@@ -135,7 +149,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (insertError || !insertedBooking?.id) {
-      return json(req, { error: insertError?.message || 'Could not reserve this class spot.' }, 400);
+      return json(req, { error: insertError?.message === 'CLASS_FULL' ? 'This class is full.' : insertError?.message || 'Could not reserve this class spot.' }, insertError?.message === 'CLASS_FULL' ? 409 : 400);
     }
 
     const origin = resolveRedirectOrigin(req);
@@ -144,6 +158,10 @@ Deno.serve(async (req) => {
 
     const body = new URLSearchParams();
     body.set('mode', 'payment');
+    if (isNeuroNidra) {
+      body.set('payment_method_types[0]', 'card');
+      body.set('expires_at', String(Math.floor(Date.now() / 1000) + 31 * 60));
+    }
     body.set('success_url', successUrl);
     body.set('cancel_url', cancelUrl);
     body.set('customer_email', email);

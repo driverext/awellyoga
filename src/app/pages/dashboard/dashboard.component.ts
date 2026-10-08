@@ -1,3 +1,4 @@
+import { NEURONIDRA_EVENT } from '../../../../shared/neuronidra-event';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -70,6 +71,14 @@ export class DashboardComponent implements OnInit {
     private dashboardAuth: DashboardAuthService,
     private router: Router
   ) {}
+
+  bookingCurrency(booking: DashboardBooking): string {
+    return booking.eventTitle === NEURONIDRA_EVENT.title ? 'EUR' : booking.currency || this.overview.currency || 'USD';
+  }
+
+  bookingStatusLabel(booking: DashboardBooking): string {
+    return booking.paymentStatus === 'unpaid_cash' ? 'Unpaid — cash on arrival' : booking.bookingStatus || booking.paymentStatus || '-';
+  }
 
   ngOnInit(): void {
     void this.load();
@@ -222,6 +231,10 @@ export class DashboardComponent implements OnInit {
     return event.attendees.filter((booking) => (booking.bookingStatus || booking.paymentStatus) === 'paid');
   }
 
+  cashAttendees(event: DashboardClassEvent | null): DashboardBooking[] {
+    return event?.attendees.filter((booking) => booking.paymentStatus === 'unpaid_cash' && booking.bookingStatus === 'reserved') || [];
+  }
+
   pendingAttendees(event: DashboardClassEvent | null): DashboardBooking[] {
     if (!event) {
       return [];
@@ -238,7 +251,7 @@ export class DashboardComponent implements OnInit {
       backup_contact: booking.customerWhatsApp || '',
       amount: this.money(booking.amountTotal),
       currency: booking.currency || this.overview.currency || 'usd',
-      status: booking.bookingStatus || booking.paymentStatus || ''
+      status: this.bookingStatusLabel(booking)
     }));
 
     this.downloadCsv(
@@ -262,7 +275,7 @@ export class DashboardComponent implements OnInit {
       backup_contact: attendee.customerWhatsApp || '',
       amount: this.money(attendee.amountTotal),
       currency: attendee.currency || this.overview.currency || 'usd',
-      status: attendee.bookingStatus || attendee.paymentStatus || ''
+      status: this.bookingStatusLabel(attendee)
     }));
 
     this.downloadCsv(

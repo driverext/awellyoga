@@ -1,3 +1,4 @@
+import { NEURONIDRA_EVENT } from '../../../../shared/neuronidra-event';
 import { Injectable } from '@angular/core';
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
@@ -232,7 +233,7 @@ export class SanityContentService {
 
   getUpcomingEvents(limit = 250): Observable<CmsEvent[]> {
     if (!this.client) {
-      return of([]);
+      return of(this.withLocalEvents([]));
     }
 
     const query = `*[_type == "retreatEvent" && isActive == true && defined(startDate) && coalesce(endDate, startDate) >= now()] | order(displayOrder asc, startDate asc)[0...$limit]{
@@ -289,8 +290,14 @@ export class SanityContentService {
       catchError((error) => {
         console.error('Sanity getUpcomingEvents failed:', error);
         return of([]);
-      })
+      }),
+      map((events) => this.withLocalEvents(events))
     );
+  }
+
+  private withLocalEvents(events: CmsEvent[]): CmsEvent[] {
+    if (Date.now() > Date.parse(NEURONIDRA_EVENT.endDate)) return events;
+    return [...events.filter((event) => event.id !== NEURONIDRA_EVENT.id), { ...NEURONIDRA_EVENT }];
   }
 
   private imageUrl(source: unknown, width = 1200): string | null {

@@ -4,6 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 
 interface SeoPayload {
   title: string;
+  exactTitle?: boolean;
   description: string;
   path?: string;
   image?: string;
@@ -27,7 +28,7 @@ export class SeoService {
     const baseUrl = 'https://awellyoga.com';
     const canonicalUrl = `${baseUrl}${payload.path || this.document.location?.pathname || '/'}`;
     const imageUrl = payload.image ? (payload.image.startsWith('http') ? payload.image : `${baseUrl}${payload.image}`) : `${baseUrl}/assets/brand/awell-yoga-logo.jpg`;
-    const fullTitle = payload.title.includes('A-WELL Yoga') ? payload.title : `${payload.title} | A-WELL Yoga`;
+    const fullTitle = payload.exactTitle || payload.title.includes('A-WELL Yoga') ? payload.title : `${payload.title} | A-WELL Yoga`;
 
     this.title.setTitle(fullTitle);
     this.meta.updateTag({ name: 'description', content: payload.description });
