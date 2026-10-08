@@ -1024,7 +1024,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.seo.updatePage({
       title: this.pageTitle || 'Schedule',
       description:
-        'Explore live online yoga, workshops, private sessions, and upcoming events with A-WELL Yoga.',
+        'Explore live online yoga, Sunday prenatal yoga in Pristina, Kosovo, workshops, private sessions, and upcoming events with A-WELL Yoga.',
       path: '/schedule',
       image: this.scheduleImageUrl
     });

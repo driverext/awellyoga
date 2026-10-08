@@ -31,7 +31,7 @@ export class OfferingsComponent {
     this.seo.updatePage({
       title: 'Online Yoga Classes and Offerings',
       description:
-        'Explore online yoga, private sessions, workshops, and retreats. Live Hatha Yoga on Zoom: Sundays October–January, 11 a.m. EST (UTC−5), $15 USD / €12 EUR.',
+        'Explore online yoga, prenatal yoga in Pristina, private sessions, workshops, and retreats. Live Hatha Yoga on Zoom: Sundays October–January, 11 a.m. EST (UTC−5), $15 USD / €12 EUR.',
       path: '/offerings'
     });
 
@@ -150,7 +150,7 @@ export class OfferingsComponent {
       id: 'prenatal',
       name: 'Prenatal Yoga',
       level: 'Specialized',
-      description: 'A gentle practice designed specifically for expectant mothers. Focuses on breathing, gentle stretching, and preparing the body for childbirth.',
+      description: 'In person in Pristina, Kosovo, Sundays at 3 p.m. local time. €20 drop-in or €60 for one month (4 sessions). A gentle practice designed specifically for expectant mothers. Focuses on breathing, gentle stretching, and preparing the body for childbirth.',
       benefits: [
         'Reduces pregnancy discomfort',
         'Improves flexibility for labor',
@@ -158,9 +158,10 @@ export class OfferingsComponent {
         'Creates community with other mothers'
       ],
       image: '/assets/classes/prenatal-yoga.jpg',
-      ctaLabel: 'Explore Live Yoga',
+      programMeta: 'Sundays · 3 p.m. · Pristina, Kosovo · €20 drop-in / €60 monthly (4 sessions)',
+      ctaLabel: 'View Prenatal Yoga Details',
       ctaRoute: '/schedule',
-      ctaFragment: 'sunday-yoga'
+      ctaFragment: 'prenatal-yoga'
     },
     {
       id: 'kids',
