@@ -42,7 +42,6 @@
 
     <h2 id="booking">Price &amp; booking</h2>
     <p>30 € · Only 12 spots · Pay by card online, or reserve now and pay in cash on arrival.</p>
-    <p aria-live="polite" *ngIf="remaining !== null">{{ remaining }} of 12 spots left</p>
     <p *ngIf="closed" role="status">{{ remaining === 0 ? 'This class is full. Booking is closed.' : 'Booking for this event has closed.' }}</p>
     <p *ngIf="availabilityError" class="form-error" role="alert">{{ availabilityError }} <button type="button" class="btn-text" (click)="refreshAvailability()">Retry</button></p>
     <form class="payment-form" *ngIf="!confirmation" (ngSubmit)="reserve('card')">

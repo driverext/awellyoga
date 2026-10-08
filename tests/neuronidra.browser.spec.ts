@@ -17,7 +17,8 @@ test('mobile page preserves copy, SEO, side-by-side options and has no horizonta
   await page.setViewportSize({ width: 375, height: 812 });
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto('/neuronidra');
-  await expect(page.getByText('12 of 12 spots left')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Pay by card', exact: true })).toBeEnabled();
+  await expect(page.getByText(/of 12 spots left/)).toHaveCount(0);
   await expect(page).toHaveTitle('NeuroNidra™ in Prishtina — Guided Deep Rest with Arieta Berisha Kirk');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'NeuroNidra™ by Arieta Berisha Kirk: a guided deep-rest practice for anxiety, grief and overthinking. Somatic, vagal, neural. Sessions in Prishtina.');
   const schema = JSON.parse(await page.locator('#jsonld-neuronidra-event').textContent() || '{}');
@@ -31,20 +32,22 @@ test('mobile page preserves copy, SEO, side-by-side options and has no horizonta
   await page.screenshot({ path: '/tmp/neuronidra-mobile.png', fullPage: true });
 });
 
-test('cash UI saves booking, shows confirmation and decrements spots', async ({ page }) => {
-  await page.goto('/neuronidra'); await expect(page.getByText('12 of 12 spots left')).toBeVisible();
+test('cash UI saves booking and shows confirmation without a spot counter', async ({ page }) => {
+  await page.goto('/neuronidra'); await expect(page.getByRole('button', { name: 'Pay by card', exact: true })).toBeEnabled();
+  await expect(page.getByText(/of 12 spots left/)).toHaveCount(0);
   await page.getByLabel('Email', { exact: true }).fill('mobile@example.test');
   await page.getByLabel('Name', { exact: false }).fill('Mobile Guest');
   await page.getByLabel('Phone', { exact: false }).fill('+38344123456');
   await page.getByRole('button', { name: 'Reserve now, pay in cash' }).click();
   await expect(page.locator('.booking-confidence')).toContainText('Please bring 30 € in cash. Doors open 17:45.');
-  await expect(page.getByText('11 of 12 spots left')).toBeVisible();
+  await expect(page.getByText(/of 12 spots left/)).toHaveCount(0);
   const rows = await (await fetch(`${bridge}/__test/bookings`)).json();
   expect(rows[0].payment_status).toBe('unpaid_cash'); expect(rows[0].stripe_customer_name).toBe('Mobile Guest');
 });
 
 test('card UI opens trusted mock checkout; signed mock webhook stores paid booking', async ({ page }) => {
-  await page.goto('/neuronidra'); await expect(page.getByText('12 of 12 spots left')).toBeVisible();
+  await page.goto('/neuronidra'); await expect(page.getByRole('button', { name: 'Pay by card', exact: true })).toBeEnabled();
+  await expect(page.getByText(/of 12 spots left/)).toHaveCount(0);
   await page.getByLabel('Email', { exact: true }).fill('browser-card@example.test');
   await page.getByRole('button', { name: 'Pay by card', exact: true }).click();
   await page.waitForURL('https://checkout.stripe.com/**');
@@ -58,7 +61,8 @@ test('full class disables both choices and stale thirteenth reservation is rejec
     const response = await fetch(`${bridge}/cash-reservation`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ eventId: event.id, name: 'Capacity Guest', email: `capacity${i}@example.test`, phone: '+38344123456' }) });
     expect(response.ok).toBe(true);
   }
-  await page.goto('/neuronidra'); await expect(page.getByText('0 of 12 spots left')).toBeVisible();
+  await page.goto('/neuronidra'); await expect(page.getByText('This class is full. Booking is closed.')).toBeVisible();
+  await expect(page.getByText(/of 12 spots left/)).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Pay by card', exact: true })).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Reserve now, pay in cash' })).toBeDisabled();
   const response = await fetch(`${bridge}/cash-reservation`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ eventId: event.id, name: 'Extra Guest', email: 'extra@example.test', phone: '+38344123456' }) }); expect(response.status).toBe(409);
