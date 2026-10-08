@@ -7,14 +7,16 @@ import { SanityContentService } from '../../services/cms/sanity-content.service'
 import { SeoService } from '../../services/seo.service';
 import { SITE_URL, STUDIO_CONTACT } from '../../config/site-constants';
 
+const ARIETA_ABOUT_TITLE = 'Founder, A-WELL Yoga Studio & School';
+const ARIETA_ABOUT_IMAGE = '/assets/teachers/arieta/arieta-team.jpg';
 const ARIETA_ABOUT_BIO = [
-  'Creator of the RESET Method™ (NeuroYoga-Based)',
-  '200hr, 300hr Neuro-Based Yoga Teacher Training Developer',
-  'Founder of A-WELL Yoga',
-  'With over 7,000 teaching hours, bridging clinical psychology, neuroscience, and embodied practice.',
-  'Arieta teaches yoga as a path of honest self-inquiry. Her work begins with the breath—allowing the nervous system to settle so movement arises from awareness, not performance.',
-  'Blending science, embodied practice, and lived experience, she creates spaces that feel both grounded and deeply transformative.',
-  'She believes yoga begins the moment we are willing to meet ourselves with truth. Her mission is simple: to help people understand why they practice—so yoga becomes a way of living.'
+  "Creator of NeuroNidra™ and the RESET Method™",
+  "Yoga Therapist & Anxiety Coach · E-RYT 500 · Trauma-Informed Yoga",
+  "Developer of Neuro-Informed 200hr & 300hr Yoga Teacher Trainings",
+  "Rooted in the Sivananda lineage and with more than 15 years and 15,000+ teaching hours, Arieta bridges classical yoga, psychology, neuroscience and embodied practice.",
+  "Her work begins with the breath, letting the nervous system settle so that movement, rest and insight arise from awareness, not performance. Today she guides people through anxiety, grief, overthinking and old emotional patterns, working where words alone can't reach: through the body, the breath and the brain. Trained in trauma-informed yoga, she creates spaces where safety comes first and every person stays in choice.",
+  "Through NeuroNidra™, her guided deep-rest practice grown from the yoga nidra tradition of her lineage, and the RESET Method™, she creates spaces that feel both grounded and deeply transformative, blending science, embodied practice and lived experience.",
+  "She believes yoga begins the moment we are willing to meet ourselves with truth. Her mission is simple: to help people understand why they practice, so yoga becomes a way of living."
 ];
 
 const MELITA_ABOUT_BIO = [
@@ -54,7 +56,7 @@ export class AboutComponent implements OnInit, OnDestroy {
       description:
         'Meet the teachers behind A-WELL Yoga and explore a grounded, therapeutic, nervous-system-aware approach to yoga.',
       path: '/about',
-      image: '/assets/teachers/arieta/arieta-bio.jpg'
+      image: ARIETA_ABOUT_IMAGE
     });
 
     this.seo.updateJsonLd([
@@ -115,9 +117,9 @@ export class AboutComponent implements OnInit, OnDestroy {
     return [
       {
         name: 'Arieta Berisha Kirk',
-        title: 'Founder',
+        title: ARIETA_ABOUT_TITLE,
         isFounder: true,
-        imageUrl: '/assets/teachers/arieta/arieta-bio.jpg',
+        imageUrl: ARIETA_ABOUT_IMAGE,
         photoAlt: 'Arieta Berisha Kirk - Founder',
         bioParagraphs: ARIETA_ABOUT_BIO
       },
@@ -213,7 +215,8 @@ export class AboutComponent implements OnInit, OnDestroy {
     return {
       ...instructor,
       name: 'Arieta Berisha Kirk',
-      title: 'Founder',
+      imageUrl: ARIETA_ABOUT_IMAGE,
+      title: ARIETA_ABOUT_TITLE,
       isFounder: true,
       photoAlt: 'Arieta Berisha Kirk - Founder',
       bioParagraphs: ARIETA_ABOUT_BIO
