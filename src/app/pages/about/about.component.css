@@ -459,3 +459,9 @@
   object-fit: contain;
   opacity: 0.95;
 }
+
+@media (max-width: 768px) {
+  .method-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

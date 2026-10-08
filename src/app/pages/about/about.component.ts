@@ -52,7 +52,7 @@ export class AboutComponent implements OnInit, OnDestroy {
     this.seo.updatePage({
       title: 'About A-WELL Yoga',
       description:
-        'Meet the teachers behind A-WELL Yoga in Sanford, Florida, and learn more about the studio’s grounded, therapeutic, nervous-system-aware approach to yoga.',
+        'Meet the teachers behind A-WELL Yoga and explore a grounded, therapeutic, nervous-system-aware approach to yoga.',
       path: '/about',
       image: '/assets/teachers/arieta/arieta-bio.jpg'
     });
@@ -68,15 +68,7 @@ export class AboutComponent implements OnInit, OnDestroy {
           url: SITE_URL,
           email: STUDIO_CONTACT.email,
           telephone: STUDIO_CONTACT.phoneSchema,
-          founder: 'Arieta Berisha Kirk',
-          address: {
-            '@type': 'PostalAddress',
-            streetAddress: STUDIO_CONTACT.addressLine,
-            addressLocality: STUDIO_CONTACT.city,
-            addressRegion: STUDIO_CONTACT.region,
-            postalCode: STUDIO_CONTACT.postalCode,
-            addressCountry: STUDIO_CONTACT.country
-          }
+          founder: 'Arieta Berisha Kirk'
         }
       },
       {

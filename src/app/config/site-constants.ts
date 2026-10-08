@@ -5,14 +5,8 @@ export const STUDIO_CONTACT = {
   email: 'info@awellyoga.com',
   phoneDisplay: '(321) 230-8833',
   phoneHref: '+13212308833',
-  phoneSchema: '+1-321-230-8833',
-  addressLine: '214 Hickman Dr',
-  cityStateZip: 'Sanford, FL 32771',
-  city: 'Sanford',
-  region: 'FL',
-  postalCode: '32771',
-  country: 'US'
+  phoneSchema: '+1-321-230-8833'
 } as const;
 
 export const GOOGLE_REVIEW_FALLBACK_URL =
-  'https://www.google.com/search?q=A-WELL+Yoga+Sanford+FL';
+  'https://www.google.com/search?q=A-WELL+Yoga';

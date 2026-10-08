@@ -29,9 +29,9 @@ export class OfferingsComponent {
 
   constructor(private seo: SeoService) {
     this.seo.updatePage({
-      title: 'Yoga Classes and Offerings',
+      title: 'Online Yoga Classes and Offerings',
       description:
-        'Explore yoga classes, private sessions, and therapeutic movement offerings from A-WELL Yoga in Sanford, Florida.',
+        'Explore online yoga, private sessions, workshops, and retreats. Live Hatha Yoga on Zoom: Sundays October–January, 11 a.m. EST (UTC−5), $15 USD / €12 EUR.',
       path: '/offerings'
     });
 
@@ -94,9 +94,9 @@ export class OfferingsComponent {
         'Enhances body awareness'
       ],
       image: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
-      ctaLabel: 'Book a Class',
+      ctaLabel: 'Explore Live Yoga',
       ctaRoute: '/schedule',
-      ctaFragment: 'calendar'
+      ctaFragment: 'sunday-yoga'
     },
     {
       id: 'yin',
@@ -110,15 +110,15 @@ export class OfferingsComponent {
         'Balances the nervous system'
       ],
       image: '/assets/classes/yin-yoga.jpg',
-      ctaLabel: 'Book a Class',
+      ctaLabel: 'Explore Live Yoga',
       ctaRoute: '/schedule',
-      ctaFragment: 'calendar'
+      ctaFragment: 'sunday-yoga'
     },
     {
       id: 'hatha',
       name: 'Hatha Yoga',
       level: 'All Levels',
-      description: 'A traditional approach to yoga that balances strength and flexibility. Poses are held longer with focus on alignment and breathing techniques.',
+      description: 'Live Hatha Yoga on Zoom, Sundays October–January at 11 a.m. EST (UTC−5), $15 USD / €12 EUR per class. This traditional approach balances strength and flexibility, with poses held longer to focus on alignment and breathing.',
       benefits: [
         'Improves physical balance and stability',
         'Enhances breath control',
@@ -126,9 +126,9 @@ export class OfferingsComponent {
         'Increases bodily awareness'
       ],
       image: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
-      ctaLabel: 'Book a Class',
+      ctaLabel: 'Explore Live Yoga',
       ctaRoute: '/schedule',
-      ctaFragment: 'calendar'
+      ctaFragment: 'sunday-yoga'
     },
     {
       id: 'restorative',
@@ -142,9 +142,9 @@ export class OfferingsComponent {
         'Enhances emotional wellbeing'
       ],
       image: '/assets/classes/restorative-yoga.jpg',
-      ctaLabel: 'Book a Class',
+      ctaLabel: 'Explore Live Yoga',
       ctaRoute: '/schedule',
-      ctaFragment: 'calendar'
+      ctaFragment: 'sunday-yoga'
     },
     {
       id: 'prenatal',
@@ -158,9 +158,9 @@ export class OfferingsComponent {
         'Creates community with other mothers'
       ],
       image: '/assets/classes/prenatal-yoga.jpg',
-      ctaLabel: 'Book a Class',
+      ctaLabel: 'Explore Live Yoga',
       ctaRoute: '/schedule',
-      ctaFragment: 'calendar'
+      ctaFragment: 'sunday-yoga'
     },
     {
       id: 'kids',
@@ -174,9 +174,9 @@ export class OfferingsComponent {
         'Creates a fun introduction to mindfulness'
       ],
       image: '/assets/classes/kids-yoga.jpg',
-      ctaLabel: 'Book a Class',
+      ctaLabel: 'Explore Live Yoga',
       ctaRoute: '/schedule',
-      ctaFragment: 'calendar'
+      ctaFragment: 'sunday-yoga'
     }
   ];
 }

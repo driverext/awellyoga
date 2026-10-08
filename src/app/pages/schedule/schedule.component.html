@@ -29,6 +29,25 @@
   </div>
 </section>
 
+<section class="section" id="sunday-yoga" aria-labelledby="sunday-yoga-heading">
+  <div class="container">
+    <div class="booking-steps-card">
+      <h2 id="sunday-yoga-heading">Hatha Yoga via Zoom</h2>
+      <p><strong>Sundays, October–January · 11:00 a.m. EST (UTC−5)</strong></p>
+      <p>A live Hatha Yoga practice with Arieta, wherever you are.</p>
+      <div class="hatha-pricing">
+        <label for="hatha-currency">Class currency</label>
+        <select id="hatha-currency" [(ngModel)]="hathaCurrency">
+          <option value="USD">USD — US dollars</option>
+          <option value="EUR">EUR — Euros</option>
+        </select>
+        <p class="hatha-price" aria-live="polite"><strong>{{ hathaCurrency === 'EUR' ? '€12 EUR' : '$15 USD' }}</strong> per class</p>
+      </div>
+      <p>Booking and joining details will be available here soon.</p>
+    </div>
+  </div>
+</section>
+
 <!-- Schedule Teaser -->
 <section class="section schedule-teaser">
   <div class="container">
@@ -274,7 +293,7 @@
     <div class="membership-header text-center">
       <h2>Memberships and Drop-Ins</h2>
       <p>
-        Keep studio class booking simple: use a $25 drop-in when you want flexibility, or start a membership and
+        Keep class booking simple: use a $25 drop-in when you want flexibility, or start a membership and
         reserve eligible classes through your membership account.
       </p>
       <div class="membership-account-card">
@@ -339,7 +358,7 @@
       <article class="membership-card featured">
         <p class="membership-kicker">Monthly Membership</p>
         <h3>$140<span>/month</span></h3>
-        <p>Built for regular students who want a consistent studio rhythm without repurchasing each class.</p>
+        <p>Built for regular students who want a consistent practice rhythm without repurchasing each class.</p>
         <button
           type="button"
           class="btn btn-primary"
@@ -357,7 +376,7 @@
       <article class="membership-card">
         <p class="membership-kicker">First Month Offer</p>
         <h3>$49<span> first month</span></h3>
-        <p>For first-time monthly members who want an easier on-ramp into the studio schedule.</p>
+        <p>For first-time monthly members who want an easier on-ramp into the class schedule.</p>
         <button
           type="button"
           class="btn btn-secondary"
@@ -374,7 +393,7 @@
     </div>
 
     <p class="membership-footnote text-center">
-      Already a member? Open any eligible studio class, sign in to your account, and choose
+      Already a member? Open any eligible class, sign in to your account, and choose
       <strong>Use Membership</strong> instead of paying the drop-in rate.
     </p>
 
@@ -549,10 +568,10 @@
   </div>
 </section>
 
-<!-- Studio Policies -->
+<!-- Class Policies -->
 <section class="section policies-section">
   <div class="container">
-    <h2 class="text-center">Studio Policies</h2>
+    <h2 class="text-center">Class Policies</h2>
     
     <div class="policies-grid">
       <div class="policy-card">
@@ -568,7 +587,7 @@
           <span class="material-icons">access_time</span>
         </div>
         <h3>Arrival & Late Entry</h3>
-        <p>Doors open 15 minutes before class. Please arrive at least 5 minutes early. For safety and class flow, late entry is not guaranteed.</p>
+        <p>For online classes, join Zoom at least 5 minutes early to check your connection. For safety and class flow, late entry is not guaranteed.</p>
       </div>
       
       <div class="policy-card">
@@ -584,15 +603,15 @@
           <span class="material-icons">payments</span>
         </div>
         <h3>Payments & Credits</h3>
-        <p>All purchases are final and non-refundable unless required by law. Approved exceptions are issued as studio credit.</p>
+        <p>All purchases are final and non-refundable unless required by law. Approved exceptions are issued as account credit.</p>
       </div>
       
       <div class="policy-card">
         <div class="policy-icon">
           <span class="material-icons">phone_in_talk</span>
         </div>
-        <h3>Studio Etiquette</h3>
-        <p>Please silence phones and avoid device use in practice areas. Respectful, non-disruptive conduct is required at all times.</p>
+        <h3>Class Etiquette</h3>
+        <p>Please silence notifications and keep your microphone muted when you are not speaking. Respectful, non-disruptive conduct is required at all times.</p>
       </div>
       
       <div class="policy-card">
@@ -600,7 +619,7 @@
           <span class="material-icons">sanitizer</span>
         </div>
         <h3>Health & Hygiene</h3>
-        <p>Please clean mats and props after use. If you are feeling unwell, please stay home and attend another session.</p>
+        <p>Choose a clear, comfortable practice area and move within your limits. If you are feeling unwell, rest and join another session.</p>
       </div>
     </div>
   </div>
@@ -634,31 +653,12 @@
     </div>
 </section>
 
-<!-- Contact/Location Section -->
 <section class="section contact-section">
   <div class="container">
-    <h2 class="text-center">Visit Our Studio</h2>
-    <div class="contact-content">
-      <div class="contact-map">
-        <img src="/assets/home/studio.jpg" alt="A-WELL Yoga studio interior" class="img-rounded">
-      </div>
-      <div class="contact-info">
-        <h3>Studio Hours</h3>
-        <ul class="hours-list">
-          <li *ngFor="let entry of studioHours">
-            <span>{{ entry.label }}:</span> {{ entry.hours }}
-          </li>
-        </ul>
-        
-        <h3>Location</h3>
-        <address>
-          <p><span class="material-icons">location_on</span> 214 Hickman Dr, Sanford, FL 32771</p>
-          <p><span class="material-icons">phone</span> (321) 230-8833</p>
-          <p><span class="material-icons">email</span> info&#64;awellyoga.com</p>
-        </address>
-        
-        <p>Free parking available in the dedicated lot behind our building.</p>
-      </div>
+    <h2 class="text-center">Practice With Us Online</h2>
+    <div class="contact-info">
+      <p>Join from a comfortable space with room to move. A yoga mat and a device with Zoom are all you need to get started.</p>
+      <p>Questions? Email <a href="mailto:info@awellyoga.com">info&#64;awellyoga.com</a>.</p>
     </div>
   </div>
 </section>

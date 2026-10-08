@@ -16,11 +16,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.seo.updatePage({
-      title: 'Sanford Yoga Classes, Private Sessions, Workshops, and Retreats',
+      title: 'Online Yoga Classes, Private Sessions, Workshops, and Retreats',
       description:
-        'A-WELL Yoga offers Sanford yoga classes, private sessions, workshops, retreats, and therapeutic nervous-system-aware support for students seeking grounded, approachable practice.',
+        'Online yoga for anyone, anywhere: live Hatha Yoga on Zoom Sundays October–January at 11 a.m. EST (UTC−5), $15 USD / €12 EUR, plus private sessions, workshops, and retreats.',
       path: '/',
-      image: '/assets/home/studio.jpg'
+      image: '/assets/classes/neuroyoga-therapeutic-yoga.jpg'
     });
 
     this.seo.updateJsonLd([
@@ -35,30 +35,18 @@ export class HomeComponent implements OnInit {
         }
       },
       {
-        id: 'home-local-business',
+        id: 'home-organization',
         data: {
           '@context': 'https://schema.org',
-          '@type': 'SportsActivityLocation',
-          '@id': `${SITE_URL}/#localbusiness`,
+          '@type': 'Organization',
+          '@id': `${SITE_URL}/#organization`,
           name: STUDIO_CONTACT.name,
           description:
-            'Yoga studio and therapeutic movement space offering classes, workshops, private sessions, and retreats.',
+            'Online yoga and therapeutic movement offering live classes, private sessions, workshops, and retreats.',
           url: SITE_URL,
-          image: `${SITE_URL}/assets/home/studio.jpg`,
+          image: `${SITE_URL}/assets/classes/neuroyoga-therapeutic-yoga.jpg`,
           telephone: STUDIO_CONTACT.phoneSchema,
           email: STUDIO_CONTACT.email,
-          address: {
-            '@type': 'PostalAddress',
-            streetAddress: STUDIO_CONTACT.addressLine,
-            addressLocality: STUDIO_CONTACT.city,
-            addressRegion: STUDIO_CONTACT.region,
-            postalCode: STUDIO_CONTACT.postalCode,
-            addressCountry: STUDIO_CONTACT.country
-          },
-          areaServed: {
-            '@type': 'City',
-            name: STUDIO_CONTACT.city
-          },
           sameAs: [`${SITE_URL}/about`, `${SITE_URL}/schedule`]
         }
       }
