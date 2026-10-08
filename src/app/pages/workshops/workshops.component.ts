@@ -18,7 +18,8 @@ export class WorkshopsComponent implements OnInit {
   workshops = [
     {
       title: NEURONIDRA_EVENT.title, label: 'Special Event',
-      date: 'Thursday, 15 October 2026', time: '18:00–20:00 (Europe/Belgrade)',
+      startDate: NEURONIDRA_EVENT.startDate, endDate: NEURONIDRA_EVENT.endDate,
+      date: 'Thursday, 15 October 2026', time: '18:00–20:00',
       location: NEURONIDRA_EVENT.location, price: NEURONIDRA_EVENT.priceLabel,
       description: NEURONIDRA_EVENT.summary, image: NEURONIDRA_IMAGE,
       bookingUrl: '/neuronidra', scheduleUrl: `/schedule?event=${NEURONIDRA_EVENT.id}#calendar`, scheduleOnly: false
@@ -27,6 +28,8 @@ export class WorkshopsComponent implements OnInit {
       title: 'Immersive Beach Yoga + Brunch',
       label: 'Special Event',
       date: 'May 16th, 2026',
+      startDate: '2026-05-16T09:00:00-04:00',
+      endDate: '2026-05-17T00:00:00-04:00',
       time: '9:00 AM',
       location: 'Chases on the Beach · New Smyrna Beach',
       price: '$35',
@@ -40,6 +43,8 @@ export class WorkshopsComponent implements OnInit {
       title: 'The Path INWARD',
       label: 'Workshop',
       date: 'May 30th, 2026',
+      startDate: '2026-05-30T18:00:00-04:00',
+      endDate: '2026-05-30T20:00:00-04:00',
       time: '6:00 PM - 8:00 PM',
       location: 'CityArt Orlando Florida',
       price: '$35',
@@ -49,6 +54,14 @@ export class WorkshopsComponent implements OnInit {
       scheduleOnly: false
     }
   ];
+
+  get upcomingWorkshops() {
+    return this.workshops.filter(workshop => Date.parse(workshop.endDate) > Date.now());
+  }
+
+  get previousWorkshops() {
+    return this.workshops.filter(workshop => Date.parse(workshop.endDate) <= Date.now());
+  }
 
   constructor(private seo: SeoService) {}
 
@@ -73,31 +86,20 @@ export class WorkshopsComponent implements OnInit {
           ]
         }
       },
-      {
-        id: 'workshop-event',
+      ...this.upcomingWorkshops.map((workshop, index) => ({
+        id: `workshop-event-${index}`,
         data: {
           '@context': 'https://schema.org',
           '@type': 'Event',
-          name: this.workshops[2].title,
-          startDate: '2026-05-30T18:00:00-04:00',
-          endDate: '2026-05-30T20:00:00-04:00',
+          name: workshop.title,
+          startDate: workshop.startDate,
+          endDate: workshop.endDate,
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
           eventStatus: 'https://schema.org/EventScheduled',
-          location: {
-            '@type': 'Place',
-            name: this.workshops[2].location,
-            address: this.workshops[2].location
-          },
-          offers: {
-            '@type': 'Offer',
-            price: '35',
-            priceCurrency: 'USD',
-            url: this.workshops[2].bookingUrl,
-            availability: 'https://schema.org/InStock'
-          },
-          url: `${SITE_URL}/workshops`
+          location: { '@type': 'Place', name: workshop.location, address: workshop.location },
+          url: workshop.bookingUrl.startsWith('/') ? `${SITE_URL}${workshop.bookingUrl}` : workshop.bookingUrl
         }
-      }
+      }))
     ]);
   }
 }

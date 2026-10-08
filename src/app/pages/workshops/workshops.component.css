@@ -671,3 +671,30 @@
     font-size: 2.5rem;
   }
 } 
+
+.previous-workshops {
+  margin-top: 4rem;
+}
+
+.intro-section h2 {
+  margin-bottom: 2rem;
+}
+
+.workshop-card-previous {
+  filter: grayscale(1);
+  background-color: #f2f2f2;
+  color: #595959;
+}
+
+.workshop-card-previous:hover {
+  transform: none;
+}
+
+.workshop-card-previous:hover .workshop-image img {
+  transform: none;
+}
+
+.past-workshop-label {
+  color: #595959;
+  font-weight: 600;
+}

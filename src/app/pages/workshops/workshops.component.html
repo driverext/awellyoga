@@ -8,14 +8,29 @@
 
 <section class="section intro-section">
   <div class="container">
-    <div class="workshops-grid">
-      <article class="workshop-card" *ngFor="let workshop of workshops">
+    <section aria-labelledby="upcoming-workshops-heading">
+      <h2 id="upcoming-workshops-heading">Upcoming Workshops</h2>
+      <p *ngIf="!upcomingWorkshops.length">More workshops are coming soon.</p>
+      <div class="workshops-grid">
+        <ng-container *ngFor="let workshop of upcomingWorkshops" [ngTemplateOutlet]="workshopCard" [ngTemplateOutletContext]="{ workshop: workshop, previous: false }"></ng-container>
+      </div>
+    </section>
+
+    <section *ngIf="previousWorkshops.length" class="previous-workshops" aria-labelledby="previous-workshops-heading">
+      <h2 id="previous-workshops-heading">Previous Workshops</h2>
+      <div class="workshops-grid">
+        <ng-container *ngFor="let workshop of previousWorkshops" [ngTemplateOutlet]="workshopCard" [ngTemplateOutletContext]="{ workshop: workshop, previous: true }"></ng-container>
+      </div>
+    </section>
+
+    <ng-template #workshopCard let-workshop="workshop" let-previous="previous">
+      <article class="workshop-card" [class.workshop-card-previous]="previous">
         <div class="workshop-image">
           <img [src]="workshop.image" [alt]="workshop.title">
         </div>
 
         <div class="workshop-content">
-          <h2 class="workshop-title">{{ workshop.title }}</h2>
+          <h3 class="workshop-title">{{ workshop.title }}</h3>
           <p class="workshop-description"><strong>{{ workshop.label }}</strong></p>
 
           <div class="workshop-meta">
@@ -33,7 +48,8 @@
               <span class="price">{{ workshop.price }}</span>
             </div>
 
-            <div class="workshop-actions">
+            <span *ngIf="previous" class="past-workshop-label">Past event</span>
+            <div *ngIf="!previous" class="workshop-actions">
               <a
                 *ngIf="workshop.bookingUrl"
                 [href]="workshop.bookingUrl"
@@ -54,6 +70,6 @@
           </div>
         </div>
       </article>
-    </div>
+    </ng-template>
   </div>
 </section>
