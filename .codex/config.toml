@@ -1,0 +1,32 @@
+# Project configuration for Codex runtimes that load trusted repository config.
+model = "gpt-6.1-sol"
+model_reasoning_effort = "low"
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 2
+max_depth = 1
+
+[agents.frontend]
+description = "Angular pages, styles, navigation, and responsive interaction."
+config_file = "agents/frontend.toml"
+
+[agents.cms]
+description = "Straightforward Sanity content fields and editor changes."
+config_file = "agents/cms.toml"
+
+[agents.backend]
+description = "Supabase functions, SQL, booking, authentication, and Stripe."
+config_file = "agents/backend.toml"
+
+[agents.qa]
+description = "Focused test work and diagnosis of straightforward failures."
+config_file = "agents/qa.toml"
+
+[agents.reviewer]
+description = "Review a substantial diff for correctness and regressions."
+config_file = "agents/reviewer.toml"
+
+[agents.deep_debug]
+description = "Demanding cross-system debugging or architecture, used sparingly."
+config_file = "agents/deep-debug.toml"

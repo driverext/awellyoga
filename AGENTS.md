@@ -4,6 +4,26 @@ Use the existing checkout. Cloud tasks are already isolated; create a worktree
 only when the user requests one. Start with `git status --short` and preserve
 unrelated changes. Keep work focused on the requested behavior.
 
+## Agent coordination
+
+The main session is the orchestrator. Handle small, single-file requests directly.
+For substantial work, delegate only independent tasks to the relevant specialist:
+`frontend`, `cms`, `backend`, `qa`, `reviewer`, or `deep_debug`.
+Use at most two simultaneous workers and do not create nested agent teams.
+Give each worker a short brief with its files, acceptance criteria, and relevant
+context. Workers share the checkout: assign separate file ownership and preserve
+each other's changes. Reuse their findings rather than repeating their research.
+The orchestrator integrates changes and runs the final relevant checks once.
+Use a reviewer for substantial behavior changes and booking/payment/auth changes;
+use `deep_debug` only when complexity or a diagnosed failed approach warrants it.
+The orchestrator handles release commands when the user requests a release.
+
+Native role/model settings are in `.codex/config.toml` and `.codex/agents/`.
+If the runtime does not expose these roles, use available sub-agent tools with
+these responsibilities and the model choices in `docs/CODEX_AGENTS.md` when
+supported. Otherwise follow the same workflow in the main session. Do not claim
+that role files activated model routing without runtime evidence.
+
 ## Where to edit
 
 | Request | Start here |

@@ -21,6 +21,19 @@ If a deploy looks odd, check these first:
 - Vercel is building from the repo root
 - no cached frontend page is hiding the new deploy
 
+### Vercel Web Analytics
+
+Enable **Web Analytics** in the Vercel project's Analytics tab, then deploy the
+frontend. `src/main.ts` uses the framework-independent `@vercel/analytics`
+SDK for Angular. It loads only in production builds and automatically tracks
+page views, including client-side navigation; local development is not counted.
+No analytics secret or environment variable is required.
+
+After deployment, visit the site and navigate between pages. Confirm that
+`/_vercel/insights/script.js` loads successfully and page-view requests are sent,
+then check the project's Analytics dashboard. Local checks verify the integration;
+visitor reporting must be verified on the deployed Vercel site.
+
 ## Sanity Studio
 
 From the repo root:
