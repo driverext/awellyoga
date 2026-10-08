@@ -131,7 +131,7 @@
               <div class="event-badge">{{ event.eventType }}</div>
               <h4>{{ event.title }}</h4>
               <p class="event-time">
-                <ng-container *ngIf="isNeuroNidra(event); else standardEventTime">18:00–20:00 (Europe/Belgrade)</ng-container>
+                <ng-container *ngIf="isNeuroNidra(event); else standardEventTime">18:00–20:00</ng-container>
                 <ng-template #standardEventTime>
                   {{ event.startDate | date: 'h:mm a' }}
                   <span *ngIf="event.endDate"> - {{ event.endDate | date: 'h:mm a' }}</span>

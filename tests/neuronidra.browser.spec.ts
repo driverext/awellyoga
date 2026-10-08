@@ -70,7 +70,7 @@ test('new event appears on workshop cards and calendar with a link to both payme
   await page.goto('/schedule');
   // Schedule selects the first upcoming local event when the CMS is empty.
   await expect(page.getByText(event.title, { exact: true }).first()).toBeVisible();
-  await expect(page.locator('.event-time').filter({ hasText: '18:00–20:00 (Europe/Belgrade)' })).toBeVisible();
+  await expect(page.locator('.event-time').filter({ hasText: '18:00–20:00' })).toBeVisible();
   await page.getByRole('button', { name: 'Book', exact: true }).first().click();
   await page.waitForURL('**/neuronidra#booking');
 });
