@@ -1,4 +1,4 @@
-import { NEURONIDRA_EVENT, NEURONIDRA_IMAGE } from '../../../../shared/neuronidra-event';
+import { NEURONIDRA_EVENTS, NEURONIDRA_IMAGE, getNeuroNidraDateLabel } from '../../../../shared/neuronidra-event';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -16,14 +16,14 @@ const BEACH_EVENT_ID = 'special-event-immersive-beach-yoga-2026-05-16';
 })
 export class WorkshopsComponent implements OnInit {
   workshops = [
-    {
-      title: NEURONIDRA_EVENT.title, label: 'Special Event',
-      startDate: NEURONIDRA_EVENT.startDate, endDate: NEURONIDRA_EVENT.endDate,
-      date: 'Thursday, 15 October 2026', time: '18:00–20:00',
-      location: NEURONIDRA_EVENT.location, price: NEURONIDRA_EVENT.priceLabel,
-      description: NEURONIDRA_EVENT.summary, image: NEURONIDRA_IMAGE,
-      bookingUrl: '/neuronidra', scheduleUrl: `/schedule?event=${NEURONIDRA_EVENT.id}#calendar`, scheduleOnly: false
-    },
+    ...NEURONIDRA_EVENTS.map(event => ({
+      title: event.title, label: 'Special Event',
+      startDate: event.startDate, endDate: event.endDate,
+      date: getNeuroNidraDateLabel(event).split(' · ')[0], time: '18:00–20:00',
+      location: event.location, price: event.priceLabel,
+      description: event.summary, image: NEURONIDRA_IMAGE,
+      bookingUrl: event.ctaUrl, scheduleUrl: `/schedule?event=${event.id}#calendar`, scheduleOnly: false
+    })),
     {
       title: 'Immersive Beach Yoga + Brunch',
       label: 'Special Event',

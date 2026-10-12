@@ -1,4 +1,4 @@
-import { NEURONIDRA_EVENT } from '../../../../shared/neuronidra-event';
+import { NEURONIDRA_EVENTS } from '../../../../shared/neuronidra-event';
 import { Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -231,8 +231,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   openBooking(event: CmsEvent): void {
-    if (event.id === NEURONIDRA_EVENT.id) {
-      void this.router.navigate(['/neuronidra'], { fragment: 'booking' });
+    const neuroNidra = NEURONIDRA_EVENTS.find(local => local.id === event.id);
+    if (neuroNidra) {
+      void this.router.navigate([neuroNidra.ctaUrl], { fragment: 'booking' });
       return;
     }
     if (this.isPrivateSessionEvent(event)) {
@@ -419,7 +420,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.updateSeo();
   }
 
-  isNeuroNidra(event: CmsEvent): boolean { return event.id === NEURONIDRA_EVENT.id; }
+  isNeuroNidra(event: CmsEvent): boolean { return NEURONIDRA_EVENTS.some(local => local.id === event.id); }
 
   eventCapacity(event: CmsEvent): number | null {
     if (typeof event.maxSpots === 'number' && event.maxSpots > 0) {

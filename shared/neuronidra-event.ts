@@ -18,3 +18,16 @@ export const NEURONIDRA_EVENT = {
 export const NEURONIDRA_IMAGE = '/assets/workshops/neuronidra.jpg';
 export const NEURONIDRA_CASH_NOTE = 'Please bring 30 € in cash. Doors open 17:45.';
 export const NEURONIDRA_DATE_LABEL = 'Thursday, 15 October 2026 · 18:00–20:00 (Europe/Belgrade)';
+
+export const NEURONIDRA_OCTOBER_17_EVENT = {
+  ...NEURONIDRA_EVENT,
+  id: 'special-event-neuronidra-prishtina-2026-10-17',
+  startDate: '2026-10-17T18:00:00+02:00',
+  endDate: '2026-10-17T20:00:00+02:00',
+  ctaUrl: '/neuronidra-october-17'
+};
+export const NEURONIDRA_EVENTS = [NEURONIDRA_EVENT, NEURONIDRA_OCTOBER_17_EVENT];
+export function getNeuroNidraDateLabel(event: typeof NEURONIDRA_EVENT): string {
+  const date = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Belgrade' }).format(new Date(event.startDate));
+  return `${date} · 18:00–20:00 (Europe/Belgrade)`;
+}

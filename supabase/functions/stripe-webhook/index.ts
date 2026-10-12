@@ -1,6 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 import { sendBookingConfirmationEmail, sendInternalBookingAlert } from '../_shared/booking-emails.ts';
-import { NEURONIDRA_EVENT, NEURONIDRA_DATE_LABEL } from '../../../shared/neuronidra-event.ts';
+import { NEURONIDRA_EVENTS, getNeuroNidraDateLabel } from '../../../shared/neuronidra-event.ts';
 
 type StripeEvent = {
   id: string;
@@ -75,6 +75,7 @@ Deno.serve(async (req) => {
 
     const session = event.data.object;
     const metadata = session.metadata || {};
+    const neuroNidraEvent = NEURONIDRA_EVENTS.find((candidate) => candidate.id === metadata.sanity_event_id);
     const bookingId = metadata.booking_id || session.client_reference_id || '';
     const collectedName =
       session.customer_details?.individual_name ||
@@ -136,9 +137,9 @@ Deno.serve(async (req) => {
         eventType: metadata.event_type || null,
         instructorName: metadata.instructor_name || null,
         eventTitle: metadata.event_title || null,
-        eventStart: metadata.event_start || null,
-        eventEnd: metadata.event_end || null,
-        eventDateLabel: metadata.sanity_event_id === NEURONIDRA_EVENT.id ? NEURONIDRA_DATE_LABEL : metadata.event_dates_label || null,
+        eventStart: neuroNidraEvent?.startDate || metadata.event_start || null,
+        eventEnd: neuroNidraEvent?.endDate || metadata.event_end || null,
+        eventDateLabel: neuroNidraEvent ? getNeuroNidraDateLabel(neuroNidraEvent) : metadata.event_dates_label || null,
         eventLocation: metadata.event_location || null,
         amountTotal: presentmentAmount,
         currency: presentmentCurrency

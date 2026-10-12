@@ -2,7 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
 import { isValidEmail } from '../_shared/email.ts';
 import { sendBookingConfirmationEmail, sendInternalBookingAlert } from '../_shared/booking-emails.ts';
-import { NEURONIDRA_EVENT, NEURONIDRA_DATE_LABEL } from '../../../shared/neuronidra-event.ts';
+import { NEURONIDRA_EVENTS, getNeuroNidraDateLabel } from '../../../shared/neuronidra-event.ts';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: buildCorsHeaders(req) });
@@ -11,8 +11,8 @@ Deno.serve(async (req) => {
   try {
     const payload = await req.json();
     if (!payload || typeof payload !== 'object') return json(req, { error: 'Invalid reservation.' }, 400);
-    const event = NEURONIDRA_EVENT;
-    if (payload.eventId !== event.id) return json(req, { error: 'Cash reservations are unavailable for this event.' }, 400);
+    const event = NEURONIDRA_EVENTS.find((candidate) => candidate.id === payload.eventId);
+    if (!event) return json(req, { error: 'Cash reservations are unavailable for this event.' }, 400);
     const name = typeof payload.name === 'string' ? payload.name.trim() : '';
     const email = typeof payload.email === 'string' ? payload.email.trim().toLowerCase() : '';
     const phone = typeof payload.phone === 'string' ? payload.phone.trim() : '';
@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     const emailPayload = {
       toEmail: email, customerName: name, customerBackupContact: phone,
       eventType: event.eventType, instructorName: event.instructorName, eventTitle: event.title,
-      eventStart: event.startDate, eventEnd: event.endDate, eventDateLabel: NEURONIDRA_DATE_LABEL,
+      eventStart: event.startDate, eventEnd: event.endDate, eventDateLabel: getNeuroNidraDateLabel(event),
       eventLocation: event.location, amountTotal: event.unitAmountCents, currency: event.currency,
       cashOnArrival: true
     };

@@ -1,8 +1,32 @@
+import { NEURONIDRA_OCTOBER_17_EVENT as october17 } from '../shared/neuronidra-event.ts';
 import { assert, event, request, reset, rows, sessions, mails, completeCheckout, setFailures, dbInsert, dbUpdate, handlers } from './neuronidra-test-harness.ts';
 const cash = (email = 'cash@example.test') => ({ eventId: event.id, name: 'Cash Guest', email, phone: '+38344123456' });
 const card = (email = 'card@example.test') => ({ eventId: event.id, title: event.title, email, maxSpots: 100, unitAmountCents: 1, currency: 'usd', stripePriceId: 'tampered', startDate: '2027-01-01' });
 
 Deno.test('NeuroNidra isolated booking integration', async (t) => {
+  await t.step('October 17 has separate dates, confirmations and independent capacity for both payment methods', async () => {
+    await reset();
+    const first = await request('cash-reservation', cash('same@example.test'));
+    assert(first.ok, await first.text());
+    const second = await request('cash-reservation', { ...cash('same@example.test'), eventId: october17.id });
+    assert(second.ok, await second.text());
+    const octoberBooking = (await rows()).find((row: { sanity_event_id: string; event_start: string }) => row.sanity_event_id === october17.id);
+    assert(octoberBooking && Date.parse(octoberBooking.event_start) === Date.parse(october17.startDate), 'Duplicate date was not stored');
+    assert(mails.slice(-3).every(mail => String(mail.text).includes('Saturday, 17 October 2026')), 'October 17 email date missing');
+    for (let i = 0; i < 11; i++) {
+      const response = await request('create-checkout-session', { ...card(`oct17-${i}@example.test`), eventId: october17.id });
+      assert(response.ok, await response.text());
+    }
+    assert(sessions[0].body.get('cancel_url')?.includes('/neuronidra-october-17#booking'), 'Checkout returns to wrong event');
+    const webhook = await completeCheckout(sessions[0]); assert(webhook.ok, await webhook.text());
+    assert(mails.slice(-3).every(mail => String(mail.text).includes('Saturday, 17 October 2026')), 'Card email date missing');
+    for (const endpoint of ['cash-reservation', 'create-checkout-session']) {
+      const response = await request(endpoint, { ...(endpoint === 'cash-reservation' ? cash('extra@example.test') : card('extra@example.test')), eventId: october17.id });
+      assert(response.status === 409, 'October 17 capacity exceeded'); await response.text();
+    }
+    const original = await request('cash-reservation', cash('original-still-open@example.test'));
+    assert(original.ok, await original.text());
+  });
   await t.step('cash stores unpaid reservation, contact, EUR amount and arrival-note emails', async () => {
     await reset(); const response = await request('cash-reservation', cash());
     assert(response.status === 200, await response.text());

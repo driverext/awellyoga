@@ -103,3 +103,11 @@ docker network rm awellyoga-neuronidra-tests
 | `tests/neuronidra.playwright.config.ts` | Chromium configuration for these browser tests only. |
 | `tests/neuronidra.browser.spec.ts` | Mobile, SEO/schema, card/cash, full capacity, listing, and dashboard browser checks. |
 | `docs/NEURONIDRA_REVIEW.md` | This review, test instructions, outstanding prerequisites, and complete file summary. |
+
+## October 17 duplicate
+
+The October 15 session is preserved. A second session on Saturday, 17 October 2026, 18:00–20:00 uses `/neuronidra-october-17` and event ID `special-event-neuronidra-prishtina-2026-10-17`. All copy, image, pricing and styling are shared. Each date has independent booking availability and a 12-person capacity.
+
+For hosted booking support, apply the original October 9 migration if not already applied, then `20261012000000_neuronidra_october_17_capacity.sql`, and deploy the updated `cash-reservation`, `create-checkout-session`, `event-booking-counts` and `stripe-webhook` functions. This remains separate from the Vercel frontend release. Supabase deployment credentials are not present in this cloud runtime.
+
+Validation: production Angular build and all three changed backend function type checks passed; isolated booking integration passed 11 steps including both October 17 payment paths, confirmation dates and independent capacity. No production bookings or payments were submitted.

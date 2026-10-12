@@ -1,4 +1,4 @@
-import { NEURONIDRA_EVENT } from '../../../../shared/neuronidra-event';
+import { NEURONIDRA_EVENTS } from '../../../../shared/neuronidra-event';
 import { Injectable } from '@angular/core';
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
@@ -296,8 +296,8 @@ export class SanityContentService {
   }
 
   private withLocalEvents(events: CmsEvent[]): CmsEvent[] {
-    if (Date.now() > Date.parse(NEURONIDRA_EVENT.endDate)) return events;
-    return [...events.filter((event) => event.id !== NEURONIDRA_EVENT.id), { ...NEURONIDRA_EVENT }];
+    const upcoming = NEURONIDRA_EVENTS.filter(event => Date.now() <= Date.parse(event.endDate));
+    return [...events.filter(event => !upcoming.some(local => local.id === event.id)), ...upcoming.map(event => ({ ...event }))];
   }
 
   private imageUrl(source: unknown, width = 1200): string | null {

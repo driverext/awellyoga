@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BookingService } from '../../services/booking.service';
 import { SeoService } from '../../services/seo.service';
 import { TrustedNavigationService } from '../../services/trusted-navigation.service';
-import { NEURONIDRA_EVENT, NEURONIDRA_IMAGE, NEURONIDRA_CASH_NOTE } from '../../../../shared/neuronidra-event';
+import { NEURONIDRA_EVENT, NEURONIDRA_EVENTS, NEURONIDRA_IMAGE, NEURONIDRA_CASH_NOTE, getNeuroNidraDateLabel } from '../../../../shared/neuronidra-event';
 import { SITE_URL } from '../../config/site-constants';
 
 @Component({
@@ -15,7 +16,8 @@ import { SITE_URL } from '../../config/site-constants';
   styleUrls: ['../workshops/workshops.component.css', '../beach-yoga-payment/beach-yoga-payment.component.css', './neuronidra.component.css']
 })
 export class NeuroNidraComponent implements OnInit, OnDestroy {
-  readonly event = NEURONIDRA_EVENT;
+  readonly event;
+  get dateLabel(): string { return getNeuroNidraDateLabel(this.event).replace(' (Europe/Belgrade)', ''); }
   readonly image = NEURONIDRA_IMAGE;
   readonly cashNote = NEURONIDRA_CASH_NOTE;
   name = '';
@@ -28,14 +30,16 @@ export class NeuroNidraComponent implements OnInit, OnDestroy {
   confirmation = '';
   private timer?: ReturnType<typeof setInterval>;
 
-  constructor(private booking: BookingService, private seo: SeoService, private navigation: TrustedNavigationService) {}
+  constructor(private booking: BookingService, private seo: SeoService, private navigation: TrustedNavigationService, route: ActivatedRoute) {
+    this.event = NEURONIDRA_EVENTS.find(event => event.id === route.snapshot.data['eventId']) || NEURONIDRA_EVENT;
+  }
 
   ngOnInit(): void {
     this.seo.updatePage({
       title: 'NeuroNidra™ in Prishtina — Guided Deep Rest with Arieta Berisha Kirk',
       exactTitle: true,
       description: 'NeuroNidra™ by Arieta Berisha Kirk: a guided deep-rest practice for anxiety, grief and overthinking. Somatic, vagal, neural. Sessions in Prishtina.',
-      path: '/neuronidra', image: this.image
+      path: this.event.ctaUrl, image: this.image
     });
     this.updateEventSchema();
     void this.refreshAvailability();
@@ -89,8 +93,8 @@ export class NeuroNidraComponent implements OnInit, OnDestroy {
       maximumAttendeeCapacity: this.event.maxSpots,
       location: { '@type': 'Place', name: this.event.location, address: { '@type': 'PostalAddress', addressLocality: 'Prishtina', addressCountry: 'XK' } },
       performer: { '@type': 'Person', name: this.event.instructorName }, image: `${SITE_URL}${this.image}`,
-      description: this.event.summary, url: `${SITE_URL}/neuronidra`,
-      offers: { '@type': 'Offer', price: 30, priceCurrency: 'EUR', url: `${SITE_URL}/neuronidra#booking`, availability: this.closed ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' }
+      description: this.event.summary, url: `${SITE_URL}${this.event.ctaUrl}`,
+      offers: { '@type': 'Offer', price: 30, priceCurrency: 'EUR', url: `${SITE_URL}${this.event.ctaUrl}#booking`, availability: this.closed ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' }
     }}]);
   }
 }

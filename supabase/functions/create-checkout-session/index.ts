@@ -1,4 +1,4 @@
-import { NEURONIDRA_EVENT, NEURONIDRA_DATE_LABEL } from '../../../shared/neuronidra-event.ts';
+import { NEURONIDRA_EVENTS, getNeuroNidraDateLabel } from '../../../shared/neuronidra-event.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 import { buildCorsHeaders, isOriginAllowed } from '../_shared/cors.ts';
 
@@ -44,15 +44,16 @@ Deno.serve(async (req) => {
       return json(req, { error: 'Missing event id or title.' }, 400);
     }
 
-    const isNeuroNidra = payload.eventId === NEURONIDRA_EVENT.id;
-    if (isNeuroNidra) {
+    const neuroNidraEvent = NEURONIDRA_EVENTS.find((event) => event.id === payload.eventId);
+    const isNeuroNidra = !!neuroNidraEvent;
+    if (neuroNidraEvent) {
       // Do not trust client-supplied prices, capacity, dates, or payment links for this event.
-      Object.assign(payload, NEURONIDRA_EVENT, {
-        eventId: NEURONIDRA_EVENT.id, dateLabel: NEURONIDRA_DATE_LABEL,
+      Object.assign(payload, neuroNidraEvent, {
+        eventId: neuroNidraEvent.id, dateLabel: getNeuroNidraDateLabel(neuroNidraEvent),
         stripePriceId: undefined, bookingUrl: undefined, instructorStripeAccountId: undefined,
-        successPath: undefined, cancelPath: '/neuronidra#booking'
+        successPath: undefined, cancelPath: `${neuroNidraEvent.ctaUrl}#booking`
       });
-      if (Date.now() >= Date.parse(NEURONIDRA_EVENT.startDate)) {
+      if (Date.now() >= Date.parse(neuroNidraEvent.startDate)) {
         return json(req, { error: 'Booking for this event has closed.', code: 'BOOKING_CLOSED' }, 409);
       }
     }
