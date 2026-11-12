@@ -26,7 +26,14 @@ export const NEURONIDRA_OCTOBER_17_EVENT = {
   endDate: '2026-10-17T20:00:00+02:00',
   ctaUrl: '/neuronidra-october-17'
 };
-export const NEURONIDRA_EVENTS = [NEURONIDRA_EVENT, NEURONIDRA_OCTOBER_17_EVENT];
+export const NEURONIDRA_NOVEMBER_17_EVENT = {
+  ...NEURONIDRA_EVENT,
+  id: 'special-event-neuronidra-prishtina-2026-11-17',
+  startDate: '2026-11-17T18:00:00+01:00',
+  endDate: '2026-11-17T20:00:00+01:00',
+  ctaUrl: '/neuronidra-november-17'
+};
+export const NEURONIDRA_EVENTS = [NEURONIDRA_EVENT, NEURONIDRA_OCTOBER_17_EVENT, NEURONIDRA_NOVEMBER_17_EVENT];
 export function getNeuroNidraDateLabel(event: typeof NEURONIDRA_EVENT): string {
   const date = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Belgrade' }).format(new Date(event.startDate));
   return `${date} · 18:00–20:00 (Europe/Belgrade)`;

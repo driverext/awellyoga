@@ -35,6 +35,7 @@ grant all on public.bookings, public.private_session_requests to service_role;
 SQL
 docker exec -i "$db" psql -U postgres -v ON_ERROR_STOP=1 < supabase/migrations/20261009000000_neuronidra_cash_capacity.sql >/dev/null
 docker exec -i "$db" psql -U postgres -v ON_ERROR_STOP=1 < supabase/migrations/20261012000000_neuronidra_october_17_capacity.sql >/dev/null
+docker exec -i "$db" psql -U postgres -v ON_ERROR_STOP=1 < supabase/migrations/20261112000000_neuronidra_november_17_capacity.sql >/dev/null
 if ! docker inspect "$rest" >/dev/null 2>&1; then
   docker run --name "$rest" --network "$network" -p 127.0.0.1:55433:3000 \
     -e PGRST_DB_URI=postgres://postgres:local-test-only@awellyoga-neuronidra-test-db:5432/postgres \

@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { NEURONIDRA_EVENTS } from '../shared/neuronidra-event';
 
-test('both dates reuse the same mobile page and book the selected event', async ({ page }) => {
+test('all three dates reuse the same mobile page and book the selected event', async ({ page }) => {
   const reservations: string[] = [];
+  await page.clock.install({ time: new Date('2026-10-12T12:00:00Z') });
   await page.setViewportSize({ width: 375, height: 812 });
   await page.route('**/*.api.sanity.io/**', route => route.fulfill({ json: { result: [] } }));
   await page.route('**/*.functions.supabase.co/**', route => {
@@ -16,7 +17,7 @@ test('both dates reuse the same mobile page and book the selected event', async 
   });
   for (const [index, event] of NEURONIDRA_EVENTS.entries()) {
     await page.goto(event.ctaUrl);
-    await expect(page.locator('.page-header')).toContainText(index === 0 ? 'Thursday, 15 October 2026' : 'Saturday, 17 October 2026');
+    await expect(page.locator('.page-header')).toContainText(['Thursday, 15 October 2026', 'Saturday, 17 October 2026', 'Tuesday, 17 November 2026'][index]);
     const schema = JSON.parse(await page.locator('#jsonld-neuronidra-event').textContent() || '{}');
     expect(schema.startDate).toBe(event.startDate);
     expect(schema.url).toBe(`https://awellyoga.com${event.ctaUrl}`);

@@ -111,3 +111,11 @@ The October 15 session is preserved. A second session on Saturday, 17 October 20
 For hosted booking support, apply the original October 9 migration if not already applied, then `20261012000000_neuronidra_october_17_capacity.sql`, and deploy the updated `cash-reservation`, `create-checkout-session`, `event-booking-counts` and `stripe-webhook` functions. This remains separate from the Vercel frontend release. Supabase deployment credentials are not present in this cloud runtime.
 
 Validation: production Angular build and all three changed backend function type checks passed; isolated booking integration passed 11 steps including both October 17 payment paths, confirmation dates and independent capacity. No production bookings or payments were submitted.
+
+## November 17 duplicate
+
+Added Tuesday, 17 November 2026, 18:00–20:00 at `/neuronidra-november-17`, with independent event ID `special-event-neuronidra-prishtina-2026-11-17`. Both October definitions remain unchanged. November uses Belgrade's +01:00 winter offset; all other terms, copy, image and styling are inherited.
+
+Hosted booking support requires applying `20261112000000_neuronidra_november_17_capacity.sql` after the previous migrations and redeploying `cash-reservation`, `create-checkout-session` and `stripe-webhook` to bundle the new shared event definition. Supabase deployment access remains unavailable in this runtime.
+
+Validation passed: Angular production build; mobile browser test covering all three pages, selected booking IDs and workshop links (test clock fixed before October events); isolated November cash/card integration including confirmation dates, winter offset and rejection after twelve combined bookings. No live bookings or payments were submitted. Run the new integration test with the existing documented Deno command targeting `tests/neuronidra-november.test.ts` after starting the local fixture.

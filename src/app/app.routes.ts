@@ -18,6 +18,7 @@ export const routes: Routes = [
   { path: 'ytt', loadComponent: () => import('../app/pages/ytt/ytt.component').then(m => m.YttComponent) },
   { path: 'neuronidra', loadComponent: () => import('../app/pages/neuronidra/neuronidra.component').then(m => m.NeuroNidraComponent) },
   { path: 'neuronidra-october-17', data: { eventId: 'special-event-neuronidra-prishtina-2026-10-17' }, loadComponent: () => import('../app/pages/neuronidra/neuronidra.component').then(m => m.NeuroNidraComponent) },
+  { path: 'neuronidra-november-17', data: { eventId: 'special-event-neuronidra-prishtina-2026-11-17' }, loadComponent: () => import('../app/pages/neuronidra/neuronidra.component').then(m => m.NeuroNidraComponent) },
   { path: 'workshops', loadComponent: () => import('../app/pages/workshops/workshops.component').then(m => m.WorkshopsComponent) },
   { path: 'retreats', component: RetreatsComponent },
   { path: 'retreats/:id', component: RetreatDetailsComponent },
